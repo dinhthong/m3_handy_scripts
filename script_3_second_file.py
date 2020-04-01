@@ -7,7 +7,7 @@ from openpyxl import Workbook
 import openpyxl
 print("SAP B1 auto tool for TSAN")
 excel_path_suffix = "./../thong_dmvt_lo1048/file_goc/"
-file = excel_path_suffix + "PL02, PL03_VTLK (Xong theo Ebom 11 du kien)_main.xlsx"
+file = excel_path_suffix + "PL02, PL03_VTLK_script3.xlsx"
 new_bom_wb = openpyxl.load_workbook(file)
 #print(new_bom_wb.sheetnames)
 # Select a specific sheet to work
@@ -19,7 +19,7 @@ i = 1
 # limit to the rows where Ma NSX1 are available
 wb_first_row = 3
 wb_last_row = 169
-for row in ws.iter_rows("H"):
+for row in ws.iter_rows("J"):
     for cell in row:
         # note that some cases we must manually link in order to complete an Excel sheet. 
         if i>=wb_first_row and i<=wb_last_row:
@@ -28,7 +28,7 @@ for row in ws.iter_rows("H"):
 print("There're total of " + str(wb_last_row-wb_first_row+1) + " component to be map the new SAP B1 component code")
 # print the list contain all ma nxs to map to target file along with its row index in previous file to Danh muc vat tu LINH KIEN.xlsx
 
-file1 = excel_path_suffix + "Danh muc vat tu LINH KIEN.xlsx"
+file1 = excel_path_suffix + "Dinh muc vat linh kien dien tu_2018.xlsx"
 component_code_match_row_index = 1
 wb1 = openpyxl.load_workbook(file1, read_only=True)
 ws1 = wb1.active
@@ -42,25 +42,25 @@ none1_cnt = 0
 list_has_foreign_name = []
 for item in component_code_list:
     #print(item[1])
-    for row in ws1.iter_rows("C"):
+    for row in ws1.iter_rows("M"):
         for cell in row:
             # if we detect any matching by component code
             if cell.value == item[1]:
                 component_code_cnt = component_code_cnt+1
-                # print("STT in first file: " + str(item[0]))
-                # print("Component code (Ma NXS1): " + str(item[1]))
-                # print("STT in second file: "+ str(component_code_match_row_index))
+                print("STT in first file: " + str(item[0]))
+                print("Component code (Ma NXS1): " + str(item[1]))
+                print("STT in second file: "+ str(component_code_match_row_index))
                 
                # print(component_code_match_row_index)
-               # print("Foreign Name (Ma cu): " + str(ws1.cell(None, component_code_match_row_index, 4).value))
+                print("Foreign Name (Ma cu): " + str(ws1.cell(None, component_code_match_row_index, 3).value))
                 item.append(component_code_match_row_index)
-                item.append(ws1.cell(None, component_code_match_row_index, 4).value)
-                if ws1.cell(None, component_code_match_row_index, 4).value == None:
+                item.append(ws1.cell(None, component_code_match_row_index, 3).value)
+                if ws1.cell(None, component_code_match_row_index, 3).value == None:
                     print("None value detected, we won't use this for the next code")
                     none1_cnt = none1_cnt+1
                 else:
                     list_has_foreign_name.append(item)
-               # print("----")
+                print("----")
 
             component_code_match_row_index = component_code_match_row_index+1
         # reset the counter for next loop    
@@ -89,14 +89,14 @@ for item in list_has_foreign_name:
                 item.append(nsx_code_match_row_index)
                 item.append(ws2.cell(None, nsx_code_match_row_index, 2).value)
                 # Ma cu
-                ws.cell(row=item[0], column=4).value = item[3]
+                ws.cell(row=item[0], column=6).value = item[3]
                 # Ma moi
-                ws.cell(row=item[0], column=5).value = ws2.cell(None, nsx_code_match_row_index, 2).value
+                ws.cell(row=item[0], column=7).value = ws2.cell(None, nsx_code_match_row_index, 2).value
                 #print("----")
             nsx_code_match_row_index = nsx_code_match_row_index+1
         # reset the counter for next loop    
     nsx_code_match_row_index = 1
 
 print(component_code_list)
-new_bom_wb.save(filename = excel_path_suffix+'sample_book2.xlsx')
+new_bom_wb.save(filename = excel_path_suffix+'output_script3.xlsx')
 print("Finish excel mapping automation tool")
