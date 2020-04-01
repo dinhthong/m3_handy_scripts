@@ -19,7 +19,7 @@ i = 1
 # limit to the rows where Ma NSX1 are available
 wb_first_row = 3
 wb_last_row = 169
-for row in ws.iter_rows("G"):
+for row in ws.iter_rows("H"):
     for cell in row:
         # note that some cases we must manually link in order to complete an Excel sheet. 
         if i>=wb_first_row and i<=wb_last_row:
@@ -66,9 +66,6 @@ for item in component_code_list:
         # reset the counter for next loop    
     component_code_match_row_index = 1
 
-#print(component_code_list)
-#print(list_has_foreign_name)
-
 print("Number of items matched by component code: " + str(component_code_cnt-none1_cnt) + " / " + str(wb_last_row-wb_first_row+1))
 nsx_code_match_row_index = 1
 file2 = excel_path_suffix + "List of Items 31-03-2020.xlsx"
@@ -76,28 +73,30 @@ wb2 = openpyxl.load_workbook(file2, read_only=True)
 ws2 = wb2.active
 print(wb2.sheetnames)
 
-#print(component_code_list)
-
 for item in list_has_foreign_name:
     for row in ws2.iter_rows("F"):
         for cell in row:
-            # if we detect any matching
-            #print(item[3])
             if cell.value == item[3]:
-                print(item[0])
-                print("Component code (Ma NXS1): " + str(item[1]))
-                print(item[2])
-                print("Foreign Name (Ma cu): " + str(item[3]))
-                print(nsx_code_match_row_index)
-                print("Item No. (Ma moi): " + str(ws2.cell(None, nsx_code_match_row_index, 2).value))
+                #print(item[0])
+                #print("Component code (Ma NXS1): " + str(item[1]))
+                # print(item[2])
+                # print("Foreign Name (Ma cu): " + str(item[3]))
+                # print(nsx_code_match_row_index)
+                # print("Item No. (Ma moi): " + str(ws2.cell(None, nsx_code_match_row_index, 2).value))
                 if ws2.cell(None, nsx_code_match_row_index, 2).value == None:
                     print("None value detected, we won't use this for the next code")
                 # STT in third excel
                 item.append(nsx_code_match_row_index)
                 item.append(ws2.cell(None, nsx_code_match_row_index, 2).value)
-                print("----")
+                # Ma cu
+                ws.cell(row=item[0], column=5).value = item[3]
+                # Ma moi
+                ws.cell(row=item[0], column=6).value = ws2.cell(None, nsx_code_match_row_index, 2).value
+                #print("----")
             nsx_code_match_row_index = nsx_code_match_row_index+1
         # reset the counter for next loop    
     nsx_code_match_row_index = 1
 
 print(component_code_list)
+new_bom_wb.save(filename = excel_path_suffix+'sample_book2.xlsx')
+print("Finish excel mapping automation tool")
