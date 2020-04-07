@@ -2,16 +2,22 @@
 # component_code_list = [STT in Excel 1, Component Code, STT in Excel 2, Ma vat tu cu]
 # first excel sheet name
 # wb range for first sheet
-#
 from openpyxl import Workbook
 import openpyxl
 print("SAP B1 auto tool for TSAN")
+# Specify the first file, where we will add a blank column and fill values
 excel_path_suffix = "./../thong_dmvt_lo1048/file_goc/"
 file = excel_path_suffix + "PL02, PL03_VTLK (Xong theo Ebom 11 du kien)_main.xlsx"
+# Select a specific of the first excel file's sheet to work
+new_bom_sheet = "VTLK Thau"
+# (we don't handle the first info rows in the excel sheet because it's kind of time-consuming for now)
+# specify item range where the real items are available
+wb_first_row = 3
+wb_last_row = 169
+
 print("Opening excel file: " + str(file))
 new_bom_wb = openpyxl.load_workbook(file)
-# Select a specific sheet to work
-new_bom_sheet = "VTLK Thau"
+
 ws = new_bom_wb[new_bom_sheet]
 print("Working with excel sheet: " + str(ws))
 
@@ -19,9 +25,7 @@ component_code_list = []
 # iterate every row in column variable
 i = 1
 # limit to the rows where Component code are available 
-# (we don't handle the first info rows in the excel sheet because it's kind of time-consuming for now)
-wb_first_row = 3
-wb_last_row = 169
+
 for row in ws.iter_rows("H"):
     for cell in row:
         # note that some cases we must manually link in order to complete an Excel sheet. 
@@ -30,13 +34,13 @@ for row in ws.iter_rows("H"):
         i = i+1
 print("There're total of " + str(wb_last_row-wb_first_row+1) + " component to be map the new SAP B1 component code")
 # print the list contain all ma nxs to map to target file along with its row index in previous file to Danh muc vat tu LINH KIEN.xlsx
-
+# specify the second excel file
 file1 = excel_path_suffix + "Danh muc vat tu LINH KIEN.xlsx"
-component_code_scanned_row_index = 1
 print("Opening excel file: " + str(file1))
 wb1 = openpyxl.load_workbook(file1, read_only=True)
 ws1 = wb1.active
 print("Working with excel sheet: " + str(wb1.sheetnames[0]))
+component_code_scanned_row_index = 1
 # search each item in component_code_list in every row of column C (Ky ma hieu) in `Danh muc vat tu LINH KIEN.xlsx`
 # counter the number of original component to be searched
 component_code_cnt = 0
@@ -102,13 +106,6 @@ for item in list_has_foreign_name:
         for cell in row:
             if cell.value == item[3]:
                 old_sap_code_match_in_loop_cnt = old_sap_code_match_in_loop_cnt + 1
-                #print(item[0])
-                #print("Component code (Ma NXS1): " + str(item[1]))
-                # print(item[2])
-                # print("Foreign Name (Ma cu): " + str(item[3]))
-                # print(nsx_code_match_row_index)
-                # print("Item No. (Ma moi): " + str(ws2.cell(None, nsx_code_match_row_index, 2).value))
-                #print("Process component: " + str(match_by_oldsapcode_cnt) + " / " + str(len(list_has_foreign_name)))
                 match_by_oldsapcode_indices.append(nsx_code_match_row_index)
                 # only consider the first match
                 if old_sap_code_match_in_loop_cnt == 1:
@@ -133,8 +130,6 @@ for item in list_has_foreign_name:
         print("Detect " + str(old_sap_code_match_in_loop_cnt) + " matching in second file With these row with following indices: ")
         print(match_by_oldsapcode_indices)
         match_by_oldsapcode_indices = []
-        #print("Matching")
-        #print(old_sap_code_match_in_loop_cnt)
     else:
         print("Didn't detect old_sap_code_match_in_loop_cnt matching")
         print("It means that it doesn't have new sap b1 component code")
