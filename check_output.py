@@ -25,13 +25,14 @@ file0_linking_col = "D"
 # limit to the rows where Component code are available 
 # (we don't handle the first info rows in the excel sheet because it's kind of time-consuming for now)
 # in future we could use automatic function in order to detect range where they're actual items
-wb_first_row = 7
-wb_last_row = 167
+wb_first_row = 1
+wb_last_row = 163
 
 # Print information
 ws = new_bom_wb[new_bom_sheet]
 print("Opening excel file: " + str(file))
 print("Working with excel sheet: " + str(ws))
+print("Column in file 1 where link file 1 and 2: " + file0_linking_col)
 # PROGRAMMING VARIABLES
 # iterate every row in column variable
 i = 1
@@ -39,7 +40,7 @@ component_code_list = []
 for row in ws.iter_rows(file0_linking_col):
     for cell in row:
         # note that some cases we must manually link in order to complete an Excel sheet. 
-        if i>=wb_first_row and i<=wb_last_row:
+        if i >= wb_first_row and i <= wb_last_row:
             component_code_list.append([i,cell.value.strip()])
         i = i+1
 
@@ -50,12 +51,13 @@ wb2 = openpyxl.load_workbook(file2, read_only=True)
 ws2 = wb2.active
 
 # USER DEFINES
-two_and_one_col = "D"
+two_and_one_col = "B"
 old_code_col = 8
-new_code_col = 9
+new_code_col = 7
 # print
 print("Opening excel file: " + str(file2))
 print("Working with excel sheet: "+str(wb2.sheetnames[0]))
+print("Column in file 2 where link file 1 and 2: " + two_and_one_col)
 # PROGRAMMING VARIABLES
 nsx_code_match_row_index = 1
 match_by_oldsapcode_cnt = 0
@@ -67,14 +69,12 @@ def print_info_3():
     print("Processed item: " + str(process_item_cnt) + " / " + str(len(component_code_list)))
     print("STT in first file: " + str(item[0]))
     print("New ma VTTH to checked: " + str(item[1]))
-    # print("STT in second file: " + str(item[2]))
-    # print("Old SAP B1 code: " + str(item[3]))
     
 for item in component_code_list:
     print("------")
     process_item_cnt = process_item_cnt + 1
     # Write new sap code column, the column links one and second files
-    #ws.cell(row=item[0], column=new_code_col).value = item[1]
+    # ws.cell(row=item[0], column=new_code_col).value = item[1]
     for row in ws2.iter_rows(two_and_one_col):
         for cell in row:
             if cell.value == item[1].strip():
@@ -87,10 +87,11 @@ for item in component_code_list:
                     #     print("None value detected")
                     # STT in second excel, where the match happens
                     item.append(nsx_code_match_row_index)
-                    item.append(ws2.cell(None, nsx_code_match_row_index, 2).value)
+                    item.append(ws2.cell(None, nsx_code_match_row_index, 6).value)
 
-                    # Ma moi
-                    ws.cell(row=item[0], column=new_code_col).value = ws2.cell(None, nsx_code_match_row_index, 2).value
+                    # Write ma cu lay tu List of Item to first excel file
+                    ws.cell(row=item[0], column=old_code_col).value = ws2.cell(None, nsx_code_match_row_index, 6).value
+                    ws.cell(row=item[0], column=9).value = ws2.cell(None, nsx_code_match_row_index, 3).value
             nsx_code_match_row_index = nsx_code_match_row_index+1
 
     print_info_3()
@@ -105,8 +106,8 @@ for item in component_code_list:
     old_sap_code_match_in_loop_cnt = 0
     # reset the row counter for next matching loop    
     nsx_code_match_row_index = 1
-print("There are: " + str(len(list_has_foreign_name)-match_by_oldsapcode_cnt) + " component without new sap b1 code")
-
+print("There are: " + str(len(component_code_list)-match_by_oldsapcode_cnt) + " component without new sap b1 code")
+print(component_code_list)
 des_file = excel_path_suffix +'VTCD2.xlsx'
 print("Saving the file to location: " + str(des_file))
 new_bom_wb.save(filename = des_file)
