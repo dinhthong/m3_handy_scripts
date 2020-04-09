@@ -2,6 +2,7 @@
 # This program double checks the output Excel file and list of items in the database. Make sure that no mistakes were made
 
 # https://stackoverflow.com/questions/51800122/using-openpyxl-to-find-rows-that-contain-cell-with-specific-value-python-3-6/51801421
+# https://www.geeksforgeeks.org/print-colors-python-terminal/
 # component_code_list = [STT in Excel 1, Component Code, STT in Excel 2, Ma vat tu cu]
 # first excel sheet name
 # wb range for first sheet
@@ -9,7 +10,18 @@
 from openpyxl import Workbook
 import openpyxl
 
-print("Check output SAP B1 auto tool for TSAN")
+# Python program to print 
+# colored text and background 
+def prRed(skk): print("\033[91m {}\033[00m" .format(skk)) 
+def prGreen(skk): print("\033[92m {}\033[00m" .format(skk)) 
+def prYellow(skk): print("\033[93m {}\033[00m" .format(skk)) 
+def prLightPurple(skk): print("\033[94m {}\033[00m" .format(skk)) 
+def prPurple(skk): print("\033[95m {}\033[00m" .format(skk)) 
+def prCyan(skk): print("\033[96m {}\033[00m" .format(skk)) 
+def prLightGray(skk): print("\033[97m {}\033[00m" .format(skk)) 
+def prBlack(skk): print("\033[98m {}\033[00m" .format(skk)) 
+
+prRed("Check output SAP B1 auto tool for TSAN")
 
 # FIRST EXCEL FILE
 excel_path_suffix = "./../thong_dmvt_lo1048/file_goc/"
@@ -30,9 +42,9 @@ wb_last_row = 31
 
 # Print information
 ws = new_bom_wb[new_bom_sheet]
-print("Opening excel file: " + str(file))
-print("Working with excel sheet: " + str(ws))
-print("Column in file 1 where link file 1 and 2: " + file0_linking_col)
+prGreen("Opening excel file: " + str(file))
+prGreen("Working with excel sheet: " + str(ws))
+prGreen("Column in file 1 where link file 1 and 2: " + file0_linking_col)
 # PROGRAMMING VARIABLES
 # iterate every row in column variable
 i = 1
@@ -55,9 +67,9 @@ two_and_one_col = "B"
 old_code_col = 13
 new_code_col = 7
 # print
-print("Opening excel file: " + str(file2))
-print("Working with excel sheet: "+str(wb2.sheetnames[0]))
-print("Column in file 2 where link file 1 and 2: " + two_and_one_col)
+prGreen("Opening excel file: " + str(file2))
+prGreen("Working with excel sheet: "+str(wb2.sheetnames[0]))
+prGreen("Column in file 2 where link file 1 and 2: " + two_and_one_col)
 # PROGRAMMING VARIABLES
 nsx_code_match_row_index = 1
 match_by_oldsapcode_cnt = 0
@@ -71,7 +83,7 @@ def print_info_3():
     print("New ma VTTH to checked: " + str(item[1]))
     
 for item in component_code_list:
-    print("------")
+    prRed("----------------------")
     process_item_cnt = process_item_cnt + 1
     # Write new sap code column, the column links one and second files
     # ws.cell(row=item[0], column=new_code_col).value = item[1]
