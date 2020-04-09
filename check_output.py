@@ -19,14 +19,14 @@ new_bom_wb = openpyxl.load_workbook(file)
 
 # USER DEFINES
 # Select a specific sheet to work
-new_bom_sheet = "VTLK Thau"
+new_bom_sheet = "Vat tu chi dinh"
 # Select the linking column between file 1 and file 2
-file0_linking_col = "D"
+file0_linking_col = "F"
 # limit to the rows where Component code are available 
 # (we don't handle the first info rows in the excel sheet because it's kind of time-consuming for now)
 # in future we could use automatic function in order to detect range where they're actual items
-wb_first_row = 1
-wb_last_row = 163
+wb_first_row = 7
+wb_last_row = 31
 
 # Print information
 ws = new_bom_wb[new_bom_sheet]
@@ -52,7 +52,7 @@ ws2 = wb2.active
 
 # USER DEFINES
 two_and_one_col = "B"
-old_code_col = 8
+old_code_col = 13
 new_code_col = 7
 # print
 print("Opening excel file: " + str(file2))
@@ -90,8 +90,9 @@ for item in component_code_list:
                     item.append(ws2.cell(None, nsx_code_match_row_index, 6).value)
 
                     # Write ma cu lay tu List of Item to first excel file
-                    ws.cell(row=item[0], column=old_code_col).value = ws2.cell(None, nsx_code_match_row_index, 6).value
-                    ws.cell(row=item[0], column=9).value = ws2.cell(None, nsx_code_match_row_index, 3).value
+                    ws.cell(row=item[0], column=15).value = ws2.cell(None, nsx_code_match_row_index, 6).value
+                    # Description
+                    ws.cell(row=item[0], column=16).value = ws2.cell(None, nsx_code_match_row_index, 3).value
             nsx_code_match_row_index = nsx_code_match_row_index+1
 
     print_info_3()
