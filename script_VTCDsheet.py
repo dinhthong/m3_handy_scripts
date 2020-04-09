@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 #https://stackoverflow.com/questions/51800122/using-openpyxl-to-find-rows-that-contain-cell-with-specific-value-python-3-6/51801421
 # component_code_list = [STT in Excel 1, Component Code, STT in Excel 2, Ma vat tu cu]
 # first excel sheet name
@@ -101,7 +103,7 @@ for item in component_code_list:
 
 print("------")
 print("Number of items matched by component code and have Foreign Name: " + str(component_code_cnt-none1_cnt) + " / " + str(wb_last_row-wb_first_row+1))
-nsx_code_match_row_index = 1
+
 
 # THIRD EXCEL FILE
 file2 = excel_path_suffix + "List of Items 31-03-2020.xlsx"
@@ -117,10 +119,19 @@ new_code_col = 6
 print("Opening excel file: " + str(file2))
 print("Working with excel sheet: "+str(wb2.sheetnames[0]))
 # PROGRAMMING VARIABLES
+nsx_code_match_row_index = 1
 match_by_oldsapcode_cnt = 0
 old_sap_code_match_in_loop_cnt = 0
 process_item_cnt = 0
 match_by_oldsapcode_indices = []
+
+def print_info_3():
+    print("Processed item: " + str(process_item_cnt) + " / " + str(len(list_has_foreign_name)))
+    print("STT in first file: " + str(item[0]))
+    print("Component code (Ma NXS1): " + str(item[1]))
+    print("STT in second file: " + str(item[2]))
+    print("Old SAP B1 code: " + str(item[3]))
+
 for item in list_has_foreign_name:
     print("------")
     process_item_cnt = process_item_cnt + 1
@@ -144,11 +155,7 @@ for item in list_has_foreign_name:
                     ws.cell(row=item[0], column=new_code_col).value = ws2.cell(None, nsx_code_match_row_index, 2).value
             nsx_code_match_row_index = nsx_code_match_row_index+1
 
-    print("Processed item: " + str(process_item_cnt) + " / " + str(len(list_has_foreign_name)))
-    print("STT in first file: " + str(item[0]))
-    print("Component code (Ma NXS1): " + str(item[1]))
-    print("STT in second file: " + str(item[2]))
-    print("Old SAP B1 code: " + str(item[3]))
+    print_info_3()
     if old_sap_code_match_in_loop_cnt != 0:
         print("Detect " + str(old_sap_code_match_in_loop_cnt) + " matching in second file With these row with following indices: ")
         print(match_by_oldsapcode_indices)
@@ -166,3 +173,4 @@ des_file = excel_path_suffix +'VTCD2.xlsx'
 print("Saving the file to location: " + str(des_file))
 new_bom_wb.save(filename = des_file)
 print("Finish excel mapping automation tool")
+
