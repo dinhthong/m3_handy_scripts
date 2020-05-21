@@ -25,7 +25,7 @@ prRed("Check output SAP B1 auto tool for TSAN")
 # FIRST EXCEL FILE
 excel_path_suffix = "./../banhanh_ccdc/chayscript/"
 
-file = excel_path_suffix + "1_CCDC va vat tu du phong TSAN 1048_v1.3_script.xlsx"
+file = excel_path_suffix + "1_CCDC va vat tu du phong TSAN 1048_v1.7_script.xlsx"
 new_bom_wb = openpyxl.load_workbook(file)
 
 # USER DEFINES
@@ -43,7 +43,7 @@ elif DEFINE_SHEET == 2:
 # (we don't handle the first info rows in the excel sheet because it's kind of time-consuming for now)
 # in future we could use automatic function in order to detect range where they're actual items
 if DEFINE_SHEET == 1:
-    wb_first_row = 12
+    wb_first_row = 13
     wb_last_row = 50
 elif DEFINE_SHEET == 2:
     wb_first_row = 7
@@ -65,7 +65,7 @@ for row in ws.iter_rows(file0_linking_col):
         i = i+1
 
 # SECOND EXCEL FILE
-file2 = excel_path_suffix + "List of Items_18.5.2020.xlsx"
+file2 = excel_path_suffix + "List of Items_20.5.2020.xlsx"
 
 wb2 = openpyxl.load_workbook(file2, read_only=True)
 ws2 = wb2.active
@@ -88,7 +88,7 @@ list_has_foreign_name = []
 def print_info_3():
     print("Processed item: " + str(process_item_cnt) + " / " + str(len(component_code_list)))
     print("STT in first file: " + str(item[0]))
-    print("Old ma VTTH: " + str(item[1]))
+    #print("Old ma VTTH: " + str(item[1]))
     
 # write to first original file, at the matched row
 # in "specific chosen colum" with the value of input chosen column in second file 
