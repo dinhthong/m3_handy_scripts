@@ -3,7 +3,7 @@
 from openpyxl import Workbook
 import openpyxl
 
-DEFINE_SHEET = 1
+DEFINE_SHEET = 2
 # Python program to print 
 # colored text and background 
 def prRed(skk): print("\033[91m {}\033[00m" .format(skk)) 
@@ -19,8 +19,11 @@ prRed("Check output SAP B1 auto tool for TSAN")
 
 # FIRST EXCEL FILE
 excel_path_suffix = "./../tailieu_machjig/"
+if DEFINE_SHEET == 1:
+    file = excel_path_suffix + "general_jig/General_Jig_V3.xlsx"
+elif DEFINE_SHEET == 2:
+    file = excel_path_suffix + "videoengine_jig/VIDEOENGINE_JIG_V3.xlsx"
 
-file = excel_path_suffix + "general_jig/General_Jig_V3.xlsx"
 new_bom_wb = openpyxl.load_workbook(file)
 
 # USER DEFINES
@@ -31,8 +34,8 @@ if DEFINE_SHEET == 1:
     file0_linking_col = "E"
 elif DEFINE_SHEET == 2:
     # Select a specific sheet to work
-    new_bom_sheet = "Vat tu chi dinh"
-    file0_linking_col = "F"
+    new_bom_sheet = "VIDEOENGINE_JIG_V2"
+    file0_linking_col = "C"
 
 # limit to the rows where Component code are available 
 # (we don't handle the first info rows in the excel sheet because it's kind of time-consuming for now)
@@ -41,8 +44,8 @@ if DEFINE_SHEET == 1:
     wb_first_row = 3
     wb_last_row = 97
 elif DEFINE_SHEET == 2:
-    wb_first_row = 7
-    wb_last_row = 31
+    wb_first_row = 2
+    wb_last_row = 40
 # Print information
 ws = new_bom_wb[new_bom_sheet]
 prGreen("Opening excel file: " + str(file))
@@ -67,8 +70,6 @@ ws2 = wb2.active
 
 # USER DEFINES
 two_and_one_col = "C"
-old_code_col = 13
-new_code_col = 7
 # print
 prGreen("Opening excel file: " + str(file2))
 prGreen("Working with excel sheet: "+str(wb2.sheetnames[0]))
@@ -78,13 +79,12 @@ nsx_code_match_row_index = 1
 match_by_oldsapcode_cnt = 0
 old_sap_code_match_in_loop_cnt = 0
 process_item_cnt = 0
-match_by_oldsapcode_indices = []
+match_by_partnumber_indices = []
 list_has_foreign_name = []
 def print_info_3():
     print("Processed item: " + str(process_item_cnt) + " / " + str(len(component_code_list)))
     print("STT in first file: " + str(item[0]))
-    #print("Old ma VTTH: " + str(item[1]))
-    
+    print("Part Number: " + str(item[1]))
 # write to first original file, at the matched row
 # in "specific chosen colum" with the value of input chosen column in second file 
 def write_to_excel(row_in_first_file, row_in_second_file):
@@ -95,13 +95,12 @@ def write_to_excel(row_in_first_file, row_in_second_file):
         first_column = 8
         second_column = 10
     elif DEFINE_SHEET == 2:
-        first_column = 17
+        first_column = 8
         second_column = 18
-    # Write Part Number
+    # Write SAP B1 code in ERP system
     ws.cell(row=row_in_first_file, column=first_column).value = ws2.cell(None, row_in_second_file, 2).value
-   # ws.cell(row=row_in_first_file, column=second_column).value = ws2.cell(None, row_in_second_file, 5).value
-   # ws.cell(row=row_in_first_file, column=8).value = ws2.cell(None, row_in_second_file,6).value
 
+number_of_match_morethanone = 0
 for item in component_code_list:
     prRed("----------------------")
     process_item_cnt = process_item_cnt + 1
@@ -109,9 +108,12 @@ for item in component_code_list:
     # ws.cell(row=item[0], column=new_code_col).value = item[1]
     for row in ws2.iter_rows(two_and_one_col):
         for cell in row:
+            # continue to next loop if variable is empty
+            if item[1] == "":
+                continue
             if (cell.value.find(item[1]) != -1):
                 old_sap_code_match_in_loop_cnt = old_sap_code_match_in_loop_cnt + 1
-                match_by_oldsapcode_indices.append(nsx_code_match_row_index)
+                match_by_partnumber_indices.append(nsx_code_match_row_index)
                 # only consider the first match
                 if old_sap_code_match_in_loop_cnt == 1:
                     match_by_oldsapcode_cnt = match_by_oldsapcode_cnt + 1
@@ -127,8 +129,10 @@ for item in component_code_list:
     print_info_3()
     if old_sap_code_match_in_loop_cnt != 0:
         print("Detect " + str(old_sap_code_match_in_loop_cnt) + " matching in second file With these row with following indices: ")
-        print(match_by_oldsapcode_indices)
-        match_by_oldsapcode_indices = []
+        print(match_by_partnumber_indices)
+        if len(match_by_partnumber_indices)>1:
+            number_of_match_morethanone = number_of_match_morethanone+1
+        match_by_partnumber_indices = []
     else:
         print("Didn't detect old_sap_code_match_in_loop_cnt matching")
         print("It means that it doesn't have new sap b1 component code")
@@ -138,8 +142,14 @@ for item in component_code_list:
     nsx_code_match_row_index = 1
 print("There are: " + str(len(component_code_list)-match_by_oldsapcode_cnt) + " component aren't in the ERP system")
 print(component_code_list)
-des_file = excel_path_suffix + 'BOM_jig' + '_out' + '.xlsx'
+
+if DEFINE_SHEET == 1:
+    output_unique_str = "general_jig"
+if DEFINE_SHEET == 2:
+    output_unique_str = "video_jig"
+
+des_file = excel_path_suffix + output_unique_str + '_out' + '.xlsx'
 print("Saving the file to location: " + str(des_file))
 new_bom_wb.save(filename = des_file)
 print("Finish excel mapping automation tool")
-
+print(number_of_match_morethanone)
