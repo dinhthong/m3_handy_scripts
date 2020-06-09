@@ -3,7 +3,7 @@
 from openpyxl import Workbook
 import openpyxl
 
-DEFINE_SHEET = 2
+DEFINE_SHEET = 3
 # Python program to print 
 # colored text and background 
 def prRed(skk): print("\033[91m {}\033[00m" .format(skk)) 
@@ -23,6 +23,8 @@ if DEFINE_SHEET == 1:
     file = excel_path_suffix + "general_jig/General_Jig_V3.xlsx"
 elif DEFINE_SHEET == 2:
     file = excel_path_suffix + "videoengine_jig/VIDEOENGINE_JIG_V3.xlsx"
+elif DEFINE_SHEET == 3:
+    file = excel_path_suffix + "SENSOR_BATPROTECT_CHAGER_JIG/SENSOR_BATPROTECT_CHAGER_JIG_V3.xlsx"
 
 new_bom_wb = openpyxl.load_workbook(file)
 
@@ -36,7 +38,10 @@ elif DEFINE_SHEET == 2:
     # Select a specific sheet to work
     new_bom_sheet = "VIDEOENGINE_JIG_V2"
     file0_linking_col = "C"
-
+elif DEFINE_SHEET == 3:
+    # Select a specific sheet to work
+    new_bom_sheet = "SENSOR_BATPROTECT_CHAGER_JIG_V2"
+    file0_linking_col = "C"
 # limit to the rows where Component code are available 
 # (we don't handle the first info rows in the excel sheet because it's kind of time-consuming for now)
 # in future we could use automatic function in order to detect range where they're actual items
@@ -46,6 +51,9 @@ if DEFINE_SHEET == 1:
 elif DEFINE_SHEET == 2:
     wb_first_row = 2
     wb_last_row = 40
+elif DEFINE_SHEET == 3:
+    wb_first_row = 4
+    wb_last_row = 12
 # Print information
 ws = new_bom_wb[new_bom_sheet]
 prGreen("Opening excel file: " + str(file))
@@ -97,6 +105,8 @@ def write_to_excel(row_in_first_file, row_in_second_file):
     elif DEFINE_SHEET == 2:
         first_column = 8
         second_column = 18
+    elif DEFINE_SHEET == 3:
+        first_column = 8
     # Write SAP B1 code in ERP system
     ws.cell(row=row_in_first_file, column=first_column).value = ws2.cell(None, row_in_second_file, 2).value
 
@@ -147,6 +157,8 @@ if DEFINE_SHEET == 1:
     output_unique_str = "general_jig"
 if DEFINE_SHEET == 2:
     output_unique_str = "video_jig"
+if DEFINE_SHEET == 3:
+    output_unique_str = "SENSOR_BATPROTECT_CHAGER"
 
 des_file = excel_path_suffix + output_unique_str + '_out' + '.xlsx'
 print("Saving the file to location: " + str(des_file))
