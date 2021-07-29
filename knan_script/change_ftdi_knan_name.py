@@ -20,8 +20,8 @@ extracted_ftdi = ""
 
 ftdi_length = 8
 fullpath_src_folder = ""
-
-print_debug_info = 1
+underscore_index_list = []
+allow_print_debug_info = 1
 #https://stackoverflow.com/questions/4664850/how-to-find-all-occurrences-of-a-substring
 def find(s, ch):
     return [i for i, ltr in enumerate(s) if ltr == ch]
@@ -38,7 +38,7 @@ def print_ok(s):
 	print(bcolors.OKCYAN + s + bcolors.ENDC)
 
 def print_debug(s):
-	if print_debug_info==1:
+	if allow_print_debug_info==1:
 		print(bcolors.OKBLUE + "Db: " + s + bcolors.ENDC)
 
 def check_and_change_nucfolder_name(do_change_flag):
@@ -110,22 +110,53 @@ def get_full_ftdi_from_file_name(file_name):
 # -20, -10, 0,...
 temp_file_check = array('B', [0, 0, 0, 0, 0, 0, 0, 0, 0])
 
-def check_file_size(_file_name):
-	file_fullpath = fullpath_src_folder+'/'+_file_name
+def get_file_size(_file_name):
+	file_fullpath = fullpath_src_folder + '/' + _file_name
 	print_debug(file_fullpath)
-	if _file_name.find(".bin")!=-1:
+	if os.path.exists(file_fullpath)==True:
 		file_size = os.path.getsize(file_fullpath)
-		print_debug(str(file_size))
+		print_debug("File size = " + str(file_size))
+		return file_size
+tepm_file_size = 157286400
+def check_file_name_and_size(_fname, _fsize):
+	print_debug("check_file_name_and_size")
+	if _fname.find(".bin") != -1:
+		underscore_index_list = find(_fname, "_")
+		if len(underscore_index_list)==2:
+			if _fsize==tepm_file_size:
+				print_ok("Temperature file ok")
+				return 1
+			else:
+				print_fail("Temperature file NOT ok")
+		else:
+			print("output file")
+			return 2
+	elif _fname.find(".txt"):
+		print("Log file detected")
+		return 3
 
-def check_file_name_and_size(_folder_content_ls):
+temp_file_count = 0
+generated_file_count = 0
+log_file_count = 0
+
+def get_ftdi_and_check_all_files(_folder_content_ls):
 	done_get_ftdi_flag = 0
+	global temp_file_count
+	global generated_file_count
+	global log_file_count
 	for tb_file in _folder_content_ls:
+		file_type = -1
 		if done_get_ftdi_flag == 0 and get_full_ftdi_from_file_name(tb_file) == 1:
 			done_get_ftdi_flag = 1
 		if done_get_ftdi_flag == 1:
-			check_file_size(tb_file)
+			file_type = check_file_name_and_size(tb_file, get_file_size(tb_file))
+			if file_type==1:
+				temp_file_count = temp_file_count + 1
+			elif file_type==2:
+				generated_file_count = generated_file_count + 1
+			#elif file_type==3:
 
-def check_file_count(file_count, folder_content_ls):
+def check_file_count(file_count):
 	print("File count: " + str(file_count))
 	if file_count == 0:
 		print_fail("Folder empty!")
@@ -134,25 +165,26 @@ def check_file_count(file_count, folder_content_ls):
 			print_ok("File count ok")
 		else:
 			print_fail("File count error")
-		check_file_name_and_size(folder_content_ls)
-
+		
 def check_complete_nuc_folder():
 	global fullpath_src_folder
 	count = 1
 	for folder_name in files:
 		print_header("***STT: " + str(count))
 		count = count + 1
-		fullpath_src_folder = path+'/'+folder_name
+		fullpath_src_folder = path + '/' + folder_name
 		print(fullpath_src_folder)
 		# all files and folder in fullpath_src_folder
 		src_folder_ls = os.listdir(fullpath_src_folder)
 		src_folder_ls_count = len(src_folder_ls)
-		check_file_count(src_folder_ls_count, src_folder_ls)
+		check_file_count(src_folder_ls_count)
+		if src_folder_ls_count>0:
+			get_ftdi_and_check_all_files(src_folder_ls)
 		print_header("--------------------------------------------------------------------------------------------")
 	
 def main():
 	print("Hello World!")
-	check_and_change_nucfolder_name(0)
-	#check_complete_nuc_folder()
+	#check_and_change_nucfolder_name(0)
+	check_complete_nuc_folder()
 if __name__ == "__main__":
     main()
