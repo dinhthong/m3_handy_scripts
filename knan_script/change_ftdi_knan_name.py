@@ -1,7 +1,7 @@
 # todo: Check folder content
 import os
 import sys
-
+from array import *
 class bcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
@@ -16,8 +16,12 @@ class bcolors:
 #path = '/mnt/e/du lieu nuc knan '
 path = '/mnt/d/Dulieu_NUC_KNAN/HDD_1TB_29July21'
 files = os.listdir(path)
-ftdi_length = 8
+extracted_ftdi = ""
 
+ftdi_length = 8
+fullpath_src_folder = ""
+
+print_debug_info = 1
 #https://stackoverflow.com/questions/4664850/how-to-find-all-occurrences-of-a-substring
 def find(s, ch):
     return [i for i, ltr in enumerate(s) if ltr == ch]
@@ -31,9 +35,11 @@ def print_warning(s):
 def print_fail(s):
 	print(bcolors.FAIL + s + bcolors.ENDC)
 def print_ok(s):
-	print(bcolors.OKBLUE + s + bcolors.ENDC)
+	print(bcolors.OKCYAN + s + bcolors.ENDC)
 
-fullpath_src_folder = ""
+def print_debug(s):
+	if print_debug_info==1:
+		print(bcolors.OKBLUE + "Db: " + s + bcolors.ENDC)
 
 def check_and_change_nucfolder_name(do_change_flag):
 	global fullpath_src_folder
@@ -94,8 +100,8 @@ def check_and_change_nucfolder_name(do_change_flag):
 		else:
 			print_fail("None valid FTDI file is found")
 
+
 # The file can be Log_FTDI.txt or matlab file
-extracted_ftdi = ""
 def get_full_ftdi_from_file_name(file_name):
 	global extracted_ftdi
 	ft_first_index = file_name.find("FT")
@@ -107,15 +113,25 @@ def get_full_ftdi_from_file_name(file_name):
 		print_fail("No FTDI string in file is found!, Please check folder content!")
 		return 0
 
+# -20, -10, 0,...
+temp_file_check = array('B', [0, 0, 0, 0, 0, 0, 0, 0, 0])
+
+def check_file_size(_file_name):
+	file_fullpath = fullpath_src_folder+'/'+_file_name
+	print_debug(file_fullpath)
+	if _file_name.find(".bin")!=-1:
+		file_size = os.path.getsize(file_fullpath)
+		print_debug(str(file_size))
+
 def check_file_name_and_size(_folder_content_ls):
-	global fullpath_src_folder
-	global extracted_ftdi
+	#extracted_ftdi
 	done_get_ftdi_flag = 0
 	for tb_file in _folder_content_ls:
 		if done_get_ftdi_flag == 0 and get_full_ftdi_from_file_name(tb_file) == 1:
 			done_get_ftdi_flag = 1
 			print("FTDI extracted from file name: " + extracted_ftdi)
-
+		if done_get_ftdi_flag == 1:
+			check_file_size(tb_file)
 
 def check_file_count(file_count, folder_content_ls):
 	print("File count: " + str(file_count))
@@ -140,8 +156,6 @@ def check_complete_nuc_folder():
 		src_folder_ls = os.listdir(fullpath_src_folder)
 		src_folder_ls_count = len(src_folder_ls)
 		check_file_count(src_folder_ls_count, src_folder_ls)
-
-
 
 def main():
 	print("Hello World!")
