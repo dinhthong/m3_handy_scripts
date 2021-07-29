@@ -94,16 +94,28 @@ def check_and_change_nucfolder_name(do_change_flag):
 		else:
 			print_fail("None valid FTDI file is found")
 
+# The file can be Log_FTDI.txt or matlab file
+extracted_ftdi = ""
+def get_full_ftdi_from_file_name(file_name):
+	global extracted_ftdi
+	ft_first_index = file_name.find("FT")
+	if ft_first_index>=0:
+		extracted_ftdi = file_name[ft_first_index:ft_first_index+ftdi_length]
+		return 1
+	else:
+		extracted_ftdi = ""
+		print_fail("No FTDI string in file is found!, Please check folder content!")
+		return 0
+
 def check_file_name_and_size(_folder_content_ls):
 	global fullpath_src_folder
+	global extracted_ftdi
+	done_get_ftdi_flag = 0
 	for tb_file in _folder_content_ls:
-		# if first char of tb_file is F -> get FTDI then break for loop
-		if tb_file[0] == 'F':
-			valid_ftdi_flag = 1
-			ftdi_str = tb_file[0:ftdi_length]
-			print(ftdi_str)
-			# break for tb_file in folder_content_ls:
-			break
+		if done_get_ftdi_flag == 0 and get_full_ftdi_from_file_name(tb_file) == 1:
+			done_get_ftdi_flag = 1
+			print("FTDI extracted from file name: " + extracted_ftdi)
+
 
 def check_file_count(file_count, folder_content_ls):
 	print("File count: " + str(file_count))
