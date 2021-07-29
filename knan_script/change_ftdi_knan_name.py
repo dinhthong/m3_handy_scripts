@@ -40,7 +40,8 @@ def print_ok(s):
 def print_debug(s):
 	if allow_print_debug_info==1:
 		print(bcolors.OKBLUE + "Db: " + s + bcolors.ENDC)
-
+# print to screen if all checks are ok
+item_info_sring = ""
 def check_and_change_nucfolder_name(do_change_flag):
 	global fullpath_src_folder
 	global extracted_ftdi
@@ -192,8 +193,19 @@ def check_file_count(file_count):
 	else:
 		if file_count == 15:
 			print_ok("File count ok")
+			add_item_info_string("File count ok")
 		else:
 			print_fail("File count error")
+			add_item_info_string("File count error")
+
+
+def add_item_info_string(s):
+	global item_info_sring
+	item_info_sring = item_info_sring + s + "\n"
+
+def add_item_info_string_fail(s):
+	global item_info_sring
+	item_info_sring = item_info_sring + bcolors.WARNING + s + bcolors.ENDC + "\n"
 
 def check_complete_nuc_folder():
 	global fullpath_src_folder
@@ -201,16 +213,19 @@ def check_complete_nuc_folder():
 	count = 1
 	root_folder_ls_list = os.listdir(path)
 	for each_item_folder_name in root_folder_ls_list:
+		item_info_sring = ""
 		print_header("***STT: " + str(count))
 		count = count + 1
 		fullpath_src_folder = path + '/' + each_item_folder_name
 		print(fullpath_src_folder)
+		add_item_info_string("Folder full path: " + fullpath_src_folder) 
 		# all root_folder_ls_list and folder in fullpath_src_folder
 		each_item_folder_ls_list = os.listdir(fullpath_src_folder)
 		each_item_folder_file_count = len(each_item_folder_ls_list)
 		check_file_count(each_item_folder_file_count)
 		if each_item_folder_file_count>0:
 			get_ftdi_and_check_all_files()
+		print(item_info_sring)
 		print_header("--------------------------------------------------------------------------------------------")
 	
 def main():
