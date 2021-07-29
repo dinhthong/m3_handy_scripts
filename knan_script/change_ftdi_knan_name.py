@@ -43,6 +43,7 @@ def print_debug(s):
 
 def check_and_change_nucfolder_name(do_change_flag):
 	global fullpath_src_folder
+	global extracted_ftdi
 	count = 1
 	for folder_name in files:
 		valid_ftdi_flag = 0
@@ -51,40 +52,34 @@ def check_and_change_nucfolder_name(do_change_flag):
 		count = count + 1
 		#print(folder_name)
 		fullpath_src_folder = path+'/'+folder_name
-		print(fullpath_src_folder)
+		print("Full path: " + fullpath_src_folder)
 		# all files and folder in fullpath_src_folder
 		src_folder_ls = os.listdir(fullpath_src_folder)
 		underscore_index_list = find(folder_name, "_")
 		underscore_count = len(underscore_index_list)
 		for tb_file in src_folder_ls:
-			# if first char of tb_file is F -> get the name then break for loop
-			if tb_file[0] == 'F':
-				valid_ftdi_flag = 1
-				ftdi_str = tb_file[0:ftdi_length]
-				# get full FTDI name
-				print(ftdi_str)
+			valid_ftdi_flag = get_full_ftdi_from_file_name(tb_file)
+			if valid_ftdi_flag == 1:
 				break
-
 		# check if folder name is already good
-
 		if valid_ftdi_flag == 1:
 			if underscore_count == 0:
 				# continue the for loop for this folder_name
 				print_fail("Discard this for loop as no underscore found")
 				continue
 			if underscore_count == 1:
-				new_folder_name = folder_name[0:underscore_index_list[0]+1]+ftdi_str
+				new_folder_name = folder_name[0:underscore_index_list[0]+1]+extracted_ftdi
 				if (len(folder_name[underscore_index_list[0]:]) == ftdi_length+1):
 					good_name_flag = 1
 			if underscore_count >= 2:
 				if (underscore_index_list[1]-underscore_index_list[0] == ftdi_length+1):
 					good_name_flag = 1
-				new_folder_name = folder_name[0:underscore_index_list[0]+1]+ftdi_str+folder_name[underscore_index_list[1]:]
+				new_folder_name = folder_name[0:underscore_index_list[0]+1]+extracted_ftdi+folder_name[underscore_index_list[1]:]
 			if good_name_flag==1:
-				print("Discard this as the folder_name is already OK")
+				print_ok("Discard this as the folder_name is already OK")
 				continue
 			new_fullpath_folder_name = path+'/'+new_folder_name
-			print("fullpath_src_folder: "+ fullpath_src_folder + "; new_fullpath_folder_name: " +new_fullpath_folder_name)
+			print("fullpath_src_folder: "+ fullpath_src_folder + "; new_fullpath_folder_name: " + new_fullpath_folder_name)
 
 			# start rename
 			if do_change_flag == 1:
@@ -93,8 +88,6 @@ def check_and_change_nucfolder_name(do_change_flag):
 					print("Folder name changed sucessfully")
 				except OSError:
 					print_fail("Error!")
-					#os.remove(newName)
-					#os.rename(f, newName)
 			else:
 				print("Folder name isn't change")
 		else:
@@ -107,6 +100,7 @@ def get_full_ftdi_from_file_name(file_name):
 	ft_first_index = file_name.find("FT")
 	if ft_first_index>=0:
 		extracted_ftdi = file_name[ft_first_index:ft_first_index+ftdi_length]
+		print_ok("FTDI: "+ extracted_ftdi)
 		return 1
 	else:
 		extracted_ftdi = ""
@@ -124,12 +118,10 @@ def check_file_size(_file_name):
 		print_debug(str(file_size))
 
 def check_file_name_and_size(_folder_content_ls):
-	#extracted_ftdi
 	done_get_ftdi_flag = 0
 	for tb_file in _folder_content_ls:
 		if done_get_ftdi_flag == 0 and get_full_ftdi_from_file_name(tb_file) == 1:
 			done_get_ftdi_flag = 1
-			print("FTDI extracted from file name: " + extracted_ftdi)
 		if done_get_ftdi_flag == 1:
 			check_file_size(tb_file)
 
@@ -156,10 +148,11 @@ def check_complete_nuc_folder():
 		src_folder_ls = os.listdir(fullpath_src_folder)
 		src_folder_ls_count = len(src_folder_ls)
 		check_file_count(src_folder_ls_count, src_folder_ls)
-
+		print_header("--------------------------------------------------------------------------------------------")
+	
 def main():
 	print("Hello World!")
-	#check_and_change_nucfolder_name(0)
-	check_complete_nuc_folder()
+	check_and_change_nucfolder_name(0)
+	#check_complete_nuc_folder()
 if __name__ == "__main__":
     main()
