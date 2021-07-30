@@ -5,8 +5,7 @@ from array import *
 from utils import *
 import json
 
-from datetime import date
-from datetime import datetime
+
 
 
 
@@ -261,7 +260,7 @@ def check_complete_nuc_folder():
 		if each_item_folder_file_count>0:
 			get_ftdi_and_check_all_files()
 		print(item_info_sring)
-		aDict = [{"stt": count, "ma_thiet_bi": "place_holder", "ftdi_name": extracted_ftdi, "files_check_status": check_folder_content_ok_flag}]
+		aDict = [{"stt": count, "foder_name": each_item_folder_name, "ma_thiet_bi": "place_holder", "ftdi_name": extracted_ftdi, "files_check_status": check_folder_content_ok_flag}]
 		jsonString = json.dumps(aDict, indent=2, separators=(',', ': '))
 		#jsonString = json.dumps(aDict)
 		jsonFile.write(jsonString)
@@ -269,22 +268,13 @@ def check_complete_nuc_folder():
 		print_header("--------------------------------------------------------------------------------------------")
 	jsonFile.close()
 
-def get_new_json_file_name():
-	global json_file_name
-	now = date.today()
-	current_date = now.strftime("%Y_%m_%d")
-	print("Today's date:", current_date)
-	now = datetime.now()
-	current_time = now.strftime("%H_%M_%S")
-	print("Current Time =", current_time)
-	date_time_str = current_date+"T"+current_time
-	print(date_time_str)
-	json_file_name = "nucfolderlog_"+date_time_str+".json"
+
 def main():
 	print("Hello World!")
-
+	global json_file_name
 	#filePath = '/home/somedir/Documents/python/logs'
-	get_new_json_file_name()
+	get_datetime_string()
+	json_file_name = "log_"+get_datetime_string()+".json"
 	if os.path.exists(json_file_name):
 		os.remove(json_file_name)
 		print_ok("Delete the file ok")

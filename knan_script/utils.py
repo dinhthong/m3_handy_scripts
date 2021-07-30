@@ -2,6 +2,8 @@
 import os
 import sys
 from array import *
+from datetime import date
+from datetime import datetime
 class bcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
@@ -27,3 +29,14 @@ def print_fail(s):
 	print(bcolors.FAIL + s + bcolors.ENDC)
 def print_ok(s):
 	print(bcolors.OKCYAN + s + bcolors.ENDC)
+
+def get_datetime_string():
+	now = date.today()
+	current_date = now.strftime("%Y_%m_%d")
+	#print_debug("Today's date:", current_date)
+	now = datetime.now()
+	current_time = now.strftime("%H_%M_%S")
+	#print("Current Time =", current_time)
+	date_time_str = current_date+"T"+current_time
+	#print(date_time_str)
+	return date_time_str
