@@ -5,15 +5,17 @@ from array import *
 from utils import *
 import json
 
-
-
-
-
 # define constant
 c_ftdi_length = 8
 c_temperatire_file_size = 157286400
-#path = '/mnt/e/du lieu nuc knan '
-path = '/mnt/d/Dulieu_NUC_KNAN/HDD_1TB_29July21'
+c_machine_type = 1 # 0 for ubuntu (windows subsystem for windows), 1 for windows
+
+if c_machine_type == 0:
+	#g_folder_path = '/mnt/e/du lieu nuc knan '
+	g_folder_path = '/mnt/d/Dulieu_NUC_KNAN/HDD_1TB_29July21'
+else:
+	g_folder_path = "D:\Dulieu_NUC_KNAN\HDD_1TB_29July21"
+
 # global vars
 extracted_ftdi = ""
 fullpath_src_folder = ""
@@ -31,15 +33,15 @@ def check_and_change_nucfolder_name():
 	global fullpath_src_folder
 	global extracted_ftdi
 	count = 1
-	root_folder_ls_list = os.listdir(path)
+	root_folder_ls_list = os.listdir(g_folder_path)
 	for each_item_folder_name in root_folder_ls_list:
 		valid_ftdi_flag = 0
 		good_name_flag = 0
 		print_header("***STT: " + str(count))
 		count = count + 1
 		#print(each_item_folder_name)
-		fullpath_src_folder = path+'/'+each_item_folder_name
-		print("Full path: " + fullpath_src_folder)
+		fullpath_src_folder = g_folder_path+'/'+each_item_folder_name
+		print("Full g_folder_path: " + fullpath_src_folder)
 		# all root_folder_ls_list and folder in fullpath_src_folder
 		src_folder_ls = os.listdir(fullpath_src_folder)
 		underscore_index_list = find(each_item_folder_name, "_")
@@ -65,7 +67,7 @@ def check_and_change_nucfolder_name():
 			if good_name_flag==1:
 				print_ok("Discard this as the each_item_folder_name is already OK")
 				continue
-			new_fullpath_folder_name = path+'/'+new_folder_name
+			new_fullpath_folder_name = g_folder_path+'/'+new_folder_name
 			print("fullpath_src_folder: "+ fullpath_src_folder + "; new_fullpath_folder_name: " + new_fullpath_folder_name)
 
 			# start rename
@@ -244,15 +246,15 @@ def check_complete_nuc_folder():
 	global each_item_folder_ls_list
 	global extracted_ftdi
 	count = 1
-	root_folder_ls_list = os.listdir(path)
+	root_folder_ls_list = os.listdir(g_folder_path)
 	jsonFile = open(json_file_name, "w")
 	for each_item_folder_name in root_folder_ls_list:
 		item_info_sring = ""
 		print_header("***STT: " + str(count))
 		count = count + 1
-		fullpath_src_folder = path + '/' + each_item_folder_name
+		fullpath_src_folder = g_folder_path + '/' + each_item_folder_name
 		print(fullpath_src_folder)
-		add_item_info_string("Folder full path: " + fullpath_src_folder) 
+		add_item_info_string("Folder full g_folder_path: " + fullpath_src_folder) 
 		# all root_folder_ls_list and folder in fullpath_src_folder
 		each_item_folder_ls_list = os.listdir(fullpath_src_folder)
 		each_item_folder_file_count = len(each_item_folder_ls_list)
@@ -267,7 +269,6 @@ def check_complete_nuc_folder():
 		
 		print_header("--------------------------------------------------------------------------------------------")
 	jsonFile.close()
-
 
 def main():
 	print("Hello World!")
@@ -284,6 +285,9 @@ def main():
 		f.close()
 	#check_and_change_nucfolder_name()
 	check_complete_nuc_folder()
+	readjsonfile = open(json_file_name, "r")
+	jsondata = json.load(readjsonfile)
+	print(jsondata)
 
 if __name__ == "__main__":
     main()
