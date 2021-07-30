@@ -2,44 +2,23 @@
 import os
 import sys
 from array import *
-class bcolors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKCYAN = '\033[96m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-
+from utils import *
+# define constant
+c_ftdi_length = 8
+c_temperatire_file_size = 157286400
 #path = '/mnt/e/du lieu nuc knan '
 path = '/mnt/d/Dulieu_NUC_KNAN/HDD_1TB_29July21'
 
 extracted_ftdi = ""
-
-ftdi_length = 8
 fullpath_src_folder = ""
 underscore_index_list = []
 allow_print_debug_info = 1
 #https://stackoverflow.com/questions/4664850/how-to-find-all-occurrences-of-a-substring
-def find(s, ch):
-    return [i for i, ltr in enumerate(s) if ltr == ch]
-
-def print_header(s):
-	print(bcolors.HEADER + s + bcolors.ENDC)
-
-def print_warning(s):
-	print(bcolors.WARNING + s + bcolors.ENDC)
-
-def print_fail(s):
-	print(bcolors.FAIL + s + bcolors.ENDC)
-def print_ok(s):
-	print(bcolors.OKCYAN + s + bcolors.ENDC)
 
 def print_debug(s):
 	if allow_print_debug_info==1:
 		print(bcolors.OKBLUE + "Db: " + s + bcolors.ENDC)
+
 # print to screen if all checks are ok
 item_info_sring = ""
 def check_and_change_nucfolder_name(do_change_flag):
@@ -71,10 +50,10 @@ def check_and_change_nucfolder_name(do_change_flag):
 				continue
 			if underscore_count == 1:
 				new_folder_name = each_item_folder_name[0:underscore_index_list[0]+1]+extracted_ftdi
-				if (len(each_item_folder_name[underscore_index_list[0]:]) == ftdi_length+1):
+				if (len(each_item_folder_name[underscore_index_list[0]:]) == c_ftdi_length+1):
 					good_name_flag = 1
 			if underscore_count >= 2:
-				if (underscore_index_list[1]-underscore_index_list[0] == ftdi_length+1):
+				if (underscore_index_list[1]-underscore_index_list[0] == c_ftdi_length+1):
 					good_name_flag = 1
 				new_folder_name = each_item_folder_name[0:underscore_index_list[0]+1]+extracted_ftdi+each_item_folder_name[underscore_index_list[1]:]
 			if good_name_flag==1:
@@ -100,7 +79,7 @@ def get_full_ftdi_from_file_name(file_name):
 	global extracted_ftdi
 	ft_first_index = file_name.find("FT")
 	if ft_first_index>=0:
-		extracted_ftdi = file_name[ft_first_index:ft_first_index+ftdi_length]
+		extracted_ftdi = file_name[ft_first_index:ft_first_index+c_ftdi_length]
 		print_ok("FTDI: "+ extracted_ftdi)
 		return 1
 	else:
@@ -119,16 +98,16 @@ def get_file_size(_file_name):
 		print_debug("File size = " + str(file_size))
 		return file_size
 
-tepm_file_size = 157286400
+
 def check_file_name_and_size(_fname, _fsize):
 	if _fname.find(".bin") != -1:
 		underscore_index_list = find(_fname, "_")
 		if len(underscore_index_list)==2:
-			if _fsize==tepm_file_size:
-				print_ok("Temperature file ok")
+			if _fsize==c_temperatire_file_size:
+				print_ok("Temperature file size ok")
 				return 1
 			else:
-				print_fail("Temperature file NOT ok")
+				print_fail("Temperature file size NOT ok")
 		else:
 			print("output file")
 			return 2
@@ -186,6 +165,7 @@ def get_ftdi_and_check_all_files():
 			elif file_type==3:
 				ok_log_file_count = ok_log_file_count + 1
 	print_check_file_content_message()
+	
 def check_file_count(file_count):
 	print("File count: " + str(file_count))
 	if file_count == 0:
@@ -197,7 +177,6 @@ def check_file_count(file_count):
 		else:
 			print_fail("File count error")
 			add_item_info_string("File count error")
-
 
 def add_item_info_string(s):
 	global item_info_sring
