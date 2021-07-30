@@ -3,11 +3,17 @@ from tkinter import *
 import tkinter as tk
 from  change_ftdi_knan_name import *
 from tkinter import filedialog
-table_name ="main"
-displayed_columns="id, device, pcb_main, c_sensor ,c_oled, note"
+
+c_machine_type = 1 # 0 for ubuntu (windows subsystem for windows), 1 for windows
+
+if c_machine_type == 0:
+	#_filename = '/mnt/e/du lieu nuc knan '
+	_filename = '/mnt/d/Dulieu_NUC_KNAN/HDD_1TB_29July21'
+else:
+	_filename = "D:\Dulieu_NUC_KNAN\HDD_1TB_29July21"
+
 global cursor
 
-selected_id=""
 # This function should be improved later:
 # main -> table variable
 # number of input vars is automatically read from table 
@@ -39,9 +45,6 @@ def brow_folder_cb():
     dir_q.set(file_path_variable)
     ent2.pack()
 
-def getrow(event):
-    global selected_id
-
 def search_for_file_path ():
     currdir = os.getcwd()
     tempdir = filedialog.askdirectory(parent=root, initialdir=currdir, title='Please select a directory')
@@ -50,7 +53,7 @@ def search_for_file_path ():
     return tempdir
 
 wrapper0 = LabelFrame(root, text="Login")
-wrapper1 = LabelFrame(root, text=table_name)
+wrapper1 = LabelFrame(root, text="main")
 wrapper2 = LabelFrame(root, text="User action")
 wrapper3 = LabelFrame (root, text="Customer Data")
 
@@ -58,9 +61,6 @@ wrapper0.pack(fill="both", expand="yes", padx=20, pady=10)
 wrapper1.pack(fill="both", expand="yes", padx=20, pady=10)
 wrapper2.pack(fill="both", expand="yes", padx=20, pady=10)
 wrapper3.pack(fill="both", expand="yes", padx=20, pady=10)
-
-query = "SELECT "+displayed_columns+" from "+table_name
-
 
 lblfrstrow = tk.Label(wrapper0, text ="Username -", )
 lblfrstrow.place(x = 50, y = 20)
@@ -109,13 +109,21 @@ ent2.pack(side=tk.LEFT, padx=6)
 # create new record wrapper
 # https://www.kite.com/python/answers/how-to-make-an-array-of-strings-in-python
 
+def btn_main_check_complete_nuc_folder():
+    print(dir_q.get())
+    main_check_complete_nuc_folder(dir_q.get())
+
+def btn_main_check_and_change_nucfolder_name():
+    print(dir_q.get())
+    main_check_and_change_nucfolder_name(dir_q.get())
+
 addrecordButton = tk.Button(wrapper3, text ="CHECK_NUC_FOLDER", 
-                       bg ='blue', command = main_check_complete_nuc_folder)
+                       bg ='blue', command = btn_main_check_complete_nuc_folder)
 
 addrecordButton.grid(row = 2, column=0, pady = 20)
 
 updateButton = tk.Button(wrapper3, text ="CHANGE_NAME", 
-                       bg ='blue', command = main_check_and_change_nucfolder_name)
+                       bg ='blue', command = btn_main_check_and_change_nucfolder_name)
 
 updateButton.grid(row = 3, column=0, pady = 20)
 
