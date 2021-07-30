@@ -3,6 +3,7 @@ import os
 import sys
 from array import *
 from utils import *
+import json
 # define constant
 c_ftdi_length = 8
 c_temperatire_file_size = 157286400
@@ -12,9 +13,8 @@ path = '/mnt/d/Dulieu_NUC_KNAN/HDD_1TB_29July21'
 extracted_ftdi = ""
 fullpath_src_folder = ""
 underscore_index_list = []
-allow_print_debug_info = 1
+allow_print_debug_info = 0
 g_allow_rename = 1
-#https://stackoverflow.com/questions/4664850/how-to-find-all-occurrences-of-a-substring
 
 def print_debug(s):
 	if allow_print_debug_info==1:
@@ -172,15 +172,14 @@ def append_checkmsg_to_folder_name(st):
 	new_folder_name = remove_original_msg()
 	end_str = "#"
 	if st == 0:
-		end_str = end_str + "OK"
+		end_str = end_str + "fcOK"
 	else:
-		end_str = end_str + "F"
+		end_str = end_str + "fcF"
 	# start rename
 	if new_folder_name=="":
 		rename_folder(fullpath_src_folder, fullpath_src_folder+end_str)
 	else:
 		rename_folder(new_folder_name, new_folder_name+end_str)
-
 
 each_item_folder_ls_list = []
 
@@ -229,11 +228,14 @@ def add_item_info_string_fail(s):
 	global item_info_sring
 	item_info_sring = item_info_sring + bcolors.WARNING + s + bcolors.ENDC + "\n"
 
+json_file_name = "data.json"
 def check_complete_nuc_folder():
 	global fullpath_src_folder
 	global each_item_folder_ls_list
+	global extracted_ftdi
 	count = 1
 	root_folder_ls_list = os.listdir(path)
+	jsonFile = open(json_file_name, "w")
 	for each_item_folder_name in root_folder_ls_list:
 		item_info_sring = ""
 		print_header("***STT: " + str(count))
@@ -248,10 +250,25 @@ def check_complete_nuc_folder():
 		if each_item_folder_file_count>0:
 			get_ftdi_and_check_all_files()
 		print(item_info_sring)
+		aDict = [{"stt": count, "ftdi_name": extracted_ftdi}]
+		jsonString = json.dumps(aDict, indent=2, separators=(',', ': '))
+		#jsonString = json.dumps(aDict)
+		jsonFile.write(jsonString)
+		
 		print_header("--------------------------------------------------------------------------------------------")
+	jsonFile.close()
 	
 def main():
 	print("Hello World!")
+
+	#filePath = '/home/somedir/Documents/python/logs'
+
+	if os.path.exists(json_file_name):
+		os.remove(json_file_name)
+		print_ok("Delete the file ok")
+	else:
+		print("Can not delete the file as it doesn't exists")
+
 	#check_and_change_nucfolder_name()
 	check_complete_nuc_folder()
 if __name__ == "__main__":
