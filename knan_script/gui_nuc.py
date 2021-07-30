@@ -2,11 +2,7 @@
 # Work with Tkinter Treeview Table with Search Feature | All Together in 1 Video | Worth Watching
 from tkinter import *
 import tkinter as tk
-#import Tkinter
-#import tkMessageBox
-#import ttk
-#import mysql.connector
-#import PIL
+from  change_ftdi_knan_name import *
 table_name ="main"
 displayed_columns="id, device, pcb_main, c_sensor ,c_oled, note"
 global cursor
@@ -312,23 +308,22 @@ entry_text = []
 #     my_entry.grid(row=1, column=cnt, pady=20, padx=5)
 #     my_entries.append(my_entry)
 
-addrecordButton = tk.Button(wrapper3, text ="ADD", 
-                       bg ='blue', command = add_new_record)
+addrecordButton = tk.Button(wrapper3, text ="CHECK_NUC_FOLDER", 
+                       bg ='blue', command = main_check_complete_nuc_folder)
 
 addrecordButton.grid(row = 2, column=0, pady = 20)
 
-updateButton = tk.Button(wrapper3, text ="UPDATE", 
-                       bg ='blue', command = update_row)
+updateButton = tk.Button(wrapper3, text ="CHANGE_NAME", 
+                       bg ='blue', command = main_check_and_change_nucfolder_name)
 
-updateButton.grid(row = 2, column=1, pady = 20)
+updateButton.grid(row = 3, column=0, pady = 20)
 
 deleteButton = tk.Button(wrapper3, text ="DELETE", 
                        bg ='blue', command = delete_row)
 
-deleteButton.grid(row = 2, column=2, pady = 20)
+deleteButton.grid(row = 4, column=0, pady = 20)
 
-root.title("My Application")
+root.title("KNAN NUC check tool")
 root.geometry("1200x800")
 #root.resizable(False, False)
 root.mainloop()
-
