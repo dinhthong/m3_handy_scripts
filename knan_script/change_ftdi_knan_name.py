@@ -8,11 +8,12 @@ c_ftdi_length = 8
 c_temperatire_file_size = 157286400
 #path = '/mnt/e/du lieu nuc knan '
 path = '/mnt/d/Dulieu_NUC_KNAN/HDD_1TB_29July21'
-
+# global vars
 extracted_ftdi = ""
 fullpath_src_folder = ""
 underscore_index_list = []
 allow_print_debug_info = 1
+g_allow_rename = 1
 #https://stackoverflow.com/questions/4664850/how-to-find-all-occurrences-of-a-substring
 
 def print_debug(s):
@@ -21,7 +22,7 @@ def print_debug(s):
 
 # print to screen if all checks are ok
 item_info_sring = ""
-def check_and_change_nucfolder_name(do_change_flag):
+def check_and_change_nucfolder_name():
 	global fullpath_src_folder
 	global extracted_ftdi
 	count = 1
@@ -63,7 +64,7 @@ def check_and_change_nucfolder_name(do_change_flag):
 			print("fullpath_src_folder: "+ fullpath_src_folder + "; new_fullpath_folder_name: " + new_fullpath_folder_name)
 
 			# start rename
-			if do_change_flag == 1:
+			if g_allow_rename == 1:
 				try:
 					os.rename(fullpath_src_folder, new_fullpath_folder_name)
 					print("Folder name changed sucessfully")
@@ -123,22 +124,62 @@ def print_check_file_content_message():
 	global ok_temp_file_count
 	global ok_generated_file_count
 	global ok_log_file_count
-
+	error = 0
 	temp_str = "ok_temp_file_count: " + str(ok_temp_file_count)+"/9"
 	if ok_temp_file_count == 9:
 		print_ok(temp_str)
 	else:
 		print_fail(temp_str)
+		error = error + 1
 	temp_str = "ok_generated_file_count: " + str(ok_generated_file_count)+"/5"
 	if ok_generated_file_count == 5:
 		print_ok(temp_str)
 	else:
 		print_fail(temp_str)
+		error = error + 1
 	temp_str ="ok_log_file_count: " + str(ok_log_file_count)+"/1"
 	if ok_log_file_count == 1:
 		print_ok(temp_str)
 	else:
 		print_fail(temp_str)
+		error = error + 1
+	return error
+
+def rename_folder(_src, _des):
+	if g_allow_rename == 1:
+		try:
+			os.rename(_src, _des)
+			print("Folder name changed sucessfully")
+			print("New name: "+_des)
+		except OSError:
+			print_fail("Error rename, check files/folders!")
+	else:
+		print("Folder name isn't change")
+
+def remove_original_msg():
+	global fullpath_src_folder
+	first_status_index = fullpath_src_folder.find("#")
+	print(first_status_index)
+	new_name = ""
+	if first_status_index>1:
+		new_name = fullpath_src_folder[0:first_status_index]
+		print(new_name)
+		rename_folder(fullpath_src_folder, new_name)
+	return new_name
+
+def append_checkmsg_to_folder_name(st):
+	global fullpath_src_folder
+	new_folder_name = remove_original_msg()
+	end_str = "#"
+	if st == 0:
+		end_str = end_str + "OK"
+	else:
+		end_str = end_str + "F"
+	# start rename
+	if new_folder_name=="":
+		rename_folder(fullpath_src_folder, fullpath_src_folder+end_str)
+	else:
+		rename_folder(new_folder_name, new_folder_name+end_str)
 
 
 each_item_folder_ls_list = []
@@ -164,8 +205,10 @@ def get_ftdi_and_check_all_files():
 				ok_generated_file_count = ok_generated_file_count + 1
 			elif file_type==3:
 				ok_log_file_count = ok_log_file_count + 1
-	print_check_file_content_message()
-	
+	error_st = print_check_file_content_message()
+	append_checkmsg_to_folder_name(error_st)
+	# append check status message to end of folder name
+
 def check_file_count(file_count):
 	print("File count: " + str(file_count))
 	if file_count == 0:
@@ -209,7 +252,7 @@ def check_complete_nuc_folder():
 	
 def main():
 	print("Hello World!")
-	#check_and_change_nucfolder_name(0)
+	#check_and_change_nucfolder_name()
 	check_complete_nuc_folder()
 if __name__ == "__main__":
     main()
