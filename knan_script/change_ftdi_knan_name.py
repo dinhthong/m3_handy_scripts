@@ -4,6 +4,12 @@ import sys
 from array import *
 from utils import *
 import json
+
+from datetime import date
+from datetime import datetime
+
+
+
 # define constant
 c_ftdi_length = 8
 c_temperatire_file_size = 157286400
@@ -120,6 +126,8 @@ ok_temp_file_count = 0
 ok_generated_file_count = 0
 ok_log_file_count = 0
 
+check_folder_content_ok_flag = 0
+
 def print_check_file_content_message():
 	global ok_temp_file_count
 	global ok_generated_file_count
@@ -169,12 +177,15 @@ def remove_original_msg():
 
 def append_checkmsg_to_folder_name(st):
 	global fullpath_src_folder
+	global check_folder_content_ok_flag
 	new_folder_name = remove_original_msg()
 	end_str = "#"
 	if st == 0:
 		end_str = end_str + "fcOK"
+		check_folder_content_ok_flag = 1
 	else:
 		end_str = end_str + "fcF"
+		check_folder_content_ok_flag = 0
 	# start rename
 	if new_folder_name=="":
 		rename_folder(fullpath_src_folder, fullpath_src_folder+end_str)
@@ -228,7 +239,7 @@ def add_item_info_string_fail(s):
 	global item_info_sring
 	item_info_sring = item_info_sring + bcolors.WARNING + s + bcolors.ENDC + "\n"
 
-json_file_name = "data.json"
+json_file_name = ""
 def check_complete_nuc_folder():
 	global fullpath_src_folder
 	global each_item_folder_ls_list
@@ -250,26 +261,39 @@ def check_complete_nuc_folder():
 		if each_item_folder_file_count>0:
 			get_ftdi_and_check_all_files()
 		print(item_info_sring)
-		aDict = [{"stt": count, "ftdi_name": extracted_ftdi}]
+		aDict = [{"stt": count, "ma_thiet_bi": "place_holder", "ftdi_name": extracted_ftdi, "files_check_status": check_folder_content_ok_flag}]
 		jsonString = json.dumps(aDict, indent=2, separators=(',', ': '))
 		#jsonString = json.dumps(aDict)
 		jsonFile.write(jsonString)
 		
 		print_header("--------------------------------------------------------------------------------------------")
 	jsonFile.close()
-	
+
+def get_new_json_file_name():
+	global json_file_name
+	now = date.today()
+	current_date = now.strftime("%Y_%m_%d")
+	print("Today's date:", current_date)
+	now = datetime.now()
+	current_time = now.strftime("%H_%M_%S")
+	print("Current Time =", current_time)
+	date_time_str = current_date+"T"+current_time
+	print(date_time_str)
+	json_file_name = "nucfolderlog_"+date_time_str+".json"
 def main():
 	print("Hello World!")
 
 	#filePath = '/home/somedir/Documents/python/logs'
-
+	get_new_json_file_name()
 	if os.path.exists(json_file_name):
 		os.remove(json_file_name)
 		print_ok("Delete the file ok")
 	else:
 		print("Can not delete the file as it doesn't exists")
-
+		f = open(json_file_name, 'a+')
+		f.close()
 	#check_and_change_nucfolder_name()
 	check_complete_nuc_folder()
+
 if __name__ == "__main__":
     main()
