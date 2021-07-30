@@ -1,26 +1,11 @@
-#youtube link: https://www.youtube.com/watch?v=i4qLI9lmkqw&ab_channel=CodeWorked
-# Work with Tkinter Treeview Table with Search Feature | All Together in 1 Video | Worth Watching
+
 from tkinter import *
 import tkinter as tk
 from  change_ftdi_knan_name import *
+from tkinter import filedialog
 table_name ="main"
 displayed_columns="id, device, pcb_main, c_sensor ,c_oled, note"
 global cursor
-
-# def insertVariblesIntoTable(id, name, price, purchase_date):
-#     try:
-#         # connection = mysql.connector.connect(host='localhost',
-#         #                                      database='Electronics',
-#         #                                      user='pynative',
-#         #                                      password='pynative@#29')
-#         cursor = connection.cursor()
-#         mySql_insert_query = """INSERT INTO Laptop (Id, Name, Price, Purchase_date) 
-#                                 VALUES (%s, %s, %s, %s) """
-
-#         recordTuple = (id, name, price, purchase_date)
-#         cursor.execute(mySql_insert_query, recordTuple)
-#         connection.commit()
-#         print("Record inserted successfully into Laptop table")
 
 selected_id=""
 # This function should be improved later:
@@ -38,87 +23,26 @@ def add_new_record():
     #     add_string=add_string+str(entries)+","
     mySql_insert_query = """INSERT INTO main (device, pcb_main, c_sensor, c_oled, note) 
                                 VALUES (%s, %s, %s, %s, %s) """
-    #recordTuple = (id, name, price, purchase_date)
-    #insert_movies_query = """
-    # INSERT INTO main (device, pcb_main, c_sensor, c_oled, note)
-    # VALUES
-    # ("++")
-    # """
-    #cursor.execute(mySql_insert_query, tuple(record_entry))
 
-    #mydb.commit()
-    #refresh_table()
     print("Record inserted successfully into Laptop table")
 
 # https://www.youtube.com/watch?v=i4qLI9lmkqw&ab_channel=CodeWorked
 # 43:57
 def update_row():
      print("update row")
-#     record_entry=[]
-#     for entries in my_entries:
-#         entry_list=record_entry.append(entries.get())
-#     record_entry.append(selected_id)
-#     print(record_entry)
-#     if tkMessageBox.askyesno("Confirm", "Are You Sure Update?"):
-#         update_query = """UPDATE main SET device=%s, pcb_main=%s, c_sensor=%s, c_oled=%s, note=%s WHERE id=%s
-#                             """
-#         cursor.execute(update_query, tuple(record_entry))
-#         #clear()
-#         refresh_table()
-#     else:
-#         return True
-    #mydb.commit()
+
+
 
 # https://www.youtube.com/watch?v=i4qLI9lmkqw&ab_channel=CodeWorked
 # 43:57
 def delete_row():
     print("delete_row")
-#     if tkMessageBox.askyesno("Confirm", "Are You Sure Delete?"):
-#         query = "DELETE FROM main WHERE id = "+str(selected_id)
-#         #cursor.execute(query)
-#         #clear()
-#         refresh_table()
-#     else:
-#         return True
-#     mydb.commit()
+
 
 def submitact():
     user = Username.get()
     passw = password.get()
     logintodb(user, passw)
-
-# def logintodb(user, passw):
-#     global db
-    
-#     # If paswword is enetered by the 
-#     # user
-#     if passw:
-#         db = mysql.connector.connect(host='127.0.0.1', #host ="localhost",
-#                                      user = user,
-#                                      password = passw,
-#                                      db ="m3_knan")
-#     cursor = db.cursor()
-
-# def descb_table():
-#     # A Table in the database
-#     show_table_query = "DESCRIBE " +table_name
-
-#     try:
-#         cursor.execute(show_table_query)
-#         myresult = cursor.fetchall()
-         
-#         # Printing the result of the
-#         # query
-#         #get table's number of columns
-#         table_col_size = len(myresult)
- 
-#         for x in myresult:
-#             print(x)
-#         print("Query Excecuted successfully")
-         
-#     except:
-#         #db.rollback()
-#         print("Error occured")
 
 def show_table():
 
@@ -142,15 +66,13 @@ def show_table():
         db.rollback()
         print("Error occured")
 
-def refresh_table():
+root = Tk()
 
+def brow_folder_cb():
     print("Refreshing table")
-    # select_movies_query = "SELECT * FROM "+table_name+" LIMIT 10"
-    # query = "SELECT "+displayed_columns+" from "+table_name
-    # cursor.execute(query)
-    # rows = cursor.fetchall()
-    # update(rows)
-
+    #root.withdraw()
+    file_path_variable = search_for_file_path()
+    print ("\nfile_path_variable = ", file_path_variable)
 
 def update(rows):
     trv.delete(*trv.get_children())
@@ -160,44 +82,20 @@ def update(rows):
 def search():
     q2 = q.get()
     query = "SELECT "+displayed_columns+" FROM "+table_name+" WHERE device LIKE '%"+q2+"%' OR pcb_main LIKE '%"+q2+"%'"
-    # cursor.execute(query)
-    # rows = cursor.fetchall()
-    # update(rows)
-# event handler for treeview table
+
 
 def getrow(event):
     global selected_id
-    #rowid=trv.indentify_row(event.y)
-    # item = trv.item(trv.focus())
-    # selected_id=item['values'][0]
-    # #print(selected_id)
-    # for i in range(table_col_size-1):
-    #     entry_text[i].set(item['values'][i+1])
 
-#mydb = mysql.connector.connect(host="localhost", user="root", passwd="cxzzxcCC", database="m3_knan", auth_plugin="mysql_native_password")
-#cursor = mydb.cursor() 
 
-# Get table's information at startup
-table_query = "DESCRIBE " +table_name
+def search_for_file_path ():
+    currdir = os.getcwd()
+    tempdir = filedialog.askdirectory(parent=root, initialdir=currdir, title='Please select a directory')
+    if len(tempdir) > 0:
+        print ("You chose: %s" % tempdir)
+    return tempdir
 
-# cursor.execute(table_query)
-# myresult = cursor.fetchall()
-         
-# Printing the result of the query
-# get table's number of columns
-#table_col_size = len(myresult)
-#print("There's "+str(table_col_size)+" cols in this table")
-table_query = "SELECT * FROM "+table_name
 
-#cursor.execute(table_query)
-#myresult = cursor.fetchall()
-
-#table_row_size = cursor.rowcount
-#print("There's "+str(table_row_size)+" rows in this table")
-#column_titles = [i[0] for i in cursor.description]
-#print(column_titles)
-
-root = Tk()
 
 wrapper0 = LabelFrame(root, text="Login")
 wrapper1 = LabelFrame(root, text=table_name)
@@ -208,41 +106,9 @@ wrapper0.pack(fill="both", expand="yes", padx=20, pady=10)
 wrapper1.pack(fill="both", expand="yes", padx=20, pady=10)
 wrapper2.pack(fill="both", expand="yes", padx=20, pady=10)
 wrapper3.pack(fill="both", expand="yes", padx=20, pady=10)
-# height = number of rows to show in one view
-#trv=ttk.Treeview(wrapper1, show="headings", height="5")
-#print(list(range(1,table_col_size)))
-# specify column size based on actual table's column size
-# trv["column"] = list(range(1,table_col_size+1))
-# trv.pack(side=LEFT) 
-# trv.place(x=0, y=0)
 
-#
-# trv.heading(1, text="Customer ID")
-# trv.heading(2, text="First Name")
-# trv.heading(3, text="Last Name")
-# trv.heading(4, text="Age")
-# trv.heading('#0', width=50, minwidth=100)
-# trv.heading('#1', width=150, minwidth=200)
-# trv.heading('#2', width=150, minwidth=100)
-# trv.heading('#3', width=150, minwidth=200)
-# trv.heading('#4', width=150, minwidth=200)
-
-# trv.bind('<Double 1>', getrow)
-
-# yscrollbar = ttk.Scrollbar(wrapper1, orient="vertical", command=trv.yview)
-# yscrollbar.pack(side=RIGHT, fill="y")
-
-# xscrollbar = ttk.Scrollbar(wrapper1, orient="horizontal", command=trv.xview)
-# xscrollbar.pack(side=BOTTOM, fill="x")
-
-#trv.configure(yscrollcommand=yscrollbar.set, xscrollcommand=xscrollbar.set)
-#query = "SELECT id, first_name, last_name, age from "+table_name\
 query = "SELECT "+displayed_columns+" from "+table_name
-# cursor.execute(query)
-# rows = cursor.fetchall()
-# update(rows)
 
-# Login form wrapper
 
 lblfrstrow = tk.Label(wrapper0, text ="Username -", )
 lblfrstrow.place(x = 50, y = 20)
@@ -269,13 +135,12 @@ showButton = tk.Button(wrapper0, text ="SHOW",
 showButton.place(x = 300, y = 50, width = 55)
 
 # User action wrapper
+btn_browse_dir = tk.Button(wrapper2, text ="BROWSE_DIR", 
+                       bg ='blue', command = brow_folder_cb)
+btn_browse_dir.place(x = 20, y = 20, width = 75)
+
 #Search selection
 q=StringVar()
-
-reFreshButton = tk.Button(wrapper2, text ="REFRESH", 
-                       bg ='blue', command = refresh_table)
-reFreshButton.place(x = 20, y = 50, width = 75)
-
 lbl = Label(wrapper2, text="Search")
 lbl.pack(side=tk.LEFT, padx=10)
 ent = Entry(wrapper2, textvariable=q)
