@@ -262,6 +262,63 @@ def check_complete_nuc_folder(_filename):
 		print_header("--------------------------------------------------------------------------------------------")
 	jsonFile.close()
 
+
+def remove_status_msg_from_nuc_folder_name(_filename):
+	global fullpath_src_folder
+	global each_item_folder_ls_list
+	global extracted_ftdi
+	count = 1
+	root_folder_ls_list = os.listdir(_filename)
+	#jsonFile = open(json_file_name, "w")
+	for each_item_folder_name in root_folder_ls_list:
+		item_info_sring = ""
+		print_header("***STT: " + str(count))
+		count = count + 1
+		fullpath_src_folder = _filename + '/' + each_item_folder_name
+		print(fullpath_src_folder)
+		add_item_info_string("Folder full _filename: " + fullpath_src_folder) 
+		# all root_folder_ls_list and folder in fullpath_src_folder
+		each_item_folder_ls_list = os.listdir(fullpath_src_folder)
+		each_item_folder_file_count = len(each_item_folder_ls_list)
+		check_file_count(each_item_folder_file_count)
+		if each_item_folder_file_count>0:
+			remove_original_msg()
+		print(item_info_sring)
+		#aDict = [{"stt": count, "foder_name": each_item_folder_name, "ma_thiet_bi": "place_holder", "ftdi_name": extracted_ftdi, "files_check_status": check_folder_content_ok_flag}]
+		#jsonString = json.dumps(aDict, indent=2, separators=(',', ': '))
+		#jsonString = json.dumps(aDict)
+		#jsonFile.write(jsonString)
+		print_header("--------------------------------------------------------------------------------------------")
+	#jsonFile.close()
+
+def check_complete_nuc_folder(_filename):
+	global fullpath_src_folder
+	global each_item_folder_ls_list
+	global extracted_ftdi
+	count = 1
+	root_folder_ls_list = os.listdir(_filename)
+	jsonFile = open(json_file_name, "w")
+	for each_item_folder_name in root_folder_ls_list:
+		item_info_sring = ""
+		print_header("***STT: " + str(count))
+		count = count + 1
+		fullpath_src_folder = _filename + '/' + each_item_folder_name
+		print(fullpath_src_folder)
+		add_item_info_string("Folder full _filename: " + fullpath_src_folder) 
+		# all root_folder_ls_list and folder in fullpath_src_folder
+		each_item_folder_ls_list = os.listdir(fullpath_src_folder)
+		each_item_folder_file_count = len(each_item_folder_ls_list)
+		check_file_count(each_item_folder_file_count)
+		if each_item_folder_file_count>0:
+			get_ftdi_and_check_all_files()
+		print(item_info_sring)
+		aDict = [{"stt": count, "foder_name": each_item_folder_name, "ma_thiet_bi": "place_holder", "ftdi_name": extracted_ftdi, "files_check_status": check_folder_content_ok_flag}]
+		jsonString = json.dumps(aDict, indent=2, separators=(',', ': '))
+		#jsonString = json.dumps(aDict)
+		jsonFile.write(jsonString)
+		print_header("--------------------------------------------------------------------------------------------")
+	jsonFile.close()
+
 def main_check_complete_nuc_folder(filepath):
 	print("Hello World!")
 	global json_file_name

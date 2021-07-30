@@ -117,20 +117,24 @@ def btn_main_check_and_change_nucfolder_name():
     print(dir_q.get())
     main_check_and_change_nucfolder_name(dir_q.get())
 
-addrecordButton = tk.Button(wrapper3, text ="CHECK_NUC_FOLDER", 
+def btn_remove_status_msg_from_nuc_folder_name():
+    #print(dir_q.get())
+    remove_status_msg_from_nuc_folder_name(dir_q.get())
+    
+btn_checknuc = tk.Button(wrapper3, text ="CHECK_NUC_FOLDER", 
                        bg ='blue', command = btn_main_check_complete_nuc_folder)
 
-addrecordButton.grid(row = 2, column=0, pady = 20)
+btn_checknuc.grid(row = 2, column=0, pady = 20)
 
-updateButton = tk.Button(wrapper3, text ="CHANGE_NAME", 
+btn_change_name = tk.Button(wrapper3, text ="CHANGE_NAME", 
                        bg ='blue', command = btn_main_check_and_change_nucfolder_name)
 
-updateButton.grid(row = 3, column=0, pady = 20)
+btn_change_name.grid(row = 3, column=0, pady = 20)
 
-deleteButton = tk.Button(wrapper3, text ="DELETE", 
-                       bg ='blue', command = delete_row)
+btn_rm_status_msg = tk.Button(wrapper3, text ="REMOVE_STATUS_MSG", 
+                       bg ='blue', command = btn_remove_status_msg_from_nuc_folder_name)
 
-deleteButton.grid(row = 4, column=0, pady = 20)
+btn_rm_status_msg.grid(row = 4, column=0, pady = 20)
 
 root.title("KNAN NUC check tool")
 root.geometry("1200x800")
