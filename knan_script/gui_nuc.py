@@ -3,7 +3,7 @@ from tkinter import *
 import tkinter as tk
 from  change_ftdi_knan_name import *
 from tkinter import filedialog
-
+import os
 c_machine_type = 1 # 0 for ubuntu (windows subsystem for windows), 1 for windows
 
 if c_machine_type == 0:
@@ -12,7 +12,10 @@ if c_machine_type == 0:
 else:
 	_filename = "D:\Dulieu_NUC_KNAN\HDD_1TB_29July21"
 
-global cursor
+pg_textfile_name = "config.txt"
+# check and write text file
+if os.path.exists(pg_textfile_name):
+    print("adding new record")
 
 # This function should be improved later:
 # main -> table variable
@@ -42,8 +45,9 @@ def brow_folder_cb():
     print("Refreshing table")
     file_path_variable = search_for_file_path()
     print ("\nfile_path_variable = ", file_path_variable)
-    dir_q.set(file_path_variable)
-    ent2.pack()
+    if file_path_variable != "":
+        dir_q.set(file_path_variable)
+        # write to config file
 
 def search_for_file_path ():
     currdir = os.getcwd()
@@ -98,10 +102,11 @@ btn.pack(side=tk.LEFT, padx=6)
 
 # Search box
 dir_q = StringVar()
-lbl = Label(wrapper2, text="Selected dir")
-lbl.pack(side=tk.LEFT, padx=10)
+lbl = Label(wrapper2, width=10, text="Selected dir")
+lbl.pack(side=tk.LEFT, padx=15)
 ent2 = Entry(wrapper2, textvariable=dir_q)
 ent2.pack(side=tk.LEFT, padx=6)
+ent2.place(x=100, y=15, height=20, width=350)
 # Search button
 #btn = Button(wrapper2, text="Search", command=search)
 #btn.pack(side=tk.LEFT, padx=6) 
@@ -120,16 +125,16 @@ def btn_main_check_and_change_nucfolder_name():
 def btn_remove_status_msg_from_nuc_folder_name():
     #print(dir_q.get())
     remove_status_msg_from_nuc_folder_name(dir_q.get())
-    
-btn_checknuc = tk.Button(wrapper3, text ="CHECK_NUC_FOLDER", 
-                       bg ='blue', command = btn_main_check_complete_nuc_folder)
-
-btn_checknuc.grid(row = 2, column=0, pady = 20)
 
 btn_change_name = tk.Button(wrapper3, text ="CHANGE_NAME", 
                        bg ='blue', command = btn_main_check_and_change_nucfolder_name)
 
-btn_change_name.grid(row = 3, column=0, pady = 20)
+btn_change_name.grid(row = 2, column=0, pady = 20)
+
+btn_checknuc = tk.Button(wrapper3, text ="CHECK_NUC_FOLDER", 
+                       bg ='blue', command = btn_main_check_complete_nuc_folder)
+
+btn_checknuc.grid(row = 3, column=0, pady = 20)
 
 btn_rm_status_msg = tk.Button(wrapper3, text ="REMOVE_STATUS_MSG", 
                        bg ='blue', command = btn_remove_status_msg_from_nuc_folder_name)

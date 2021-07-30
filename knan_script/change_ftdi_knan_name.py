@@ -340,17 +340,17 @@ def main_check_complete_nuc_folder(filepath):
 
 def main_check_and_change_nucfolder_name(filepath):
 	print("Hello World!")
-	global json_file_name
+	# global json_file_name
 	#filePath = '/home/somedir/Documents/python/logs'
-	get_datetime_string()
-	json_file_name = "log_"+get_datetime_string()+".json"
-	if os.path.exists(json_file_name):
-		os.remove(json_file_name)
-		print_ok("Delete the file ok")
-	else:
-		print("Can not delete the file as it doesn't exists")
-		f = open(json_file_name, 'a+')
-		f.close()
+	# get_datetime_string()
+	# json_file_name = "log_"+get_datetime_string()+".json"
+	# if os.path.exists(json_file_name):
+	# 	os.remove(json_file_name)
+	# 	print_ok("Delete the file ok")
+	# else:
+	# 	print("Can not delete the file as it doesn't exists")
+	# 	f = open(json_file_name, 'a+')
+	# 	f.close()
 	check_and_change_nucfolder_name(filepath)
 	#readjsonfile = open(json_file_name, "r")
 	#jsondata = json.load(readjsonfile)
