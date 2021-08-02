@@ -10,3 +10,6 @@
 - Clean code
 - JSON file -> more info: check info of each file, display file name and file size
 - Export to current folder: json file contains FAIL folders only
+
+# References
+https://stackoverflow.com/questions/111155/how-do-i-handle-the-window-close-event-in-tkinter

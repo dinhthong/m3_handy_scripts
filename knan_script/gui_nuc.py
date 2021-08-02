@@ -1,9 +1,12 @@
 
 from tkinter import *
 import tkinter as tk
+from tkinter import messagebox
 from  change_ftdi_knan_name import *
 from tkinter import filedialog
 import os
+from configparser import ConfigParser
+
 c_machine_type = 1 # 0 for ubuntu (windows subsystem for windows), 1 for windows
 
 if c_machine_type == 0:
@@ -12,27 +15,23 @@ if c_machine_type == 0:
 else:
 	_filename = "D:\Dulieu_NUC_KNAN\HDD_1TB_29July21"
 
-pg_textfile_name = "config.txt"
+pg_textfile_name = "config.ini"
+config = ConfigParser()
 # check and write text file
 if os.path.exists(pg_textfile_name):
-    print("adding new record")
-
-# This function should be improved later:
-# main -> table variable
-# number of input vars is automatically read from table 
-def add_new_record():
-    print("adding new record")
-    print("Record inserted successfully into Laptop table")
-
-# https://www.youtube.com/watch?v=i4qLI9lmkqw&ab_channel=CodeWorked
-# 43:57
-def update_row():
-     print("update row")
-
-# https://www.youtube.com/watch?v=i4qLI9lmkqw&ab_channel=CodeWorked
-# 43:57
-def delete_row():
-    print("delete_row")
+    print("Config already exists")
+    #print(config.get('main', 'complete_nuc_parentfolder'))
+    # config.add_section('main')
+    # config.set('main', 'key1', 'value1')
+    # config.set('main', 'key2', 'value2')
+    # config.set('main', 'key3', 'value3')
+else:
+    f = open(pg_textfile_name,"w+")
+    f.close()
+config.read(pg_textfile_name)
+if config.has_section('main') == False:
+    config.add_section('main')
+    config.set('main', 'complete_nuc_parentfolder', "")
 
 def submitact():
     user = Username.get()
@@ -48,7 +47,8 @@ def brow_folder_cb():
     if file_path_variable != "":
         dir_q.set(file_path_variable)
         # write to config file
-
+        # config.add_section('main')
+        config.set('main', 'complete_nuc_parentfolder', file_path_variable)
 def search_for_file_path ():
     currdir = os.getcwd()
     tempdir = filedialog.askdirectory(parent=root, initialdir=currdir, title='Please select a directory')
@@ -96,6 +96,7 @@ lbl = Label(wrapper2, text="Search")
 lbl.pack(side=tk.LEFT, padx=10)
 ent = Entry(wrapper2, textvariable=q)
 ent.pack(side=tk.LEFT, padx=6)
+
 # Search button
 btn = Button(wrapper2, text="Search", command=search_btn_cb)
 btn.pack(side=tk.LEFT, padx=6) 
@@ -107,6 +108,7 @@ lbl.pack(side=tk.LEFT, padx=15)
 ent2 = Entry(wrapper2, textvariable=dir_q)
 ent2.pack(side=tk.LEFT, padx=6)
 ent2.place(x=100, y=15, height=20, width=350)
+dir_q.set(config.get('main', 'complete_nuc_parentfolder'))
 # Search button
 #btn = Button(wrapper2, text="Search", command=search)
 #btn.pack(side=tk.LEFT, padx=6) 
@@ -144,4 +146,13 @@ btn_rm_status_msg.grid(row = 4, column=0, pady = 20)
 root.title("KNAN NUC check tool")
 root.geometry("1200x800")
 #root.resizable(False, False)
+
+def on_closing():
+    if messagebox.askokcancel("Quit", "Do you want to quit?"):
+        with open('config.ini', 'w') as f:
+            config.write(f)
+        root.destroy()
+
+root.protocol("WM_DELETE_WINDOW", on_closing)
+
 root.mainloop()
