@@ -72,16 +72,7 @@ def check_and_change_nucfolder_name(_filepath):
 # -20, -10, 0,...
 temp_file_check = array('B', [0, 0, 0, 0, 0, 0, 0, 0, 0])
 
-def get_file_size(_file_fullpath):
-	#file_fullpath = fullpath_src_folder + '/' + _fullpath_file
-	print_debug(_file_fullpath)
-	if os.path.exists(_file_fullpath)==True and os.path.isfile(_file_fullpath) == True:
-		file_size = os.path.getsize(_file_fullpath)
-		print_ok("File size = " + str(file_size))
-		return file_size
-	else:
-		print_fail("Can't get file size")
-		return -1
+
 
 def check_file_name_and_size(_fname, _fsize):
 	if _fname.find(".bin") != -1:
@@ -142,21 +133,23 @@ def rename_folder(_src, _des):
 	else:
 		print("Folder name isn't change")
 
-def remove_original_msg():
-	global fullpath_src_folder
-	first_status_index = fullpath_src_folder.find("#")
-	print(first_status_index)
+# Remove string after # character
+# VD: D:\Dulieu_NUC_KNAN\fromOneDrive_PC_HDD\031_FT5P10Z3_ok
+def remove_original_msg(_dir_full_path):
+	#global fullpath_src_folder
+	first_status_index = _dir_full_path.find("#")
+	#print(first_status_index)
 	new_name = ""
 	if first_status_index>1:
-		new_name = fullpath_src_folder[0:first_status_index]
+		new_name = _dir_full_path[0:first_status_index]
 		print(new_name)
-		rename_folder(fullpath_src_folder, new_name)
+		rename_folder(_dir_full_path, new_name)
 	return new_name
 
-def append_checkmsg_to_folder_name(st):
+def append_checkmsg_to_folder_name(st, _dir_full_path):
 	global fullpath_src_folder
 	global check_folder_content_ok_flag
-	new_folder_name = remove_original_msg()
+	new_folder_name = remove_original_msg(_dir_full_path)
 	end_str = "#"
 	if st == 0:
 		end_str = end_str + "fcOK"
@@ -166,7 +159,7 @@ def append_checkmsg_to_folder_name(st):
 		check_folder_content_ok_flag = 0
 	# start rename
 	if new_folder_name=="":
-		rename_folder(fullpath_src_folder, fullpath_src_folder+end_str)
+		rename_folder(_dir_full_path, _dir_full_path+end_str)
 	else:
 		rename_folder(new_folder_name, new_folder_name+end_str)
 
@@ -197,7 +190,7 @@ def get_ftdi_and_check_all_files(_full_dir_path, _each_item_folder_ls_list):
 			elif file_type==3:
 				ok_log_file_count = ok_log_file_count + 1
 	error_st = print_check_file_content_message()
-	append_checkmsg_to_folder_name(error_st)
+	append_checkmsg_to_folder_name(error_st, _full_dir_path)
 	# append check status message to end of folder name
 
 def check_file_count(file_count):
@@ -240,7 +233,7 @@ def remove_status_msg_from_nuc_folder_name(_filename):
 		each_item_folder_file_count = len(each_item_folder_ls_list)
 		check_file_count(each_item_folder_file_count)
 		if each_item_folder_file_count>0:
-			remove_original_msg()
+			remove_original_msg(fullpath_src_folder)
 		print(item_info_sring)
 		#aDict = [{"stt": count, "foder_name": each_item_folder_name, "ma_thiet_bi": "place_holder", "ftdi_name": extracted_ftdi, "files_check_status": check_folder_content_ok_flag}]
 		#jsonString = json.dumps(aDict, indent=2, separators=(',', ': '))

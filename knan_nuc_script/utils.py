@@ -58,3 +58,14 @@ def get_full_ftdi_from_file_name(file_name):
 		print_fail("No FTDI string in file is found!, Please check folder content!")
 		return_status = 0
 	return return_status, get_ftdi
+
+def get_file_size(_file_fullpath):
+	#file_fullpath = fullpath_src_folder + '/' + _fullpath_file
+	print(_file_fullpath)
+	if os.path.exists(_file_fullpath)==True and os.path.isfile(_file_fullpath) == True:
+		file_size = os.path.getsize(_file_fullpath)
+		print_ok("File size = " + str(file_size))
+		return file_size
+	else:
+		print_fail("Can't get file size")
+		return -1
