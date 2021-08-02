@@ -82,15 +82,6 @@ def check_and_change_nucfolder_name(_filepath):
 # -20, -10, 0,...
 temp_file_check = array('B', [0, 0, 0, 0, 0, 0, 0, 0, 0])
 
-def get_file_size(_file_name):
-	file_fullpath = item_fullpath + '/' + _file_name
-	print_debug(file_fullpath)
-	if os.path.exists(file_fullpath)==True:
-		file_size = os.path.getsize(file_fullpath)
-		print_debug("File size = " + str(file_size))
-		return file_size
-
-
 def check_file_name_and_size(_fname, _fsize):
 	if _fname.find(".bin") != -1:
 		underscore_index_list = find(_fname, "_")
