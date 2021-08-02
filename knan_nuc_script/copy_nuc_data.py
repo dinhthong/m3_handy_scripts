@@ -234,20 +234,12 @@ def add_item_info_string_fail(s):
 
 json_file_name = ""
 
-def copy_from_nuc_data_folder_to_des(knan_software_dir, _des_folder):
-	global item_fullpath
-	global each_item_folder_ls_list
-	global extracted_ftdi
+def create_ftdi_folders_and_move_ftdi_files(base_dir, folder_ls_list):
 	count = 1
-	
-	root_folder_ls_list = os.listdir(knan_software_dir)
-	#jsonFile = open(json_file_name, "w")
-	data_folder_list = []
-	done_get_ftdi_flag = 0
-	for each_item_folder_name in root_folder_ls_list:
+	for each_item_folder_name in folder_ls_list:
 		print_header("***STT: " + str(count))
 		count = count + 1
-		item_fullpath = knan_software_dir + '/' + each_item_folder_name
+		item_fullpath = base_dir + '/' + each_item_folder_name
 		print(item_fullpath)
 		add_item_info_string("Folder full _filename: " + item_fullpath) 
 
@@ -255,12 +247,19 @@ def copy_from_nuc_data_folder_to_des(knan_software_dir, _des_folder):
 			status, extracted_ftdi = get_full_ftdi_from_file_name(each_item_folder_name)
 			if status == 1:
 				print("Extracted ftdi: " + extracted_ftdi)
-				create_data_FTDI_folder(knan_software_dir, extracted_ftdi)
+				create_data_FTDI_folder(base_dir, extracted_ftdi)
 				file_type = check_file_name_and_size(each_item_folder_name, get_file_size(each_item_folder_name))
-				new_file_path = knan_software_dir + '/' + "data_" + extracted_ftdi + '/' + each_item_folder_name
+				new_file_path = base_dir + '/' + "data_" + extracted_ftdi + '/' + each_item_folder_name
 				os.rename(item_fullpath, new_file_path)
 		print_header("--------------------------------------------------------------------------------------------")
-	#jsonFile.close()
+
+def copy_from_nuc_data_folder_to_des(knan_software_dir, _des_folder):
+	global item_fullpath
+	global each_item_folder_ls_list
+	root_folder_ls_list = os.listdir(knan_software_dir)
+	create_ftdi_folders_and_move_ftdi_files(knan_software_dir, root_folder_ls_list)
+	# check files in each folder
+	
 
 def remove_status_msg_from_nuc_folder_name(_filename):
 	global item_fullpath

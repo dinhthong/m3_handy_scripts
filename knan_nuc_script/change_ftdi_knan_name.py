@@ -6,7 +6,6 @@ from utils import *
 import json
 
 # global vars
-extracted_ftdi = ""
 fullpath_src_folder = ""
 underscore_index_list = []
 allow_print_debug_info = 0
@@ -20,7 +19,6 @@ def print_debug(s):
 item_info_sring = ""
 def check_and_change_nucfolder_name(_filepath):
 	global fullpath_src_folder
-	global extracted_ftdi
 	count = 1
 	root_folder_ls_list = os.listdir(_filepath)
 	for each_item_folder_name in root_folder_ls_list:
@@ -36,7 +34,7 @@ def check_and_change_nucfolder_name(_filepath):
 		underscore_index_list = find(each_item_folder_name, "_")
 		underscore_count = len(underscore_index_list)
 		for tb_file in src_folder_ls:
-			valid_ftdi_flag = get_full_ftdi_from_file_name(tb_file, extracted_ftdi)
+			valid_ftdi_flag, extracted_ftdi = get_full_ftdi_from_file_name(tb_file)
 			if valid_ftdi_flag == 1:
 				break
 		# check if folder name is already good
@@ -71,19 +69,6 @@ def check_and_change_nucfolder_name(_filepath):
 		else:
 			print_fail("None valid FTDI file is found")
 
-# The file can be Log_FTDI.txt or matlab file
-# def get_full_ftdi_from_file_name(file_name):
-# 	global extracted_ftdi
-# 	ft_first_index = file_name.find("FT")
-# 	if ft_first_index>=0:
-# 		extracted_ftdi = file_name[ft_first_index:ft_first_index+c_ftdi_length]
-# 		print_ok("FTDI: "+ extracted_ftdi)
-# 		return 1
-# 	else:
-# 		extracted_ftdi = ""
-# 		print_fail("No FTDI string in file is found!, Please check folder content!")
-# 		return 0
-
 # -20, -10, 0,...
 temp_file_check = array('B', [0, 0, 0, 0, 0, 0, 0, 0, 0])
 
@@ -94,7 +79,6 @@ def get_file_size(_file_name):
 		file_size = os.path.getsize(file_fullpath)
 		print_debug("File size = " + str(file_size))
 		return file_size
-
 
 def check_file_name_and_size(_fname, _fsize):
 	if _fname.find(".bin") != -1:
@@ -195,8 +179,10 @@ def get_ftdi_and_check_all_files():
 	ok_log_file_count = 0
 	for tb_file in each_item_folder_ls_list:
 		file_type = -1
-		if done_get_ftdi_flag == 0 and get_full_ftdi_from_file_name(tb_file, extracted_ftdi) == 1:
-			done_get_ftdi_flag = 1
+		if done_get_ftdi_flag == 0:
+			get_ftdi_status, extracted_ftdi = get_full_ftdi_from_file_name(tb_file)
+			if get_ftdi_status==1:
+				done_get_ftdi_flag = 1
 		if done_get_ftdi_flag == 1:
 			file_type = check_file_name_and_size(tb_file, get_file_size(tb_file))
 			if file_type==1:
@@ -230,39 +216,10 @@ def add_item_info_string_fail(s):
 	item_info_sring = item_info_sring + bcolors.WARNING + s + bcolors.ENDC + "\n"
 
 json_file_name = ""
-def check_complete_nuc_folder(_filename):
-	global fullpath_src_folder
-	global each_item_folder_ls_list
-	global extracted_ftdi
-	count = 1
-	root_folder_ls_list = os.listdir(_filename)
-	jsonFile = open(json_file_name, "w")
-	for each_item_folder_name in root_folder_ls_list:
-		item_info_sring = ""
-		print_header("***STT: " + str(count))
-		count = count + 1
-		fullpath_src_folder = _filename + '/' + each_item_folder_name
-		print(fullpath_src_folder)
-		add_item_info_string("Folder full _filename: " + fullpath_src_folder) 
-		# all root_folder_ls_list and folder in fullpath_src_folder
-		each_item_folder_ls_list = os.listdir(fullpath_src_folder)
-		each_item_folder_file_count = len(each_item_folder_ls_list)
-		check_file_count(each_item_folder_file_count)
-		if each_item_folder_file_count>0:
-			get_ftdi_and_check_all_files()
-		print(item_info_sring)
-		aDict = [{"stt": count, "foder_name": each_item_folder_name, "ma_thiet_bi": "place_holder", "ftdi_name": extracted_ftdi, "files_check_status": check_folder_content_ok_flag}]
-		jsonString = json.dumps(aDict, indent=2, separators=(',', ': '))
-		#jsonString = json.dumps(aDict)
-		jsonFile.write(jsonString)
-		print_header("--------------------------------------------------------------------------------------------")
-	jsonFile.close()
-
 
 def remove_status_msg_from_nuc_folder_name(_filename):
 	global fullpath_src_folder
 	global each_item_folder_ls_list
-	global extracted_ftdi
 	count = 1
 	root_folder_ls_list = os.listdir(_filename)
 	#jsonFile = open(json_file_name, "w")
@@ -290,7 +247,6 @@ def remove_status_msg_from_nuc_folder_name(_filename):
 def check_complete_nuc_folder(_filename):
 	global fullpath_src_folder
 	global each_item_folder_ls_list
-	global extracted_ftdi
 	count = 1
 	root_folder_ls_list = os.listdir(_filename)
 	jsonFile = open(json_file_name, "w")
@@ -308,7 +264,7 @@ def check_complete_nuc_folder(_filename):
 		if each_item_folder_file_count>0:
 			get_ftdi_and_check_all_files()
 		print(item_info_sring)
-		aDict = [{"stt": count, "foder_name": each_item_folder_name, "ma_thiet_bi": "place_holder", "ftdi_name": extracted_ftdi, "files_check_status": check_folder_content_ok_flag}]
+		aDict = [{"stt": count, "foder_name": each_item_folder_name, "ma_thiet_bi": "place_holder", "ftdi_name": 123, "files_check_status": check_folder_content_ok_flag}]
 		jsonString = json.dumps(aDict, indent=2, separators=(',', ': '))
 		#jsonString = json.dumps(aDict)
 		jsonFile.write(jsonString)
@@ -353,7 +309,8 @@ def main_check_and_change_nucfolder_name(filepath):
 	#print(jsondata)
 
 def main():
-	main_check_complete_nuc_folder()
+	print("Hello World!")
+	#main_check_complete_nuc_folder()
 
 if __name__ == "__main__":
     main()
