@@ -91,37 +91,8 @@ def check_file_name_and_size(_fname, _fsize):
 		print("Log file detected")
 		return 3
 
-ok_temp_file_count = 0
-ok_generated_file_count = 0
-ok_log_file_count = 0
 
 check_folder_content_ok_flag = 0
-
-def print_check_file_content_message():
-	global ok_temp_file_count
-	global ok_generated_file_count
-	global ok_log_file_count
-	error = 0
-	temp_str = "ok_temp_file_count: " + str(ok_temp_file_count)+"/9"
-	if ok_temp_file_count == 9:
-		print_ok(temp_str)
-	else:
-		print_fail(temp_str)
-		error = error + 1
-	temp_str = "ok_generated_file_count: " + str(ok_generated_file_count)+"/5"
-	if ok_generated_file_count == 5:
-		print_ok(temp_str)
-	else:
-		print_fail(temp_str)
-		error = error + 1
-	temp_str ="ok_log_file_count: " + str(ok_log_file_count)+"/1"
-	if ok_log_file_count == 1:
-		print_ok(temp_str)
-	else:
-		print_fail(temp_str)
-		error = error + 1
-	return error
-
 def rename_folder(_src, _des):
 	if g_allow_rename == 1:
 		try:
@@ -165,16 +136,13 @@ def append_checkmsg_to_folder_name(st, _dir_full_path):
 
 each_item_folder_ls_list = []
 # _full_dir_path = D:\Dulieu_NUC_KNAN\fromOneDrive_PC_HDD\002_FT5P16DM
-# _each_item_folder_ls_list = FT5P16DM_190521_50.bin
+# _each_item_folder_ls_list = [FT5P16DM_190521_50.bin, FT5OUSZM_310521_30.bin, Log_FT5OUSZM.txt]
 def get_ftdi_and_check_all_files(_full_dir_path, _each_item_folder_ls_list):
-	#global each_item_folder_ls_list
-	global ok_temp_file_count
-	global ok_generated_file_count
-	global ok_log_file_count
 	done_get_ftdi_flag = 0
 	ok_temp_file_count = 0
 	ok_generated_file_count = 0
 	ok_log_file_count = 0
+	# tb_file: FT5P16DM_190521_50.bin
 	for tb_file in _each_item_folder_ls_list:
 		file_type = -1
 		if done_get_ftdi_flag == 0:
@@ -189,7 +157,7 @@ def get_ftdi_and_check_all_files(_full_dir_path, _each_item_folder_ls_list):
 				ok_generated_file_count = ok_generated_file_count + 1
 			elif file_type==3:
 				ok_log_file_count = ok_log_file_count + 1
-	error_st = print_check_file_content_message()
+	error_st = print_check_file_content_message(ok_temp_file_count, ok_generated_file_count, ok_log_file_count)
 	append_checkmsg_to_folder_name(error_st, _full_dir_path)
 	# append check status message to end of folder name
 
@@ -242,18 +210,10 @@ def remove_status_msg_from_nuc_folder_name(_filename):
 		print_header("--------------------------------------------------------------------------------------------")
 	#jsonFile.close()
 
-# input: path to folder
-
-def check_folder_nuc_files(_dirname, _folder_name):
+def check_folder_nuc_files(_base_dir_name, _nuc_dir_name):
 	#jsonFile = open(_json_file, "w")
-	full_dir_path = _dirname + '/' + _folder_name
+	full_dir_path = _base_dir_name + '/' + _nuc_dir_name
 	print(full_dir_path)
-	#item_info_sring = ""
-	#print_header("***STT: " + str(count))
-	#count = count + 1
-	
-	#print(fullpath_src_folder)
-	#add_item_info_string("Folder full _filename: " + fullpath_src_folder) 
 	# all root_folder_ls_list and folder in fullpath_src_folder
 	each_item_folder_ls_list = os.listdir(full_dir_path)
 	each_item_folder_file_count = len(each_item_folder_ls_list)
@@ -267,14 +227,17 @@ def check_folder_nuc_files(_dirname, _folder_name):
 	#jsonFile.write(jsonString)
 	print_header("--------------------------------------------------------------------------------------------")
 
-def check_complete_nuc_folder(_filename):
+# _filename: D:\Dulieu_NUC_KNAN\fromOneDrive_PC_HDD
+def check_complete_nuc_folder(_base_dir_name):
 	global fullpath_src_folder
 	global each_item_folder_ls_list
 	count = 1
-	root_folder_ls_list = os.listdir(_filename)
-	
+	root_folder_ls_list = os.listdir(_base_dir_name)
+	# each_item_folder_name: 056_FT5OV9NG_ok
 	for each_item_folder_name in root_folder_ls_list:
-		check_folder_nuc_files(_filename, each_item_folder_name)
+		print_header("***STT: " + str(count))
+		count = count + 1
+		check_folder_nuc_files(_base_dir_name, each_item_folder_name)
 
 	#jsonFile.close()
 

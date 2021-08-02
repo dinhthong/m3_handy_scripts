@@ -61,7 +61,7 @@ def get_full_ftdi_from_file_name(file_name):
 
 def get_file_size(_file_fullpath):
 	#file_fullpath = fullpath_src_folder + '/' + _fullpath_file
-	print(_file_fullpath)
+	print("Get file size: "+_file_fullpath)
 	if os.path.exists(_file_fullpath)==True and os.path.isfile(_file_fullpath) == True:
 		file_size = os.path.getsize(_file_fullpath)
 		print_ok("File size = " + str(file_size))
@@ -69,3 +69,25 @@ def get_file_size(_file_fullpath):
 	else:
 		print_fail("Can't get file size")
 		return -1
+
+def print_check_file_content_message(_ok_temp_file_count, _ok_generated_file_count, _ok_log_file_count):
+	error = 0
+	temp_str = "_ok_temp_file_count: " + str(_ok_temp_file_count)+"/9"
+	if _ok_temp_file_count == 9:
+		print_ok(temp_str)
+	else:
+		print_fail(temp_str)
+		error = error + 1
+	temp_str = "_ok_generated_file_count: " + str(_ok_generated_file_count)+"/5"
+	if _ok_generated_file_count == 5:
+		print_ok(temp_str)
+	else:
+		print_fail(temp_str)
+		error = error + 1
+	temp_str ="_ok_log_file_count: " + str(_ok_log_file_count)+"/1"
+	if _ok_log_file_count == 1:
+		print_ok(temp_str)
+	else:
+		print_fail(temp_str)
+		error = error + 1
+	return error

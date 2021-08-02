@@ -140,34 +140,6 @@ def rename_folder(_src, _des):
 	else:
 		print("Folder name isn't change")
 
-def remove_original_msg():
-	global item_fullpath
-	first_status_index = item_fullpath.find("#")
-	print(first_status_index)
-	new_name = ""
-	if first_status_index>1:
-		new_name = item_fullpath[0:first_status_index]
-		print(new_name)
-		rename_folder(item_fullpath, new_name)
-	return new_name
-
-def append_checkmsg_to_folder_name(st):
-	global item_fullpath
-	global check_folder_content_ok_flag
-	new_folder_name = remove_original_msg()
-	end_str = "#"
-	if st == 0:
-		end_str = end_str + "fcOK"
-		check_folder_content_ok_flag = 1
-	else:
-		end_str = end_str + "fcF"
-		check_folder_content_ok_flag = 0
-	# start rename
-	if new_folder_name=="":
-		rename_folder(item_fullpath, item_fullpath+end_str)
-	else:
-		rename_folder(new_folder_name, new_folder_name+end_str)
-
 each_item_folder_ls_list = []
 # Create if not exist
 def create_data_FTDI_folder(base, ftdi):
@@ -232,14 +204,13 @@ def create_ftdi_folders_and_move_ftdi_files(base_dir, folder_ls_list):
 		count = count + 1
 		item_fullpath = base_dir + '/' + each_item_folder_name
 		print(item_fullpath)
-		add_item_info_string("Folder full _filename: " + item_fullpath) 
-
+		add_item_info_string("ITEM full _filename: " + item_fullpath) 
 		if os.path.isfile(item_fullpath) == True:
 			status, extracted_ftdi = get_full_ftdi_from_file_name(each_item_folder_name)
 			if status == 1:
 				print("Extracted ftdi: " + extracted_ftdi)
 				create_data_FTDI_folder(base_dir, extracted_ftdi)
-				file_type = check_file_name_and_size(each_item_folder_name, get_file_size(each_item_folder_name))
+				file_type = check_file_name_and_size(each_item_folder_name, get_file_size(item_fullpath))
 				new_file_path = base_dir + '/' + "data_" + extracted_ftdi + '/' + each_item_folder_name
 				os.rename(item_fullpath, new_file_path)
 		print_header("--------------------------------------------------------------------------------------------")
