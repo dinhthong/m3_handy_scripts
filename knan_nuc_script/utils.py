@@ -91,3 +91,15 @@ def print_check_file_content_message(_ok_temp_file_count, _ok_generated_file_cou
 		print_fail(temp_str)
 		error = error + 1
 	return error
+
+def check_standard_files_count(file_count):
+	print("File count: " + str(file_count))
+	if file_count == 0:
+		print_fail("Folder empty!")
+	else:
+		if file_count == 15:
+			print_ok("File count ok")
+			# add_item_info_string("File count ok")
+		else:
+			print_fail("File count error")
+			# add_item_info_string("File count error")

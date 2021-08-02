@@ -161,18 +161,6 @@ def get_ftdi_and_check_all_files(_full_dir_path, _each_item_folder_ls_list):
 	append_checkmsg_to_folder_name(error_st, _full_dir_path)
 	# append check status message to end of folder name
 
-def check_file_count(file_count):
-	print("File count: " + str(file_count))
-	if file_count == 0:
-		print_fail("Folder empty!")
-	else:
-		if file_count == 15:
-			print_ok("File count ok")
-			add_item_info_string("File count ok")
-		else:
-			print_fail("File count error")
-			add_item_info_string("File count error")
-
 def add_item_info_string(s):
 	global item_info_sring
 	item_info_sring = item_info_sring + s + "\n"
@@ -183,9 +171,8 @@ def add_item_info_string_fail(s):
 
 json_file_name = ""
 
+# input: D:\Dulieu_NUC_KNAN\fromOneDrive_PC_HDD
 def remove_status_msg_from_nuc_folder_name(_filename):
-	global fullpath_src_folder
-	global each_item_folder_ls_list
 	count = 1
 	root_folder_ls_list = os.listdir(_filename)
 	#jsonFile = open(json_file_name, "w")
@@ -195,11 +182,9 @@ def remove_status_msg_from_nuc_folder_name(_filename):
 		count = count + 1
 		fullpath_src_folder = _filename + '/' + each_item_folder_name
 		print(fullpath_src_folder)
-		add_item_info_string("Folder full _filename: " + fullpath_src_folder) 
-		# all root_folder_ls_list and folder in fullpath_src_folder
 		each_item_folder_ls_list = os.listdir(fullpath_src_folder)
 		each_item_folder_file_count = len(each_item_folder_ls_list)
-		check_file_count(each_item_folder_file_count)
+		# check_standard_files_count(each_item_folder_file_count)
 		if each_item_folder_file_count>0:
 			remove_original_msg(fullpath_src_folder)
 		print(item_info_sring)
@@ -210,14 +195,15 @@ def remove_status_msg_from_nuc_folder_name(_filename):
 		print_header("--------------------------------------------------------------------------------------------")
 	#jsonFile.close()
 
-def check_folder_nuc_files(_base_dir_name, _nuc_dir_name):
-	#jsonFile = open(_json_file, "w")
+# RETURN LIST: [ftdi number, number of files, file name and check status,
+# temperature files check status, output files check and status, Log files check and status, check result]
+def check_individual_nuc_folder_files(_base_dir_name, _nuc_dir_name):
 	full_dir_path = _base_dir_name + '/' + _nuc_dir_name
 	print(full_dir_path)
 	# all root_folder_ls_list and folder in fullpath_src_folder
 	each_item_folder_ls_list = os.listdir(full_dir_path)
 	each_item_folder_file_count = len(each_item_folder_ls_list)
-	check_file_count(each_item_folder_file_count)
+	check_standard_files_count(each_item_folder_file_count)
 	if each_item_folder_file_count>0:
 		get_ftdi_and_check_all_files(full_dir_path, each_item_folder_ls_list)
 	#print(item_info_sring)
@@ -228,16 +214,15 @@ def check_folder_nuc_files(_base_dir_name, _nuc_dir_name):
 	print_header("--------------------------------------------------------------------------------------------")
 
 # _filename: D:\Dulieu_NUC_KNAN\fromOneDrive_PC_HDD
+# root_folder_ls_list: [061_FT5OV9HL_ok, 097_FT5OUWNJ_cancheck]
 def check_complete_nuc_folder(_base_dir_name):
-	global fullpath_src_folder
-	global each_item_folder_ls_list
 	count = 1
 	root_folder_ls_list = os.listdir(_base_dir_name)
 	# each_item_folder_name: 056_FT5OV9NG_ok
 	for each_item_folder_name in root_folder_ls_list:
 		print_header("***STT: " + str(count))
 		count = count + 1
-		check_folder_nuc_files(_base_dir_name, each_item_folder_name)
+		check_individual_nuc_folder_files(_base_dir_name, each_item_folder_name)
 
 	#jsonFile.close()
 
