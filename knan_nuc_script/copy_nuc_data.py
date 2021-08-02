@@ -4,10 +4,15 @@ import sys
 from array import *
 from utils import *
 import json
+import shutil
+
+# define constant
+c_ftdi_length = 8
+c_temperatire_file_size = 157286400
 
 # global vars
 extracted_ftdi = ""
-fullpath_src_folder = ""
+item_fullpath = ""
 underscore_index_list = []
 allow_print_debug_info = 0
 g_allow_rename = 1
@@ -19,7 +24,7 @@ def print_debug(s):
 # print to screen if all checks are ok
 item_info_sring = ""
 def check_and_change_nucfolder_name(_filepath):
-	global fullpath_src_folder
+	global item_fullpath
 	global extracted_ftdi
 	count = 1
 	root_folder_ls_list = os.listdir(_filepath)
@@ -29,14 +34,14 @@ def check_and_change_nucfolder_name(_filepath):
 		print_header("***STT: " + str(count))
 		count = count + 1
 		#print(each_item_folder_name)
-		fullpath_src_folder = _filepath+'/'+each_item_folder_name
-		print("Full _filepath: " + fullpath_src_folder)
-		# all root_folder_ls_list and folder in fullpath_src_folder
-		src_folder_ls = os.listdir(fullpath_src_folder)
+		item_fullpath = _filepath+'/'+each_item_folder_name
+		print("Full _filepath: " + item_fullpath)
+		# all root_folder_ls_list and folder in item_fullpath
+		src_folder_ls = os.listdir(item_fullpath)
 		underscore_index_list = find(each_item_folder_name, "_")
 		underscore_count = len(underscore_index_list)
 		for tb_file in src_folder_ls:
-			valid_ftdi_flag = get_full_ftdi_from_file_name(tb_file, extracted_ftdi)
+			valid_ftdi_flag = get_full_ftdi_from_file_name(tb_file)
 			if valid_ftdi_flag == 1:
 				break
 		# check if folder name is already good
@@ -57,12 +62,12 @@ def check_and_change_nucfolder_name(_filepath):
 				print_ok("Discard this as the each_item_folder_name is already OK")
 				continue
 			new_fullpath_folder_name = _filepath+'/'+new_folder_name
-			print("fullpath_src_folder: "+ fullpath_src_folder + "; new_fullpath_folder_name: " + new_fullpath_folder_name)
+			print("item_fullpath: "+ item_fullpath + "; new_fullpath_folder_name: " + new_fullpath_folder_name)
 
 			# start rename
 			if g_allow_rename == 1:
 				try:
-					os.rename(fullpath_src_folder, new_fullpath_folder_name)
+					os.rename(item_fullpath, new_fullpath_folder_name)
 					print("Folder name changed sucessfully")
 				except OSError:
 					print_fail("Error!")
@@ -72,23 +77,13 @@ def check_and_change_nucfolder_name(_filepath):
 			print_fail("None valid FTDI file is found")
 
 # The file can be Log_FTDI.txt or matlab file
-# def get_full_ftdi_from_file_name(file_name):
-# 	global extracted_ftdi
-# 	ft_first_index = file_name.find("FT")
-# 	if ft_first_index>=0:
-# 		extracted_ftdi = file_name[ft_first_index:ft_first_index+c_ftdi_length]
-# 		print_ok("FTDI: "+ extracted_ftdi)
-# 		return 1
-# 	else:
-# 		extracted_ftdi = ""
-# 		print_fail("No FTDI string in file is found!, Please check folder content!")
-# 		return 0
+
 
 # -20, -10, 0,...
 temp_file_check = array('B', [0, 0, 0, 0, 0, 0, 0, 0, 0])
 
 def get_file_size(_file_name):
-	file_fullpath = fullpath_src_folder + '/' + _file_name
+	file_fullpath = item_fullpath + '/' + _file_name
 	print_debug(file_fullpath)
 	if os.path.exists(file_fullpath)==True:
 		file_size = os.path.getsize(file_fullpath)
@@ -155,18 +150,18 @@ def rename_folder(_src, _des):
 		print("Folder name isn't change")
 
 def remove_original_msg():
-	global fullpath_src_folder
-	first_status_index = fullpath_src_folder.find("#")
+	global item_fullpath
+	first_status_index = item_fullpath.find("#")
 	print(first_status_index)
 	new_name = ""
 	if first_status_index>1:
-		new_name = fullpath_src_folder[0:first_status_index]
+		new_name = item_fullpath[0:first_status_index]
 		print(new_name)
-		rename_folder(fullpath_src_folder, new_name)
+		rename_folder(item_fullpath, new_name)
 	return new_name
 
 def append_checkmsg_to_folder_name(st):
-	global fullpath_src_folder
+	global item_fullpath
 	global check_folder_content_ok_flag
 	new_folder_name = remove_original_msg()
 	end_str = "#"
@@ -178,12 +173,20 @@ def append_checkmsg_to_folder_name(st):
 		check_folder_content_ok_flag = 0
 	# start rename
 	if new_folder_name=="":
-		rename_folder(fullpath_src_folder, fullpath_src_folder+end_str)
+		rename_folder(item_fullpath, item_fullpath+end_str)
 	else:
 		rename_folder(new_folder_name, new_folder_name+end_str)
 
 each_item_folder_ls_list = []
-
+# Create if not exist
+def create_data_FTDI_folder(base, ftdi):
+	#get_datetime_string()
+	ftdi_folder_path = base + "/data_" + ftdi
+	try:
+		os.mkdir(ftdi_folder_path) 
+	except OSError as error: 
+		print(error)
+	
 def get_ftdi_and_check_all_files():
 	global each_item_folder_ls_list
 	global ok_temp_file_count
@@ -195,18 +198,18 @@ def get_ftdi_and_check_all_files():
 	ok_log_file_count = 0
 	for tb_file in each_item_folder_ls_list:
 		file_type = -1
-		if done_get_ftdi_flag == 0 and get_full_ftdi_from_file_name(tb_file, extracted_ftdi) == 1:
+		if done_get_ftdi_flag == 0 and get_full_ftdi_from_file_name(tb_file) == 1:
 			done_get_ftdi_flag = 1
 		if done_get_ftdi_flag == 1:
 			file_type = check_file_name_and_size(tb_file, get_file_size(tb_file))
-			if file_type==1:
-				ok_temp_file_count = ok_temp_file_count + 1
-			elif file_type==2:
-				ok_generated_file_count = ok_generated_file_count + 1
-			elif file_type==3:
-				ok_log_file_count = ok_log_file_count + 1
+			# if file_type==1:
+			# 	ok_temp_file_count = ok_temp_file_count + 1
+			# elif file_type==2:
+			# 	ok_generated_file_count = ok_generated_file_count + 1
+			# elif file_type==3:
+			# 	ok_log_file_count = ok_log_file_count + 1
 	error_st = print_check_file_content_message()
-	append_checkmsg_to_folder_name(error_st)
+	#append_checkmsg_to_folder_name(error_st)
 	# append check status message to end of folder name
 
 def check_file_count(file_count):
@@ -230,37 +233,37 @@ def add_item_info_string_fail(s):
 	item_info_sring = item_info_sring + bcolors.WARNING + s + bcolors.ENDC + "\n"
 
 json_file_name = ""
-def check_complete_nuc_folder(_filename):
-	global fullpath_src_folder
+
+def copy_from_nuc_data_folder_to_des(knan_software_dir, _des_folder):
+	global item_fullpath
 	global each_item_folder_ls_list
 	global extracted_ftdi
 	count = 1
-	root_folder_ls_list = os.listdir(_filename)
-	jsonFile = open(json_file_name, "w")
+	
+	root_folder_ls_list = os.listdir(knan_software_dir)
+	#jsonFile = open(json_file_name, "w")
+	data_folder_list = []
+	done_get_ftdi_flag = 0
 	for each_item_folder_name in root_folder_ls_list:
-		item_info_sring = ""
 		print_header("***STT: " + str(count))
 		count = count + 1
-		fullpath_src_folder = _filename + '/' + each_item_folder_name
-		print(fullpath_src_folder)
-		add_item_info_string("Folder full _filename: " + fullpath_src_folder) 
-		# all root_folder_ls_list and folder in fullpath_src_folder
-		each_item_folder_ls_list = os.listdir(fullpath_src_folder)
-		each_item_folder_file_count = len(each_item_folder_ls_list)
-		check_file_count(each_item_folder_file_count)
-		if each_item_folder_file_count>0:
-			get_ftdi_and_check_all_files()
-		print(item_info_sring)
-		aDict = [{"stt": count, "foder_name": each_item_folder_name, "ma_thiet_bi": "place_holder", "ftdi_name": extracted_ftdi, "files_check_status": check_folder_content_ok_flag}]
-		jsonString = json.dumps(aDict, indent=2, separators=(',', ': '))
-		#jsonString = json.dumps(aDict)
-		jsonFile.write(jsonString)
-		print_header("--------------------------------------------------------------------------------------------")
-	jsonFile.close()
+		item_fullpath = knan_software_dir + '/' + each_item_folder_name
+		print(item_fullpath)
+		add_item_info_string("Folder full _filename: " + item_fullpath) 
 
+		if os.path.isfile(item_fullpath) == True:
+			status, extracted_ftdi = get_full_ftdi_from_file_name(each_item_folder_name)
+			if status == 1:
+				print("Extracted ftdi: " + extracted_ftdi)
+				create_data_FTDI_folder(knan_software_dir, extracted_ftdi)
+				file_type = check_file_name_and_size(each_item_folder_name, get_file_size(each_item_folder_name))
+				new_file_path = knan_software_dir + '/' + "data_" + extracted_ftdi + '/' + each_item_folder_name
+				os.rename(item_fullpath, new_file_path)
+		print_header("--------------------------------------------------------------------------------------------")
+	#jsonFile.close()
 
 def remove_status_msg_from_nuc_folder_name(_filename):
-	global fullpath_src_folder
+	global item_fullpath
 	global each_item_folder_ls_list
 	global extracted_ftdi
 	count = 1
@@ -270,11 +273,11 @@ def remove_status_msg_from_nuc_folder_name(_filename):
 		item_info_sring = ""
 		print_header("***STT: " + str(count))
 		count = count + 1
-		fullpath_src_folder = _filename + '/' + each_item_folder_name
-		print(fullpath_src_folder)
-		add_item_info_string("Folder full _filename: " + fullpath_src_folder) 
-		# all root_folder_ls_list and folder in fullpath_src_folder
-		each_item_folder_ls_list = os.listdir(fullpath_src_folder)
+		item_fullpath = _filename + '/' + each_item_folder_name
+		print(item_fullpath)
+		add_item_info_string("Folder full _filename: " + item_fullpath) 
+		# all root_folder_ls_list and folder in item_fullpath
+		each_item_folder_ls_list = os.listdir(item_fullpath)
 		each_item_folder_file_count = len(each_item_folder_ls_list)
 		check_file_count(each_item_folder_file_count)
 		if each_item_folder_file_count>0:
@@ -288,21 +291,21 @@ def remove_status_msg_from_nuc_folder_name(_filename):
 	#jsonFile.close()
 
 def check_complete_nuc_folder(_filename):
-	global fullpath_src_folder
+	global item_fullpath
 	global each_item_folder_ls_list
 	global extracted_ftdi
 	count = 1
 	root_folder_ls_list = os.listdir(_filename)
-	jsonFile = open(json_file_name, "w")
+	#jsonFile = open(json_file_name, "w")
 	for each_item_folder_name in root_folder_ls_list:
 		item_info_sring = ""
 		print_header("***STT: " + str(count))
 		count = count + 1
-		fullpath_src_folder = _filename + '/' + each_item_folder_name
-		print(fullpath_src_folder)
-		add_item_info_string("Folder full _filename: " + fullpath_src_folder) 
-		# all root_folder_ls_list and folder in fullpath_src_folder
-		each_item_folder_ls_list = os.listdir(fullpath_src_folder)
+		item_fullpath = _filename + '/' + each_item_folder_name
+		print(item_fullpath)
+		add_item_info_string("Folder full _filename: " + item_fullpath) 
+		# all root_folder_ls_list and folder in item_fullpath
+		each_item_folder_ls_list = os.listdir(item_fullpath)
 		each_item_folder_file_count = len(each_item_folder_ls_list)
 		check_file_count(each_item_folder_file_count)
 		if each_item_folder_file_count>0:
@@ -311,16 +314,16 @@ def check_complete_nuc_folder(_filename):
 		aDict = [{"stt": count, "foder_name": each_item_folder_name, "ma_thiet_bi": "place_holder", "ftdi_name": extracted_ftdi, "files_check_status": check_folder_content_ok_flag}]
 		jsonString = json.dumps(aDict, indent=2, separators=(',', ': '))
 		#jsonString = json.dumps(aDict)
-		jsonFile.write(jsonString)
+		#jsonFile.write(jsonString)
 		print_header("--------------------------------------------------------------------------------------------")
-	jsonFile.close()
+	#jsonFile.close()
 
 def main_check_complete_nuc_folder(filepath):
 	print("Hello World!")
-	global json_file_name
+	#global json_file_name
 	#filePath = '/home/somedir/Documents/python/logs'
 	get_datetime_string()
-	json_file_name = "log_"+get_datetime_string()+".json"
+	#json_file_name = "log_"+get_datetime_string()+".json"
 	if os.path.exists(json_file_name):
 		os.remove(json_file_name)
 		print_ok("Delete the file ok")
@@ -353,7 +356,7 @@ def main_check_and_change_nucfolder_name(filepath):
 	#print(jsondata)
 
 def main():
-	main_check_complete_nuc_folder()
-
+	#main_check_complete_nuc_folder()
+	copy_from_nuc_data_folder_to_des("D:\py_test_KNAN_software", "D:\py_test_des_folder")
 if __name__ == "__main__":
     main()

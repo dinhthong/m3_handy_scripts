@@ -4,6 +4,11 @@ import sys
 from array import *
 from datetime import date
 from datetime import datetime
+
+# define constant
+c_ftdi_length = 8
+c_temperatire_file_size = 157286400
+
 class bcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
@@ -40,3 +45,16 @@ def get_datetime_string():
 	date_time_str = current_date+"T"+current_time
 	#print(date_time_str)
 	return date_time_str
+
+def get_full_ftdi_from_file_name(file_name):
+	ft_first_index = file_name.find("FT")
+	return_status = 0
+	if ft_first_index>=0:
+		input_ftdi = file_name[ft_first_index:ft_first_index+c_ftdi_length]
+		print_ok("FTDI: "+ input_ftdi)
+		return_status = 1
+	else:
+		input_ftdi = ""
+		print_fail("No FTDI string in file is found!, Please check folder content!")
+		return_status = 0
+	return return_status, input_ftdi
