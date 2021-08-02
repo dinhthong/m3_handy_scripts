@@ -7,24 +7,13 @@ from tkinter import filedialog
 import os
 from configparser import ConfigParser
 
-c_machine_type = 1 # 0 for ubuntu (windows subsystem for windows), 1 for windows
-
-if c_machine_type == 0:
-	#_filename = '/mnt/e/du lieu nuc knan '
-	_filename = '/mnt/d/Dulieu_NUC_KNAN/HDD_1TB_29July21'
-else:
-	_filename = "D:\Dulieu_NUC_KNAN\HDD_1TB_29July21"
-
 pg_textfile_name = "config.ini"
 config = ConfigParser()
 # check and write text file
 if os.path.exists(pg_textfile_name):
     print("Config already exists")
-    #print(config.get('main', 'complete_nuc_parentfolder'))
     # config.add_section('main')
     # config.set('main', 'key1', 'value1')
-    # config.set('main', 'key2', 'value2')
-    # config.set('main', 'key3', 'value3')
 else:
     f = open(pg_textfile_name,"w+")
     f.close()
@@ -59,7 +48,7 @@ def search_for_file_path ():
 wrapper0 = LabelFrame(root, text="Login")
 wrapper1 = LabelFrame(root, text="main")
 wrapper2 = LabelFrame(root, text="User action")
-wrapper3 = LabelFrame (root, text="Customer Data")
+wrapper3 = LabelFrame (root, text="KNAN NUC TOOL")
 
 wrapper0.pack(fill="both", expand="yes", padx=20, pady=10)
 wrapper1.pack(fill="both", expand="yes", padx=20, pady=10)
@@ -89,7 +78,7 @@ btn_browse_dir.place(x = 20, y = 20, width = 75)
 
 def search_btn_cb():
     print("Search button clicked")
-#Search selection
+# Search selection
 # Search box
 q=StringVar()
 lbl = Label(wrapper2, text="Search")
@@ -109,9 +98,6 @@ ent2 = Entry(wrapper2, textvariable=dir_q)
 ent2.pack(side=tk.LEFT, padx=6)
 ent2.place(x=100, y=15, height=20, width=350)
 dir_q.set(config.get('main', 'complete_nuc_parentfolder'))
-# Search button
-#btn = Button(wrapper2, text="Search", command=search)
-#btn.pack(side=tk.LEFT, padx=6) 
 
 # create new record wrapper
 # https://www.kite.com/python/answers/how-to-make-an-array-of-strings-in-python
@@ -129,19 +115,19 @@ def btn_remove_status_msg_from_nuc_folder_name():
     remove_status_msg_from_nuc_folder_name(dir_q.get())
 
 btn_change_name = tk.Button(wrapper3, text ="CHANGE_NAME", 
-                       bg ='blue', command = btn_main_check_and_change_nucfolder_name)
+                       bg ='#ffb3fe', command = btn_main_check_and_change_nucfolder_name)
 
-btn_change_name.grid(row = 2, column=0, pady = 20)
+btn_change_name.grid(row = 2, column=1, pady = 20)
 
 btn_checknuc = tk.Button(wrapper3, text ="CHECK_NUC_FOLDER", 
-                       bg ='blue', command = btn_main_check_complete_nuc_folder)
+                       bg ='#ffb3fe', command = btn_main_check_complete_nuc_folder)
 
-btn_checknuc.grid(row = 3, column=0, pady = 20)
+btn_checknuc.grid(row = 3, column=2, pady = 20)
 
 btn_rm_status_msg = tk.Button(wrapper3, text ="REMOVE_STATUS_MSG", 
-                       bg ='blue', command = btn_remove_status_msg_from_nuc_folder_name)
+                       bg ='#ffb3fe', command = btn_remove_status_msg_from_nuc_folder_name)
 
-btn_rm_status_msg.grid(row = 4, column=0, pady = 20)
+btn_rm_status_msg.grid(row = 4, column=3, pady = 20)
 
 root.title("KNAN NUC check tool")
 root.geometry("1200x800")

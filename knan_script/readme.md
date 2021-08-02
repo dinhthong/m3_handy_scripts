@@ -1,15 +1,14 @@
-# Todos
-- Read working path from file (save latest working dir path) -> Open another process -> Auto read this:
-+ Design it to hold multiple non-volatile variables that's necessary for new session
-+ Read the variables at beginning of program
-- Write working logs and save to text file
-- Expand this: 
-+ User can point to 'Phan mem lay mau du lieu', and it can navigate to Data folder, NUC_Table, Log... -> check the files -> copy finished FTDI to one folder automatically -> To save disk storage.
+# Intro
 + Save user operations, and error prone.
-- Handle browse -> Cancel
-- Clean code
+# Todos
+- Write user working logs (new session, button click...) and save to text file
 - JSON file -> more info: check info of each file, display file name and file size
-- Export to current folder: json file contains FAIL folders only
-
+# Features
+- User can point to 'Phan mem lay mau du lieu', the software then navigates to Data folder, NUC_Table, Log... (or by user selection dir paths) -> check the files:
++ copy finished FTDI to one folder automatically -> Ready to be copied to store disk.
++ The user can select parent nuc folder. -> and select temperature folder -> Add feature: export valid temperature data files (by checking name and size in subfolders...) to temperature folder (to be generated NUC in software again)
+- Export to current folder: json file contains FAIL/OK folders only
+# Practices
+- Clean code
 # References
 https://stackoverflow.com/questions/111155/how-do-i-handle-the-window-close-event-in-tkinter
