@@ -15,8 +15,7 @@ def print_debug(s):
 	if allow_print_debug_info==1:
 		print(bcolors.OKBLUE + "Db: " + s + bcolors.ENDC)
 
-# print to screen if all checks are ok
-item_info_sring = ""
+
 def check_and_change_nucfolder_name(_filepath):
 	global fullpath_src_folder
 	count = 1
@@ -71,27 +70,6 @@ def check_and_change_nucfolder_name(_filepath):
 
 # -20, -10, 0,...
 temp_file_check = array('B', [0, 0, 0, 0, 0, 0, 0, 0, 0])
-
-
-
-def check_file_name_and_size(_fname, _fsize):
-	if _fname.find(".bin") != -1:
-		underscore_index_list = find(_fname, "_")
-		if len(underscore_index_list)==2:
-			#print_debug(_fsize)
-			if _fsize==c_temperatire_file_size:
-				print_ok("Temperature file size ok")
-				return 1
-			else:
-				print_fail("Temperature file size NOT ok")
-		else:
-			print("output file")
-			return 2
-	elif _fname.find(".txt"):
-		print("Log file detected")
-		return 3
-
-
 check_folder_content_ok_flag = 0
 def rename_folder(_src, _des):
 	if g_allow_rename == 1:
@@ -169,7 +147,6 @@ def remove_status_msg_from_nuc_folder_name(_filename):
 	root_folder_ls_list = os.listdir(_filename)
 	#jsonFile = open(json_file_name, "w")
 	for each_item_folder_name in root_folder_ls_list:
-		item_info_sring = ""
 		print_header("***STT: " + str(count))
 		count = count + 1
 		fullpath_src_folder = _filename + '/' + each_item_folder_name
@@ -179,7 +156,6 @@ def remove_status_msg_from_nuc_folder_name(_filename):
 		# check_standard_files_count(each_item_folder_file_count)
 		if each_item_folder_file_count>0:
 			remove_original_msg(fullpath_src_folder)
-		print(item_info_sring)
 		#aDict = [{"stt": count, "foder_name": each_item_folder_name, "ma_thiet_bi": "place_holder", "ftdi_name": extracted_ftdi, "files_check_status": check_folder_content_ok_flag}]
 		#jsonString = json.dumps(aDict, indent=2, separators=(',', ': '))
 		#jsonString = json.dumps(aDict)
@@ -198,7 +174,6 @@ def check_individual_nuc_folder_files(_base_dir_name, _nuc_dir_name):
 	check_standard_files_count(each_item_folder_file_count)
 	if each_item_folder_file_count>0:
 		get_ftdi_and_check_all_files(full_dir_path, each_item_folder_ls_list)
-	#print(item_info_sring)
 	#aDict = [{"stt": count, "foder_name": each_item_folder_name, "ma_thiet_bi": "place_holder", "ftdi_name": 123, "files_check_status": check_folder_content_ok_flag}]
 	#jsonString = json.dumps(aDict, indent=2, separators=(',', ': '))
 	#jsonString = json.dumps(aDict)

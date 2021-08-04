@@ -99,7 +99,21 @@ def check_standard_files_count(file_count):
 	else:
 		if file_count == 15:
 			print_ok("File count ok")
-			# add_item_info_string("File count ok")
 		else:
 			print_fail("File count error")
-			# add_item_info_string("File count error")
+
+def check_file_name_and_size(_fname, _fsize):
+	if _fname.find(".bin") != -1:
+		underscore_index_list = find(_fname, "_")
+		if len(underscore_index_list)==2:
+			if _fsize==c_temperatire_file_size:
+				print_ok("Temperature file size ok")
+				return 1
+			else:
+				print_fail("Temperature file size NOT ok")
+		else:
+			print("output file")
+			return 2
+	elif _fname.find(".txt"):
+		print("Log file detected")
+		return 3
