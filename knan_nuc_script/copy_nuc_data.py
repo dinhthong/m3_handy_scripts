@@ -91,15 +91,17 @@ def extract_files_in_childfolders_to_des(_paren_folder, _des_folder):
 					print("nuc_file_fullpath: " + nuc_file_fullpath)
 					print("new_file_path: " + new_file_path)
 					os.rename(nuc_file_fullpath, new_file_path)
+		else:
+			print_header("Not folder")
 		#check_individual_nuc_folder_files(_base_dir_name, each_item_folder_name)
-def copy_from_nuc_data_folder_to_des(knan_software_dir, _des_folder):
+def arrange_nuc_files_to_folder(knan_software_dir):
 	global each_item_folder_ls_list
 	root_folder_ls_list = os.listdir(knan_software_dir)
 	create_ftdi_folders_and_move_ftdi_files(knan_software_dir, root_folder_ls_list)
 	# check files in each folder
 	
 def main():
-	#copy_from_nuc_data_folder_to_des("D:\py_test_KNAN_software", "D:\py_test_des_folder")
+	#arrange_nuc_files_to_folder("D:\py_test_KNAN_software", "D:\py_test_des_folder")
 	extract_files_in_childfolders_to_des("D:\py_test_KNAN_software", "D:\py_test_des_folder")
 if __name__ == "__main__":
     main()
