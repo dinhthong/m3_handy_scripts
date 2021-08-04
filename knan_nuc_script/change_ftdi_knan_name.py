@@ -161,14 +161,6 @@ def get_ftdi_and_check_all_files(_full_dir_path, _each_item_folder_ls_list):
 	append_checkmsg_to_folder_name(error_st, _full_dir_path)
 	# append check status message to end of folder name
 
-def add_item_info_string(s):
-	global item_info_sring
-	item_info_sring = item_info_sring + s + "\n"
-
-def add_item_info_string_fail(s):
-	global item_info_sring
-	item_info_sring = item_info_sring + bcolors.WARNING + s + bcolors.ENDC + "\n"
-
 json_file_name = ""
 
 # input: D:\Dulieu_NUC_KNAN\fromOneDrive_PC_HDD

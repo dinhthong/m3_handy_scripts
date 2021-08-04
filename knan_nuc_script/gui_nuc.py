@@ -17,8 +17,11 @@ if os.path.exists(pg_textfile_name):
 else:
     f = open(pg_textfile_name,"w+")
     f.close()
+
 config.read(pg_textfile_name)
+
 if config.has_section('main') == False:
+    print("config.has_section('main') == False")
     config.add_section('main')
     config.set('main', 'complete_nuc_parentfolder', "")
     config.set('main', 'software_folder', "")
@@ -108,6 +111,7 @@ lbl.pack(side=tk.LEFT, padx=15)
 ent2 = Entry(wrapper2, textvariable=dir_q)
 ent2.pack(side=tk.LEFT, padx=6)
 ent2.place(x=100, y=15, height=20, width=350)
+print("main->complete_nuc_parentfolder: "+config.get('main', 'complete_nuc_parentfolder'))
 dir_q.set(config.get('main', 'complete_nuc_parentfolder'))
 
 # data_folder selection

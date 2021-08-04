@@ -182,18 +182,8 @@ def check_file_count(file_count):
 	else:
 		if file_count == 15:
 			print_ok("File count ok")
-			add_item_info_string("File count ok")
 		else:
 			print_fail("File count error")
-			add_item_info_string("File count error")
-
-def add_item_info_string(s):
-	global item_info_sring
-	item_info_sring = item_info_sring + s + "\n"
-
-def add_item_info_string_fail(s):
-	global item_info_sring
-	item_info_sring = item_info_sring + bcolors.WARNING + s + bcolors.ENDC + "\n"
 
 json_file_name = ""
 
@@ -204,7 +194,6 @@ def create_ftdi_folders_and_move_ftdi_files(base_dir, folder_ls_list):
 		count = count + 1
 		item_fullpath = base_dir + '/' + each_item_folder_name
 		print(item_fullpath)
-		add_item_info_string("ITEM full _filename: " + item_fullpath) 
 		if os.path.isfile(item_fullpath) == True:
 			status, extracted_ftdi = get_full_ftdi_from_file_name(each_item_folder_name)
 			if status == 1:
@@ -236,7 +225,6 @@ def remove_status_msg_from_nuc_folder_name(_filename):
 		count = count + 1
 		item_fullpath = _filename + '/' + each_item_folder_name
 		print(item_fullpath)
-		add_item_info_string("Folder full _filename: " + item_fullpath) 
 		# all root_folder_ls_list and folder in item_fullpath
 		each_item_folder_ls_list = os.listdir(item_fullpath)
 		each_item_folder_file_count = len(each_item_folder_ls_list)
@@ -264,7 +252,6 @@ def check_complete_nuc_folder(_filename):
 		count = count + 1
 		item_fullpath = _filename + '/' + each_item_folder_name
 		print(item_fullpath)
-		add_item_info_string("Folder full _filename: " + item_fullpath) 
 		# all root_folder_ls_list and folder in item_fullpath
 		each_item_folder_ls_list = os.listdir(item_fullpath)
 		each_item_folder_file_count = len(each_item_folder_ls_list)
