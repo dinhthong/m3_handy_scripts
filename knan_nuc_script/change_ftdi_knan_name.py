@@ -76,9 +76,7 @@ check_folder_content_ok_flag = 0
 # Remove string after # character
 # VD: D:\Dulieu_NUC_KNAN\fromOneDrive_PC_HDD\031_FT5P10Z3_ok
 def remove_original_msg(_dir_full_path):
-	#global fullpath_src_folder
 	first_status_index = _dir_full_path.find("#")
-	#print(first_status_index)
 	new_name = ""
 	if first_status_index>1:
 		new_name = _dir_full_path[0:first_status_index]
@@ -131,7 +129,7 @@ def remove_status_msg_from_nuc_folder_name(_filename):
 		print_header("--------------------------------------------------------------------------------------------")
 	#jsonFile.close()
 
-
+# Example data:
 # _full_dir_path = D:\Dulieu_NUC_KNAN\fromOneDrive_PC_HDD\002_FT5P16DM
 # _each_item_folder_ls_list = [FT5P16DM_190521_50.bin, FT5OUSZM_310521_30.bin, Log_FT5OUSZM.txt]
 def get_ftdi_and_check_all_files(_full_dir_path, _each_item_folder_ls_list):
@@ -139,8 +137,8 @@ def get_ftdi_and_check_all_files(_full_dir_path, _each_item_folder_ls_list):
 	ok_temp_file_count = 0
 	ok_generated_file_count = 0
 	ok_log_file_count = 0
-	# tb_file: FT5P16DM_190521_50.bin
 	file_info_list = []
+	# tb_file: FT5P16DM_190521_50.bin
 	for tb_file in _each_item_folder_ls_list:
 		this_file_info_dict = {}
 		full_nuc_file_path = _full_dir_path+'/'+tb_file
@@ -154,11 +152,11 @@ def get_ftdi_and_check_all_files(_full_dir_path, _each_item_folder_ls_list):
 			file_size = get_file_size(full_nuc_file_path)
 			this_file_info_dict['file_size'] = file_size
 			file_type = check_file_name_and_size(tb_file, file_size)
-			if file_type==1:
+			if file_type == 1:
 				ok_temp_file_count = ok_temp_file_count + 1
-			elif file_type==2:
+			elif file_type == 2:
 				ok_generated_file_count = ok_generated_file_count + 1
-			elif file_type==3:
+			elif file_type == 3:
 				ok_log_file_count = ok_log_file_count + 1
 			this_file_info_dict['file_type'] = file_type
 		file_info_list.append(this_file_info_dict)
@@ -193,9 +191,12 @@ def check_individual_nuc_folder_files(_base_dir_name, _nuc_dir_name):
 def check_complete_nuc_folder(_base_dir_name):
 	count = 0
 	root_folder_ls_list = os.listdir(_base_dir_name)
-	# each_item_folder_name: 056_FT5OV9NG_ok
-	jfilename= get_json_file_name()
+	jfilename = get_json_file_name()
 	jsonFile = open(jfilename, "w")
+	json_info_dict = {"command": "check_complete_nuc_folder", "file_name": jfilename}
+	jsonString = json.dumps(json_info_dict, indent=2, separators=(',', ': '))
+	jsonFile.write(jsonString)
+	# each_item_folder_name: 056_FT5OV9NG_ok
 	for each_item_folder_name in root_folder_ls_list:
 		count = count + 1
 		json_info_dict = {}
