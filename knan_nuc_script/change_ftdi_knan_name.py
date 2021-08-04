@@ -8,12 +8,6 @@ import json
 # global vars
 fullpath_src_folder = ""
 underscore_index_list = []
-allow_print_debug_info = 1
-
-def print_debug(s):
-	if allow_print_debug_info==1:
-		print(bcolors.OKBLUE + "Db: " + s + bcolors.ENDC)
-
 
 def check_and_change_nucfolder_name(_filepath):
 	global fullpath_src_folder
@@ -182,19 +176,13 @@ def check_complete_nuc_folder(_base_dir_name):
 
 	#jsonFile.close()
 
+
 def main_check_complete_nuc_folder(filepath):
 	print("Hello World!")
 	global json_file_name
 	#filePath = '/home/somedir/Documents/python/logs'
 	get_datetime_string()
-	json_file_name = "log_"+get_datetime_string()+".json"
-	if os.path.exists(json_file_name):
-		os.remove(json_file_name)
-		print_ok("Delete the file ok")
-	else:
-		print("Can not delete the file as it doesn't exists")
-		f = open(json_file_name, 'a+')
-		f.close()
+
 	#check_and_change_nucfolder_name()
 	check_complete_nuc_folder(filepath)
 	#readjsonfile = open(json_file_name, "r")

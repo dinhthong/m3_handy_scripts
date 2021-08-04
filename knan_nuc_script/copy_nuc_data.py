@@ -11,11 +11,6 @@ c_ftdi_length = 8
 # global vars
 extracted_ftdi = ""
 underscore_index_list = []
-allow_print_debug_info = 0
-
-def print_debug(s):
-	if allow_print_debug_info==1:
-		print(bcolors.OKBLUE + "Db: " + s + bcolors.ENDC)
 
 # -20, -10, 0,...
 temp_file_check = array('B', [0, 0, 0, 0, 0, 0, 0, 0, 0])
@@ -73,27 +68,40 @@ def check_temperature_file(_nuc_file_fullpath):
 		return True
 	else: 
 		print("Not file")
+
+
 # _paren_folder: D:\py_test_KNAN_software
 def extract_files_in_childfolders_to_des(_paren_folder, _des_folder):
 	count = 1
 	root_folder_ls_list = os.listdir(_paren_folder)
 	# each_item_folder_name: 056_FT5OV9NG_ok
+	jfilename= get_json_file_name()
+	jsonFile = open(jfilename, "w")
 	for each_item_folder_name in root_folder_ls_list:
-		print_header("***STT: " + str(count))
-		count = count + 1
 		nuc_folder_fullpath = _paren_folder + '/'+  each_item_folder_name
 		if os.path.isdir(nuc_folder_fullpath) == True:
 			nuc_folder_fullpath_ls = os.listdir(nuc_folder_fullpath)
 			for each_nuc_file in nuc_folder_fullpath_ls:
+				json_info_dict = {}
+				print_header("***STT: " + str(count))
+				count = count + 1
+				json_info_dict['STT'] = count
 				nuc_file_fullpath = nuc_folder_fullpath +'/' + each_nuc_file
 				if check_temperature_file(nuc_file_fullpath) == True:
-					new_file_path = _des_folder+'/'+each_nuc_file
+					#json_info_dict['md5'] = get_md5_hash(nuc_file_fullpath)
 					print("nuc_file_fullpath: " + nuc_file_fullpath)
+					json_info_dict['original_path'] = nuc_file_fullpath
+					new_file_path = _des_folder+'/'+each_nuc_file
 					print("new_file_path: " + new_file_path)
+					json_info_dict['destination_path'] = new_file_path
 					os.rename(nuc_file_fullpath, new_file_path)
+					print(json_info_dict)
+				jsonString = json.dumps(json_info_dict, indent=2, separators=(',', ': '))
+				jsonFile.write(jsonString)
 		else:
 			print_header("Not folder")
 		#check_individual_nuc_folder_files(_base_dir_name, each_item_folder_name)
+	jsonFile.close()
 def arrange_nuc_files_to_folder(knan_software_dir):
 	global each_item_folder_ls_list
 	root_folder_ls_list = os.listdir(knan_software_dir)

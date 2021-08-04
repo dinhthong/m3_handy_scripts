@@ -18,3 +18,6 @@
 - Clean code
 # References
 https://stackoverflow.com/questions/111155/how-do-i-handle-the-window-close-event-in-tkinter
+
+## JSON
+https://stackoverflow.com/questions/53110610/json-dump-in-python-writing-newline-character-and-carriage-returns-in-file/57021651

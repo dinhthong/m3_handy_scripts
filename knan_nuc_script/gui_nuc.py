@@ -52,7 +52,7 @@ def br_software_folder_cb():
         dir_data_q.set(file_path_variable)
         # write to config file
         # config.add_section('main')
-        config.set('main', 'knandata_folder', file_path_variable)
+        config.set('main', 'software_folder', file_path_variable)
         status_q.set("Change folder contains KNAN_Software to: "+file_path_variable)
 
 def br_nucdata_folder_cb():
@@ -63,10 +63,10 @@ def br_nucdata_folder_cb():
         dir_knandata_q.set(file_path_variable)
         # write to config file
         # config.add_section('main')
-        config.set('main', 'software_folder', file_path_variable)
+        config.set('main', 'knandata_folder', file_path_variable)
         status_q.set("Change folder contains KNAN_Software to: "+file_path_variable)
 
-def search_for_file_path ():
+def search_for_file_path():
     currdir = os.getcwd()
     tempdir = filedialog.askdirectory(parent=root, initialdir=currdir, title='Please select a directory')
     if len(tempdir) > 0:
@@ -105,7 +105,7 @@ def search_btn_cb():
 # User action wrapper
 btn_browse_dir = tk.Button(wrapper2, text ="BROWSE_DIR", 
                        bg ='blue', command = browse_folder_cb)
-btn_browse_dir.place(x = 20, y = 20, width = 75)
+btn_browse_dir.place(x = 10, y = 10, width = 75)
 # Search selection
 # Search box
 q = StringVar()
@@ -130,23 +130,23 @@ dir_q.set(config.get('main', 'complete_nuc_parentfolder'))
 # data_folder selection
 btn_browse_softwarefolder_dir = tk.Button(wrapper2, text ="SOFT_DIR", 
                        bg ='blue', command = br_software_folder_cb)
-btn_browse_softwarefolder_dir.place(x = 400, y = 50, width = 75)
+btn_browse_softwarefolder_dir.place(x = 500, y = 40, width = 75)
 
 dir_data_q = StringVar()
 ent_data = Entry(wrapper2, textvariable=dir_data_q)
 ent_data.pack(side=tk.LEFT, padx=6)
-ent_data.place(x=500, y=55, height=20, width=350)
+ent_data.place(x=600, y=40, height=20, width=350)
 dir_data_q.set(config.get('main', 'software_folder'))
 
 # KNAN_software/data folder
 btn_browse_knandata_dir = tk.Button(wrapper2, text ="DATA_DIR", 
                        bg ='blue', command = br_nucdata_folder_cb)
-btn_browse_knandata_dir.place(x = 400, y = 80, width = 75)
+btn_browse_knandata_dir.place(x = 500, y = 65, width = 75)
 
 dir_knandata_q = StringVar()
 ent3 = Entry(wrapper2, textvariable=dir_knandata_q)
 ent3.pack(side=tk.LEFT, padx=6)
-ent3.place(x=500, y=85, height=20, width=350)
+ent3.place(x=600, y=65, height=20, width=350)
 dir_knandata_q.set(config.get('main', 'knandata_folder'))
 
 # working log on GUI

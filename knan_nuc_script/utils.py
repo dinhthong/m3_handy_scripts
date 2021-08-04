@@ -4,11 +4,13 @@ import sys
 from array import *
 from datetime import date
 from datetime import datetime
-
+import hashlib
 # define constant
 c_ftdi_length = 8
 c_temperatire_file_size = 157286400
 g_allow_rename = 1
+allow_print_debug_info = 0
+
 class bcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
@@ -20,7 +22,7 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-#https://stackoverflow.com/questions/4664850/how-to-find-all-occurrences-of-a-substring
+# https://stackoverflow.com/questions/4664850/how-to-find-all-occurrences-of-a-substring
 def find(s, ch):
     return [i for i, ltr in enumerate(s) if ltr == ch]
 
@@ -38,7 +40,7 @@ def print_ok(s):
 def get_datetime_string():
 	now = date.today()
 	current_date = now.strftime("%Y_%m_%d")
-	#print_debug("Today's date:", current_date)
+	print_debug("Today's date:" + current_date)
 	now = datetime.now()
 	current_time = now.strftime("%H_%M_%S")
 	#print("Current Time =", current_time)
@@ -128,3 +130,30 @@ def rename_folder(_src, _des):
 			print_fail("Error rename, check files/folders!")
 	else:
 		print("Folder name isn't change")
+
+def print_debug(s):
+	if allow_print_debug_info==1:
+		print(bcolors.OKBLUE + "Debug: " + s + bcolors.ENDC)
+
+def get_json_file_name():
+	json_file_name = "log_"+get_datetime_string()+".json"
+	if os.path.exists(json_file_name):
+		os.remove(json_file_name)
+		print_ok("Delete the file ok")
+	else:
+		print("Can not delete the file as it doesn't exists")
+		f = open(json_file_name, 'a+')
+		f.close()
+	return json_file_name
+
+# Import hashlib library (md5 method is part of it)
+
+
+def get_md5_hash(_filename):
+	# Open,close, read file and calculate MD5 on its contents 
+	with open(_filename) as file_to_check:
+		# read contents of the file
+		data = file_to_check.read()    
+		# pipe contents of the file through
+		md5_returned = hashlib.md5(data).hexdigest()
+	return md5_returned
