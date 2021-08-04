@@ -8,7 +8,7 @@ from datetime import datetime
 # define constant
 c_ftdi_length = 8
 c_temperatire_file_size = 157286400
-
+g_allow_rename = 1
 class bcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
@@ -117,3 +117,14 @@ def check_file_name_and_size(_fname, _fsize):
 	elif _fname.find(".txt"):
 		print("Log file detected")
 		return 3
+
+def rename_folder(_src, _des):
+	if g_allow_rename == 1:
+		try:
+			os.rename(_src, _des)
+			print("Folder name (moved) changed sucessfully")
+			print("New name: "+_des)
+		except OSError:
+			print_fail("Error rename, check files/folders!")
+	else:
+		print("Folder name isn't change")

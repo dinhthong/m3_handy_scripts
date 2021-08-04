@@ -9,7 +9,6 @@ import json
 fullpath_src_folder = ""
 underscore_index_list = []
 allow_print_debug_info = 1
-g_allow_rename = 1
 
 def print_debug(s):
 	if allow_print_debug_info==1:
@@ -71,16 +70,6 @@ def check_and_change_nucfolder_name(_filepath):
 # -20, -10, 0,...
 temp_file_check = array('B', [0, 0, 0, 0, 0, 0, 0, 0, 0])
 check_folder_content_ok_flag = 0
-def rename_folder(_src, _des):
-	if g_allow_rename == 1:
-		try:
-			os.rename(_src, _des)
-			print("Folder name changed sucessfully")
-			print("New name: "+_des)
-		except OSError:
-			print_fail("Error rename, check files/folders!")
-	else:
-		print("Folder name isn't change")
 
 # Remove string after # character
 # VD: D:\Dulieu_NUC_KNAN\fromOneDrive_PC_HDD\031_FT5P10Z3_ok

@@ -10,10 +10,8 @@ import shutil
 c_ftdi_length = 8
 # global vars
 extracted_ftdi = ""
-item_fullpath = ""
 underscore_index_list = []
 allow_print_debug_info = 0
-g_allow_rename = 1
 
 def print_debug(s):
 	if allow_print_debug_info==1:
@@ -69,15 +67,39 @@ def create_ftdi_folders_and_move_ftdi_files(base_dir, folder_ls_list):
 				new_file_path = base_dir + '/' + "data_" + extracted_ftdi + '/' + each_item_folder_name
 				os.rename(item_fullpath, new_file_path)
 		print_header("--------------------------------------------------------------------------------------------")
-
+# Description: check file name and file size 
+def check_temperature_file(_nuc_file_fullpath):
+	if os.path.isfile(_nuc_file_fullpath):
+		return True
+	else: 
+		print("Not file")
+# _paren_folder: D:\py_test_KNAN_software
+def extract_files_in_childfolders_to_des(_paren_folder, _des_folder):
+	count = 1
+	root_folder_ls_list = os.listdir(_paren_folder)
+	# each_item_folder_name: 056_FT5OV9NG_ok
+	for each_item_folder_name in root_folder_ls_list:
+		print_header("***STT: " + str(count))
+		count = count + 1
+		nuc_folder_fullpath = _paren_folder + '/'+  each_item_folder_name
+		if os.path.isdir(nuc_folder_fullpath) == True:
+			nuc_folder_fullpath_ls = os.listdir(nuc_folder_fullpath)
+			for each_nuc_file in nuc_folder_fullpath_ls:
+				nuc_file_fullpath = nuc_folder_fullpath +'/' + each_nuc_file
+				if check_temperature_file(nuc_file_fullpath) == True:
+					new_file_path = _des_folder+'/'+each_nuc_file
+					print("nuc_file_fullpath: " + nuc_file_fullpath)
+					print("new_file_path: " + new_file_path)
+					os.rename(nuc_file_fullpath, new_file_path)
+		#check_individual_nuc_folder_files(_base_dir_name, each_item_folder_name)
 def copy_from_nuc_data_folder_to_des(knan_software_dir, _des_folder):
-	global item_fullpath
 	global each_item_folder_ls_list
 	root_folder_ls_list = os.listdir(knan_software_dir)
 	create_ftdi_folders_and_move_ftdi_files(knan_software_dir, root_folder_ls_list)
 	# check files in each folder
 	
 def main():
-	copy_from_nuc_data_folder_to_des("D:\py_test_KNAN_software", "D:\py_test_des_folder")
+	#copy_from_nuc_data_folder_to_des("D:\py_test_KNAN_software", "D:\py_test_des_folder")
+	extract_files_in_childfolders_to_des("D:\py_test_KNAN_software", "D:\py_test_des_folder")
 if __name__ == "__main__":
     main()
