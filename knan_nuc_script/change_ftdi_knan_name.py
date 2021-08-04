@@ -11,12 +11,17 @@ underscore_index_list = []
 
 def check_and_change_nucfolder_name(_filepath):
 	global fullpath_src_folder
+	#json code
+	#jfilename= get_json_file_name()
+	#jsonFile = open(jfilename, "w")
 	count = 1
 	root_folder_ls_list = os.listdir(_filepath)
 	for each_item_folder_name in root_folder_ls_list:
+		json_info_dict = {}
 		valid_ftdi_flag = 0
 		good_name_flag = 0
 		print_header("***STT: " + str(count))
+		json_info_dict['STT'] = count
 		count = count + 1
 		#print(each_item_folder_name)
 		fullpath_src_folder = _filepath+'/'+each_item_folder_name
@@ -60,7 +65,10 @@ def check_and_change_nucfolder_name(_filepath):
 				print("Folder name isn't change")
 		else:
 			print_fail("None valid FTDI file is found")
-
+		# json_info_dict.update(dict_folder_info)
+		# jsonString = json.dumps(json_info_dict, indent=2, separators=(',', ': '))
+		# jsonFile.write(jsonString)
+	# jsonFile.close()
 # -20, -10, 0,...
 temp_file_check = array('B', [0, 0, 0, 0, 0, 0, 0, 0, 0])
 check_folder_content_ok_flag = 0
@@ -91,37 +99,14 @@ def append_checkmsg_to_folder_name(st, _dir_full_path):
 		check_folder_content_ok_flag = 0
 	# start rename
 	if new_folder_name=="":
-		rename_folder(_dir_full_path, _dir_full_path+end_str)
+		_nn = _dir_full_path+end_str
+		rename_folder(_dir_full_path, _nn)
 	else:
-		rename_folder(new_folder_name, new_folder_name+end_str)
+		_nn = new_folder_name+end_str
+		rename_folder(new_folder_name, _nn)
+	return _nn
 
 each_item_folder_ls_list = []
-# _full_dir_path = D:\Dulieu_NUC_KNAN\fromOneDrive_PC_HDD\002_FT5P16DM
-# _each_item_folder_ls_list = [FT5P16DM_190521_50.bin, FT5OUSZM_310521_30.bin, Log_FT5OUSZM.txt]
-def get_ftdi_and_check_all_files(_full_dir_path, _each_item_folder_ls_list):
-	done_get_ftdi_flag = 0
-	ok_temp_file_count = 0
-	ok_generated_file_count = 0
-	ok_log_file_count = 0
-	# tb_file: FT5P16DM_190521_50.bin
-	for tb_file in _each_item_folder_ls_list:
-		file_type = -1
-		if done_get_ftdi_flag == 0:
-			get_ftdi_status, extracted_ftdi = get_full_ftdi_from_file_name(tb_file)
-			if get_ftdi_status==1:
-				done_get_ftdi_flag = 1
-		if done_get_ftdi_flag == 1:
-			file_type = check_file_name_and_size(tb_file, get_file_size(_full_dir_path+'/'+tb_file))
-			if file_type==1:
-				ok_temp_file_count = ok_temp_file_count + 1
-			elif file_type==2:
-				ok_generated_file_count = ok_generated_file_count + 1
-			elif file_type==3:
-				ok_log_file_count = ok_log_file_count + 1
-	error_st = print_check_file_content_message(ok_temp_file_count, ok_generated_file_count, ok_log_file_count)
-	append_checkmsg_to_folder_name(error_st, _full_dir_path)
-	# append check status message to end of folder name
-
 json_file_name = ""
 
 # input: D:\Dulieu_NUC_KNAN\fromOneDrive_PC_HDD
@@ -146,36 +131,81 @@ def remove_status_msg_from_nuc_folder_name(_filename):
 		print_header("--------------------------------------------------------------------------------------------")
 	#jsonFile.close()
 
+
+# _full_dir_path = D:\Dulieu_NUC_KNAN\fromOneDrive_PC_HDD\002_FT5P16DM
+# _each_item_folder_ls_list = [FT5P16DM_190521_50.bin, FT5OUSZM_310521_30.bin, Log_FT5OUSZM.txt]
+def get_ftdi_and_check_all_files(_full_dir_path, _each_item_folder_ls_list):
+	done_get_ftdi_flag = 0
+	ok_temp_file_count = 0
+	ok_generated_file_count = 0
+	ok_log_file_count = 0
+	# tb_file: FT5P16DM_190521_50.bin
+	file_info_list = []
+	for tb_file in _each_item_folder_ls_list:
+		this_file_info_dict = {}
+		full_nuc_file_path = _full_dir_path+'/'+tb_file
+		this_file_info_dict['nuc_file_path'] = full_nuc_file_path
+		file_type = -1
+		if done_get_ftdi_flag == 0:
+			get_ftdi_status, extracted_ftdi = get_full_ftdi_from_file_name(tb_file)
+			if get_ftdi_status==1:
+				done_get_ftdi_flag = 1
+		if done_get_ftdi_flag == 1:
+			file_size = get_file_size(full_nuc_file_path)
+			this_file_info_dict['file_size'] = file_size
+			file_type = check_file_name_and_size(tb_file, file_size)
+			if file_type==1:
+				ok_temp_file_count = ok_temp_file_count + 1
+			elif file_type==2:
+				ok_generated_file_count = ok_generated_file_count + 1
+			elif file_type==3:
+				ok_log_file_count = ok_log_file_count + 1
+			this_file_info_dict['file_type'] = file_type
+		file_info_list.append(this_file_info_dict)
+	error_st = print_check_file_content_message(ok_temp_file_count, ok_generated_file_count, ok_log_file_count)
+	new_folder_name =append_checkmsg_to_folder_name(error_st, _full_dir_path)
+	return [extracted_ftdi, check_folder_content_ok_flag, file_info_list, new_folder_name]
+	# append check status message to end of folder name
+
 # RETURN LIST: [ftdi number, number of files, file name and check status,
 # temperature files check status, output files check and status, Log files check and status, check result]
 def check_individual_nuc_folder_files(_base_dir_name, _nuc_dir_name):
+	this_info_dict = {}
 	full_dir_path = _base_dir_name + '/' + _nuc_dir_name
 	print(full_dir_path)
+	this_info_dict['dir_full_path'] = full_dir_path
 	# all root_folder_ls_list and folder in fullpath_src_folder
 	each_item_folder_ls_list = os.listdir(full_dir_path)
 	each_item_folder_file_count = len(each_item_folder_ls_list)
+	this_info_dict['file_count'] = each_item_folder_file_count
 	check_standard_files_count(each_item_folder_file_count)
 	if each_item_folder_file_count>0:
-		get_ftdi_and_check_all_files(full_dir_path, each_item_folder_ls_list)
-	#aDict = [{"stt": count, "foder_name": each_item_folder_name, "ma_thiet_bi": "place_holder", "ftdi_name": 123, "files_check_status": check_folder_content_ok_flag}]
-	#jsonString = json.dumps(aDict, indent=2, separators=(',', ': '))
-	#jsonString = json.dumps(aDict)
-	#jsonFile.write(jsonString)
-	print_header("--------------------------------------------------------------------------------------------")
+		[this_ftdi, check_result, this_all_fileinfo_list, new_path] = get_ftdi_and_check_all_files(full_dir_path, each_item_folder_ls_list)
+		this_info_dict['check_result'] = check_result
+		this_info_dict['ftdi'] = this_ftdi
+		this_info_dict['files_info_list'] = this_all_fileinfo_list
+		this_info_dict['new_dir_full_path'] = new_path
 
+	print_header("--------------------------------------------------------------------------------------------")
+	return this_info_dict
 # _filename: D:\Dulieu_NUC_KNAN\fromOneDrive_PC_HDD
 # root_folder_ls_list: [061_FT5OV9HL_ok, 097_FT5OUWNJ_cancheck]
 def check_complete_nuc_folder(_base_dir_name):
-	count = 1
+	count = 0
 	root_folder_ls_list = os.listdir(_base_dir_name)
 	# each_item_folder_name: 056_FT5OV9NG_ok
+	jfilename= get_json_file_name()
+	jsonFile = open(jfilename, "w")
 	for each_item_folder_name in root_folder_ls_list:
-		print_header("***STT: " + str(count))
 		count = count + 1
-		check_individual_nuc_folder_files(_base_dir_name, each_item_folder_name)
-
-	#jsonFile.close()
-
+		json_info_dict = {}
+		print_header("***STT: " + str(count))
+		json_info_dict['STT'] = count
+		dict_folder_info = check_individual_nuc_folder_files(_base_dir_name, each_item_folder_name)
+		json_info_dict.update(dict_folder_info)
+		jsonString = json.dumps(json_info_dict, indent=2, separators=(',', ': '))
+		jsonFile.write(jsonString)
+	jsonFile.close()
 
 def main_check_complete_nuc_folder(filepath):
 	print("Hello World!")

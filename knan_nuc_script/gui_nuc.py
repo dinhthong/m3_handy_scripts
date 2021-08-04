@@ -24,7 +24,7 @@ config.read(pg_textfile_name)
 if config.has_section('main') == False:
     print("config.has_section('main') == False")
     config.add_section('main')
-    config.set('main', 'complete_nuc_parentfolder', "")
+    config.set('main', 'nuc_base_dir', "")
     config.set('main', 'software_folder', "")
     config.set('main', 'knandata_folder', "")
 def submitact():
@@ -34,33 +34,33 @@ def submitact():
 
 root = Tk()
 
-def browse_folder_cb():
+def btn_org_dir_cb():
     #print("Refreshing table")
     file_path_variable = search_for_file_path()
     print ("\nfile_path_variable = ", file_path_variable)
     if file_path_variable != "":
-        dir_q.set(file_path_variable)
+        dir_org_q.set(file_path_variable)
         # write to config file
         # config.add_section('main')
-        config.set('main', 'complete_nuc_parentfolder', file_path_variable)
+        config.set('main', 'nuc_base_dir', file_path_variable)
         status_q.set("Change folder contains NUC folders to: "+file_path_variable)
-def br_software_folder_cb():
+def btn_soft_dir_cb():
     #print("Refreshing table")
     file_path_variable = search_for_file_path()
     print ("\nfile_path_variable = ", file_path_variable)
     if file_path_variable != "":
-        dir_data_q.set(file_path_variable)
+        dir_soft_q.set(file_path_variable)
         # write to config file
         # config.add_section('main')
         config.set('main', 'software_folder', file_path_variable)
         status_q.set("Change folder contains KNAN_Software to: "+file_path_variable)
 
-def br_nucdata_folder_cb():
+def btn_des_dir_cb():
         #print("Refreshing table")
     file_path_variable = search_for_file_path()
     print ("\nfile_path_variable = ", file_path_variable)
     if file_path_variable != "":
-        dir_knandata_q.set(file_path_variable)
+        dir_des_q.set(file_path_variable)
         # write to config file
         # config.add_section('main')
         config.set('main', 'knandata_folder', file_path_variable)
@@ -103,9 +103,9 @@ def search_btn_cb():
     print("Search button clicked")
 
 # User action wrapper
-btn_browse_dir = tk.Button(wrapper2, text ="BROWSE_DIR", 
-                       bg ='blue', command = browse_folder_cb)
-btn_browse_dir.place(x = 10, y = 10, width = 75)
+btn_org_dir_object = tk.Button(wrapper2, text ="ORG_DIR", 
+                       bg ='blue', command = btn_org_dir_cb)
+btn_org_dir_object.place(x = 10, y = 10, width = 75)
 # Search selection
 # Search box
 q = StringVar()
@@ -119,35 +119,35 @@ btn = Button(wrapper2, text="Search", command=search_btn_cb)
 btn.pack(side=tk.LEFT, padx=6) 
 
 # Search box
-dir_q = StringVar()
+dir_org_q = StringVar()
 # lbl = Label(wrapper2, width=10, text="Selected dir")
 # lbl.pack(side=tk.LEFT, padx=15)
-ent2 = Entry(wrapper2, textvariable=dir_q)
+ent2 = Entry(wrapper2, textvariable=dir_org_q)
 ent2.pack(side=tk.LEFT, padx=6)
 ent2.place(x=100, y=15, height=20, width=350)
-dir_q.set(config.get('main', 'complete_nuc_parentfolder'))
+dir_org_q.set(config.get('main', 'nuc_base_dir'))
 
 # data_folder selection
-btn_browse_softwarefolder_dir = tk.Button(wrapper2, text ="SOFT_DIR", 
-                       bg ='blue', command = br_software_folder_cb)
-btn_browse_softwarefolder_dir.place(x = 500, y = 40, width = 75)
+btn_soft_dir_object = tk.Button(wrapper2, text ="SOFT_DIR", 
+                       bg ='blue', command = btn_soft_dir_cb)
+btn_soft_dir_object.place(x = 500, y = 40, width = 75)
 
-dir_data_q = StringVar()
-ent_data = Entry(wrapper2, textvariable=dir_data_q)
+dir_soft_q = StringVar()
+ent_data = Entry(wrapper2, textvariable=dir_soft_q)
 ent_data.pack(side=tk.LEFT, padx=6)
 ent_data.place(x=600, y=40, height=20, width=350)
-dir_data_q.set(config.get('main', 'software_folder'))
+dir_soft_q.set(config.get('main', 'software_folder'))
 
 # KNAN_software/data folder
-btn_browse_knandata_dir = tk.Button(wrapper2, text ="DATA_DIR", 
-                       bg ='blue', command = br_nucdata_folder_cb)
-btn_browse_knandata_dir.place(x = 500, y = 65, width = 75)
+btn_des_dir_object = tk.Button(wrapper2, text ="DES_DIR", 
+                       bg ='blue', command = btn_des_dir_cb)
+btn_des_dir_object.place(x = 500, y = 65, width = 75)
 
-dir_knandata_q = StringVar()
-ent3 = Entry(wrapper2, textvariable=dir_knandata_q)
+dir_des_q = StringVar()
+ent3 = Entry(wrapper2, textvariable=dir_des_q)
 ent3.pack(side=tk.LEFT, padx=6)
 ent3.place(x=600, y=65, height=20, width=350)
-dir_knandata_q.set(config.get('main', 'knandata_folder'))
+dir_des_q.set(config.get('main', 'knandata_folder'))
 
 # working log on GUI
 status_q = StringVar()
@@ -159,48 +159,48 @@ lbl.pack(side=tk.LEFT, padx=15)
 # https://www.kite.com/python/answers/how-to-make-an-array-of-strings-in-python
 
 def btn_main_check_complete_nuc_folder():
-    print(dir_q.get())
-    main_check_complete_nuc_folder(dir_q.get())
+    print(dir_org_q.get())
+    main_check_complete_nuc_folder(dir_org_q.get())
     status_q.set("Done btn_main_check_complete_nuc_folder!")
 
 def btn_main_check_and_change_nucfolder_name():
-    print(dir_q.get())
-    main_check_and_change_nucfolder_name(dir_q.get())
+    print(dir_org_q.get())
+    main_check_and_change_nucfolder_name(dir_org_q.get())
 
 def btn_remove_status_msg_from_nuc_folder_name():
-    #print(dir_q.get())
-    remove_status_msg_from_nuc_folder_name(dir_q.get())
+    #print(dir_org_q.get())
+    remove_status_msg_from_nuc_folder_name(dir_org_q.get())
     status_q.set("Done btn_remove_status_msg_from_nuc_folder_name!")
 
 def btn_arrange_nuc_files_to_folder():
-    #print(dir_q.get())
-    arrange_nuc_files_to_folder(dir_data_q.get())
+    #print(dir_org_q.get())
+    arrange_nuc_files_to_folder(dir_soft_q.get())
     status_q.set("Done btn_remove_status_msg_from_nuc_folder_name!")
 def btn_extract_nucfiles_to_desdir():
-    extract_files_in_childfolders_to_des(dir_knandata_q.get(), dir_data_q.get())
+    extract_files_in_childfolders_to_des(dir_soft_q.get(), dir_des_q.get())
     status_q.set("Done btn_extract_nucfiles_to_desdir!")
 # Define buttons
-btn_change_name = tk.Button(wrapper3, text ="CHANGE_NAME", 
+btn_CHANGE_FOLDER_NAME_IN_ORG = tk.Button(wrapper3, text ="CHANGE_FOLDER_NAME_IN_ORG", 
                        bg ='#ffb3fe', command = btn_main_check_and_change_nucfolder_name)
 
-btn_change_name.grid(row = 2, column=2, pady = 20)
+btn_CHANGE_FOLDER_NAME_IN_ORG.grid(row = 2, column=2, pady = 20)
 
-btn_checknuc = tk.Button(wrapper3, text ="CHECK_NUC_FOLDER", 
+btn_checknuc = tk.Button(wrapper3, text ="CHECK_NUC_FOLDER_IN_ORG", 
                        bg ='#ffb3fe', command = btn_main_check_complete_nuc_folder)
 
 btn_checknuc.grid(row = 3, column=2, pady = 20)
 
-btn_rm_status_msg = tk.Button(wrapper3, text ="REMOVE_STATUS_MSG", 
+btn_rm_status_msg = tk.Button(wrapper3, text ="REMOVE_STATUS_MSG_IN_ORG", 
                        bg ='#ffb3fe', command = btn_remove_status_msg_from_nuc_folder_name)
 
-btn_rm_status_msg.grid(row = 4, column=3, pady = 20)
+btn_rm_status_msg.grid(row = 4, column=2, pady = 20)
 
-btn_rm_status_msg = tk.Button(wrapper3, text ="ARRANGE_NUC_FILES_TO_FOLDER", 
+btn_rm_status_msg = tk.Button(wrapper3, text ="ARRANGE_NUC_FILES_TO_FOLDER_IN_SOFT", 
                        bg ='#ffb3fe', command = btn_arrange_nuc_files_to_folder)
 
 btn_rm_status_msg.grid(row = 5, column= 3, pady = 20)
 
-btn_rm_status_msg = tk.Button(wrapper3, text ="EXTRACT_NUC_FILES_TO_DES_DIR", 
+btn_rm_status_msg = tk.Button(wrapper3, text ="EXTRACT_NUC_FILES_IN_SOFT_TO_DES", 
                        bg ='#ffb3fe', command = btn_extract_nucfiles_to_desdir)
 
 btn_rm_status_msg.grid(row = 6, column= 3, pady = 20)

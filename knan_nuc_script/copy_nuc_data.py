@@ -72,7 +72,6 @@ def check_temperature_file(_nuc_file_fullpath):
 
 # _paren_folder: D:\py_test_KNAN_software
 def extract_files_in_childfolders_to_des(_paren_folder, _des_folder):
-	count = 1
 	root_folder_ls_list = os.listdir(_paren_folder)
 	# each_item_folder_name: 056_FT5OV9NG_ok
 	jfilename= get_json_file_name()
@@ -81,12 +80,14 @@ def extract_files_in_childfolders_to_des(_paren_folder, _des_folder):
 		nuc_folder_fullpath = _paren_folder + '/'+  each_item_folder_name
 		if os.path.isdir(nuc_folder_fullpath) == True:
 			nuc_folder_fullpath_ls = os.listdir(nuc_folder_fullpath)
+			count = 0
 			for each_nuc_file in nuc_folder_fullpath_ls:
 				json_info_dict = {}
-				print_header("***STT: " + str(count))
 				count = count + 1
+				print_header("***STT: " + str(count))
 				json_info_dict['STT'] = count
 				nuc_file_fullpath = nuc_folder_fullpath +'/' + each_nuc_file
+				print(nuc_file_fullpath)
 				if check_temperature_file(nuc_file_fullpath) == True:
 					#json_info_dict['md5'] = get_md5_hash(nuc_file_fullpath)
 					print("nuc_file_fullpath: " + nuc_file_fullpath)

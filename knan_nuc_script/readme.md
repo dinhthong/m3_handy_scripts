@@ -1,7 +1,7 @@
 # Intro
 + Save user operations, and error prone.
 # Todos
-- Display working file, reuturn status after clicking the button
+- Display working file, reuturn status after clicking the button. And the folder status
 - Display working messages (fail/ok) to GUI
 - Write user working logs (new session, button click...) and save to text file
 - JSON file -> more info: check info of each file, display file name and file size... MD5, and the folder it's working. maybe also the commands?
