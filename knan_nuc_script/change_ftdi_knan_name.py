@@ -81,7 +81,7 @@ def remove_original_msg(_dir_full_path):
 	if first_status_index>1:
 		new_name = _dir_full_path[0:first_status_index]
 		print(new_name)
-		rename_folder(_dir_full_path, new_name)
+		rename_dir(_dir_full_path, new_name)
 	return new_name
 
 def append_checkmsg_to_folder_name(st, _dir_full_path):
@@ -98,10 +98,10 @@ def append_checkmsg_to_folder_name(st, _dir_full_path):
 	# start rename
 	if new_folder_name=="":
 		_nn = _dir_full_path+end_str
-		rename_folder(_dir_full_path, _nn)
+		rename_dir(_dir_full_path, _nn)
 	else:
 		_nn = new_folder_name+end_str
-		rename_folder(new_folder_name, _nn)
+		rename_dir(new_folder_name, _nn)
 	return _nn
 
 each_item_folder_ls_list = []
@@ -151,7 +151,7 @@ def get_ftdi_and_check_all_files(_full_dir_path, _each_item_folder_ls_list):
 		if done_get_ftdi_flag == 1:
 			file_size = get_file_size(full_nuc_file_path)
 			this_file_info_dict['file_size'] = file_size
-			file_type = check_file_name_and_size(tb_file, file_size)
+			file_type = check_nuc_file_name_and_size(tb_file, file_size)
 			if file_type == 1:
 				ok_temp_file_count = ok_temp_file_count + 1
 			elif file_type == 2:
@@ -173,17 +173,19 @@ def check_individual_nuc_folder_files(_base_dir_name, _nuc_dir_name):
 	print(full_dir_path)
 	this_info_dict['dir_full_path'] = full_dir_path
 	# all root_folder_ls_list and folder in fullpath_src_folder
-	each_item_folder_ls_list = os.listdir(full_dir_path)
-	each_item_folder_file_count = len(each_item_folder_ls_list)
-	this_info_dict['file_count'] = each_item_folder_file_count
-	check_standard_files_count(each_item_folder_file_count)
-	if each_item_folder_file_count>0:
-		[this_ftdi, check_result, this_all_fileinfo_list, new_path] = get_ftdi_and_check_all_files(full_dir_path, each_item_folder_ls_list)
-		this_info_dict['check_result'] = check_result
-		this_info_dict['ftdi'] = this_ftdi
-		this_info_dict['files_info_list'] = this_all_fileinfo_list
-		this_info_dict['new_dir_full_path'] = new_path
-
+	if os.path.isdir(full_dir_path):
+		each_item_folder_ls_list = os.listdir(full_dir_path)
+		each_item_folder_file_count = len(each_item_folder_ls_list)
+		this_info_dict['file_count'] = each_item_folder_file_count
+		check_standard_files_count(each_item_folder_file_count)
+		if each_item_folder_file_count>0:
+			[this_ftdi, check_result, this_all_fileinfo_list, new_path] = get_ftdi_and_check_all_files(full_dir_path, each_item_folder_ls_list)
+			this_info_dict['check_result'] = check_result
+			this_info_dict['ftdi'] = this_ftdi
+			this_info_dict['files_info_list'] = this_all_fileinfo_list
+			this_info_dict['new_dir_full_path'] = new_path
+	else:
+		print("Not a dir")
 	print_header("--------------------------------------------------------------------------------------------")
 	return this_info_dict
 # _filename: D:\Dulieu_NUC_KNAN\fromOneDrive_PC_HDD

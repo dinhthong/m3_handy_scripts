@@ -9,7 +9,7 @@ import hashlib
 c_ftdi_length = 8
 c_temperatire_file_size = 157286400
 g_allow_rename = 1
-allow_print_debug_info = 0
+allow_print_debug_info = 1
 
 class bcolors:
     HEADER = '\033[95m'
@@ -104,7 +104,7 @@ def check_standard_files_count(file_count):
 		else:
 			print_fail("File count error")
 
-def check_file_name_and_size(_fname, _fsize):
+def check_nuc_file_name_and_size(_fname, _fsize):
 	if _fname.find(".bin") != -1:
 		underscore_index_list = find(_fname, "_")
 		if len(underscore_index_list)==2:
@@ -120,16 +120,18 @@ def check_file_name_and_size(_fname, _fsize):
 		print("Log file detected")
 		return 3
 
-def rename_folder(_src, _des):
+def rename_dir(_src, _des):
+	print("Rename src dir: " + _src)
+	print("Rename des dir: " + _des)
 	if g_allow_rename == 1:
 		try:
 			os.rename(_src, _des)
-			print("Folder name (moved) changed sucessfully")
+			print("Dir name (moved) changed sucessfully")
 			print("New name: "+_des)
 		except OSError:
 			print_fail("Error rename, check files/folders!")
 	else:
-		print("Folder name isn't change")
+		print("Dir name isn't changed")
 
 def print_debug(s):
 	if allow_print_debug_info==1:
@@ -157,3 +159,13 @@ def get_md5_hash(_filename):
 		# pipe contents of the file through
 		md5_returned = hashlib.md5(data).hexdigest()
 	return md5_returned
+
+# Create if not exist
+def create_data_FTDI_folder(base, ftdi):
+	#get_datetime_string()
+	ftdi_folder_path = base + "/data_" + ftdi
+	try:
+		os.mkdir(ftdi_folder_path) 
+	except OSError as error: 
+		print(error)
+	return ftdi_folder_path

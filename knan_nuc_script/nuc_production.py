@@ -21,7 +21,18 @@ ok_generated_file_count = 0
 ok_log_file_count = 0
 
 check_folder_content_ok_flag = 0
+
+
 each_item_folder_ls_list = []
+# Create if not exist
+def create_data_FTDI_folder(base, ftdi):
+	#get_datetime_string()
+	ftdi_folder_path = base + "/data_" + ftdi
+	try:
+		os.mkdir(ftdi_folder_path) 
+	except OSError as error: 
+		print(error)
+	
 
 def check_file_count(file_count):
 	print("File count: " + str(file_count))
@@ -35,24 +46,21 @@ def check_file_count(file_count):
 
 json_file_name = ""
 
-# item_fullpath_list: [D:/py_test_KNAN_software\\data_FT5P145V', 'D:/py_test_KNAN_software\\data_FT5P31ZZ', 'D:/py_test_KNAN_software\\FT5P145V1.bin']
-# full_des_dir: full destination folder
-def create_ftdi_folders_and_move_ftdi_files(item_fullpath_list, full_des_dir):
+def recursive_create_ftdi_folders_and_move_ftdi_files(base_dir, folder_ls_list, des_dir):
 	count = 1
-	for full_item_dir in item_fullpath_list:
+	for each_item_folder_name in folder_ls_list:
 		print_header("***STT: " + str(count))
 		count = count + 1
-		#item_fullpath = base_dir + '/' + each_item_folder_name
-		print(full_item_dir)
-		last_part_of_dir = os.path.basename(os.path.normpath(full_item_dir))
-		if os.path.isfile(full_item_dir) == True:
-			get_ftdi_ok, extracted_ftdi = get_full_ftdi_from_file_name(full_item_dir)
-			if get_ftdi_ok == 1:
+		item_fullpath = base_dir + '/' + each_item_folder_name
+		print(item_fullpath)
+		if os.path.isfile(item_fullpath) == True:
+			status, extracted_ftdi = get_full_ftdi_from_file_name(each_item_folder_name)
+			if status == 1:
 				print("Extracted ftdi: " + extracted_ftdi)
-				new_ftdi_folder = create_data_FTDI_folder(full_des_dir, extracted_ftdi)
-				file_type = check_nuc_file_name_and_size(full_item_dir, get_file_size(full_item_dir))
-				new_file_path = os.path.join(new_ftdi_folder, last_part_of_dir)
-				rename_dir(full_item_dir, new_file_path)
+				create_data_FTDI_folder(base_dir, extracted_ftdi)
+				file_type = check_nuc_file_name_and_size(each_item_folder_name, get_file_size(item_fullpath))
+				new_file_path = base_dir + '/' + "data_" + extracted_ftdi + '/' + each_item_folder_name
+				os.rename(item_fullpath, new_file_path)
 		print_header("--------------------------------------------------------------------------------------------")
 # Description: check file name and file size 
 def check_temperature_file(_nuc_file_fullpath):
@@ -60,6 +68,7 @@ def check_temperature_file(_nuc_file_fullpath):
 		return True
 	else: 
 		print("Not file")
+
 
 # _paren_folder: D:\py_test_KNAN_software
 def extract_files_in_childfolders_to_des(_paren_folder, _des_folder):
@@ -95,11 +104,10 @@ def extract_files_in_childfolders_to_des(_paren_folder, _des_folder):
 		#check_individual_nuc_folder_files(_base_dir_name, each_item_folder_name)
 	jsonFile.close()
 def arrange_nuc_files_to_folder(knan_software_dir):
-	full_item_dir_list = []
-	for item in os.listdir(knan_software_dir):
-		full_item_dir_list.append(os.path.join(knan_software_dir, item))
-	#print_debug(full_item_dir_list)
-	create_ftdi_folders_and_move_ftdi_files(full_item_dir_list, knan_software_dir)
+	global each_item_folder_ls_list
+	root_folder_ls_list = os.listdir(knan_software_dir)
+	create_ftdi_folders_and_move_ftdi_files(knan_software_dir, root_folder_ls_list)
+	# check files in each folder
 	
 def main():
 	#arrange_nuc_files_to_folder("D:\py_test_KNAN_software", "D:\py_test_des_folder")
