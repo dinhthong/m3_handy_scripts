@@ -2,12 +2,12 @@
 from tkinter import *
 import tkinter as tk
 from tkinter import messagebox
-from  change_ftdi_knan_name import *
-from copy_nuc_data import *
 from tkinter import filedialog
 import os
 from configparser import ConfigParser
-
+from change_ftdi_knan_name import *
+from copy_nuc_data import *
+from nuc_production import *
 pg_textfile_name = "config.ini"
 config = ConfigParser()
 # check and write text file
@@ -176,6 +176,10 @@ def btn_arrange_nuc_files_to_folder():
     #print(dir_org_q.get())
     arrange_nuc_files_to_folder(dir_soft_q.get())
     status_q.set("Done btn_remove_status_msg_from_nuc_folder_name!")
+
+def btn_arrange_nuc_files_firstlevel_subfolders_to_des_folder():
+    arrange_nuc_files_in_firstlevel_subfolder_to_des_dir(dir_soft_q.get(), dir_des_q.get())
+    status_q.set("Done btn_arrange_nuc_files_firstlevel_subfolders_to_folder!")
 def btn_extract_nucfiles_to_desdir():
     extract_files_in_childfolders_to_des(dir_soft_q.get(), dir_des_q.get())
     status_q.set("Done btn_extract_nucfiles_to_desdir!")
@@ -198,12 +202,17 @@ btn_rm_status_msg.grid(row = 4, column=2, pady = 20)
 btn_rm_status_msg = tk.Button(wrapper3, text ="ARRANGE_NUC_FILES_TO_FOLDER_IN_SOFT", 
                        bg ='#ffb3fe', command = btn_arrange_nuc_files_to_folder)
 
-btn_rm_status_msg.grid(row = 5, column= 3, pady = 20)
+btn_rm_status_msg.grid(row = 3, column= 3, pady = 20)
+
+btn_rm_status_msg = tk.Button(wrapper3, text ="ARRANGE_NUC_FILES_IN_FIRSTLEVEL_SOFT_SUBFOLDERS_TO_DES", 
+                       bg ='#ffb3fe', command = btn_arrange_nuc_files_firstlevel_subfolders_to_des_folder)
+
+btn_rm_status_msg.grid(row = 4, column= 3, pady = 20)
 
 btn_rm_status_msg = tk.Button(wrapper3, text ="EXTRACT_NUC_FILES_IN_SOFT_TO_DES", 
                        bg ='#ffb3fe', command = btn_extract_nucfiles_to_desdir)
 
-btn_rm_status_msg.grid(row = 6, column= 3, pady = 20)
+btn_rm_status_msg.grid(row = 6, column= 4, pady = 20)
 
 root.title("KNAN NUC check tool")
 root.geometry("1200x800")

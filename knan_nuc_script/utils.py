@@ -159,7 +159,25 @@ def get_md5_hash(_filename):
 		# pipe contents of the file through
 		md5_returned = hashlib.md5(data).hexdigest()
 	return md5_returned
+# program related utils
 
+# Description: check file name and file size 
+def check_temperature_file(_nuc_file_fullpath):
+	if os.path.isfile(_nuc_file_fullpath):
+		return True
+	else: 
+		print("Not file")
+
+def check_file_count(file_count):
+	print("File count: " + str(file_count))
+	if file_count == 0:
+		print_fail("Folder empty!")
+	else:
+		if file_count == 15:
+			print_ok("File count ok")
+		else:
+			print_fail("File count error")
+			
 # Create if not exist
 def create_data_FTDI_folder(base, ftdi):
 	#get_datetime_string()
@@ -169,3 +187,23 @@ def create_data_FTDI_folder(base, ftdi):
 	except OSError as error: 
 		print(error)
 	return ftdi_folder_path
+
+# item_fullpath_list: [D:/py_test_KNAN_software\\data_FT5P145V', 'D:/py_test_KNAN_software\\data_FT5P31ZZ', 'D:/py_test_KNAN_software\\FT5P145V1.bin']
+# full_des_dir: full destination folder
+def create_ftdi_folders_and_move_ftdi_files(item_fullpath_list, full_des_dir):
+	count = 1
+	for full_item_dir in item_fullpath_list:
+		print_header("***STT: " + str(count))
+		count = count + 1
+		#item_fullpath = base_dir + '/' + each_item_folder_name
+		print(full_item_dir)
+		last_part_of_dir = os.path.basename(os.path.normpath(full_item_dir))
+		if os.path.isfile(full_item_dir) == True:
+			get_ftdi_ok, extracted_ftdi = get_full_ftdi_from_file_name(full_item_dir)
+			if get_ftdi_ok == 1:
+				print("Extracted ftdi: " + extracted_ftdi)
+				new_ftdi_folder = create_data_FTDI_folder(full_des_dir, extracted_ftdi)
+				file_type = check_nuc_file_name_and_size(full_item_dir, get_file_size(full_item_dir))
+				new_file_path = os.path.join(new_ftdi_folder, last_part_of_dir)
+				rename_dir(full_item_dir, new_file_path)
+		print_header("--------------------------------------------------------------------------------------------")

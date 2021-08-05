@@ -24,7 +24,7 @@ def check_and_change_nucfolder_name(_filepath):
 		json_info_dict['STT'] = count
 		count = count + 1
 		#print(each_item_folder_name)
-		fullpath_src_folder = _filepath+'/'+each_item_folder_name
+		fullpath_src_folder = os.path.join(_filepath, each_item_folder_name)
 		print("Full _filepath: " + fullpath_src_folder)
 		# all root_folder_ls_list and folder in fullpath_src_folder
 		src_folder_ls = os.listdir(fullpath_src_folder)
@@ -51,7 +51,7 @@ def check_and_change_nucfolder_name(_filepath):
 			if good_name_flag==1:
 				print_ok("Discard this as the each_item_folder_name is already OK")
 				continue
-			new_fullpath_folder_name = _filepath+'/'+new_folder_name
+			new_fullpath_folder_name = os.path.join(_filepath, new_folder_name)
 			print("fullpath_src_folder: "+ fullpath_src_folder + "; new_fullpath_folder_name: " + new_fullpath_folder_name)
 
 			# start rename
@@ -115,7 +115,7 @@ def remove_status_msg_from_nuc_folder_name(_filename):
 	for each_item_folder_name in root_folder_ls_list:
 		print_header("***STT: " + str(count))
 		count = count + 1
-		fullpath_src_folder = _filename + '/' + each_item_folder_name
+		fullpath_src_folder = os.path.join(_filename, each_item_folder_name)
 		print(fullpath_src_folder)
 		each_item_folder_ls_list = os.listdir(fullpath_src_folder)
 		each_item_folder_file_count = len(each_item_folder_ls_list)
@@ -141,7 +141,7 @@ def get_ftdi_and_check_all_files(_full_dir_path, _each_item_folder_ls_list):
 	# tb_file: FT5P16DM_190521_50.bin
 	for tb_file in _each_item_folder_ls_list:
 		this_file_info_dict = {}
-		full_nuc_file_path = _full_dir_path+'/'+tb_file
+		full_nuc_file_path = os.path.join(_full_dir_path, tb_file)
 		this_file_info_dict['nuc_file_path'] = full_nuc_file_path
 		file_type = -1
 		if done_get_ftdi_flag == 0:
@@ -169,7 +169,7 @@ def get_ftdi_and_check_all_files(_full_dir_path, _each_item_folder_ls_list):
 # temperature files check status, output files check and status, Log files check and status, check result]
 def check_individual_nuc_folder_files(_base_dir_name, _nuc_dir_name):
 	this_info_dict = {}
-	full_dir_path = _base_dir_name + '/' + _nuc_dir_name
+	full_dir_path = os.path.join(_base_dir_name, _nuc_dir_name)
 	print(full_dir_path)
 	this_info_dict['dir_full_path'] = full_dir_path
 	# all root_folder_ls_list and folder in fullpath_src_folder
