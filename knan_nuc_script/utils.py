@@ -49,7 +49,7 @@ def get_datetime_string():
 	return date_time_str
 
 def get_full_ftdi_from_file_name(file_name):
-	# 06-Aug-21: Discard FTDIData* and FTDIGSK* and FTDIDevice*
+	# 06-Aug-21: Discard FTDIData*, FTDIGSK* and FTDIDevice*
 	# Because in KNAN_software/State the program generates these file for some information, but it's not interested files
 	return_status = 0
 	if file_name.find("FTDI") >= 0:

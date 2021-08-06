@@ -36,28 +36,29 @@ root = Tk()
 
 def btn_org_dir_cb():
     #print("Refreshing table")
-    file_path_variable = search_for_file_path()
+    file_path_variable = search_for_file_path(dir_org_q.get())
     print ("\nfile_path_variable = ", file_path_variable)
     if file_path_variable != "":
         dir_org_q.set(file_path_variable)
         # write to config file
         # config.add_section('main')
         config.set('main', 'nuc_base_dir', file_path_variable)
-        status_q.set("Change folder contains NUC folders to: "+file_path_variable)
+        status_q.set("Change folder contains NUC folders to: " + file_path_variable)
+
 def btn_soft_dir_cb():
     #print("Refreshing table")
-    file_path_variable = search_for_file_path()
+    file_path_variable = search_for_file_path(dir_soft_q.get())
     print ("\nfile_path_variable = ", file_path_variable)
     if file_path_variable != "":
         dir_soft_q.set(file_path_variable)
         # write to config file
         # config.add_section('main')
         config.set('main', 'software_folder', file_path_variable)
-        status_q.set("Change folder contains KNAN_Software to: "+file_path_variable)
+        status_q.set("Change folder contains KNAN_Software to: " + file_path_variable)
 
 def btn_des_dir_cb():
         #print("Refreshing table")
-    file_path_variable = search_for_file_path()
+    file_path_variable = search_for_file_path(dir_des_q.get())
     print ("\nfile_path_variable = ", file_path_variable)
     if file_path_variable != "":
         dir_des_q.set(file_path_variable)
@@ -66,9 +67,9 @@ def btn_des_dir_cb():
         config.set('main', 'knandata_folder', file_path_variable)
         status_q.set("Change folder contains KNAN_Software to: "+file_path_variable)
 
-def search_for_file_path():
-    currdir = os.getcwd()
-    tempdir = filedialog.askdirectory(parent=root, initialdir=currdir, title='Please select a directory')
+def search_for_file_path(current_dir):
+    #currdir = os.getcwd()
+    tempdir = filedialog.askdirectory(parent=root, initialdir=current_dir, title='Please select a directory')
     if len(tempdir) > 0:
         print ("You chose: %s" % tempdir)
     return tempdir
