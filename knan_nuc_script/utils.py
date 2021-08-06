@@ -138,7 +138,7 @@ def print_debug(s):
 		print(bcolors.OKBLUE + "Debug: " + s + bcolors.ENDC)
 
 def get_json_file_name():
-	json_file_name = "log_"+get_datetime_string()+".json"
+	json_file_name = "log_"+ get_datetime_string() +".json"
 	if os.path.exists(json_file_name):
 		os.remove(json_file_name)
 		print_ok("Delete the file ok")
@@ -149,8 +149,6 @@ def get_json_file_name():
 	return json_file_name
 
 # Import hashlib library (md5 method is part of it)
-
-
 def get_md5_hash(_filename):
 	# Open,close, read file and calculate MD5 on its contents 
 	with open(_filename) as file_to_check:

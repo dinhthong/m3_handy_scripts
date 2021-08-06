@@ -180,9 +180,9 @@ def btn_arrange_nuc_files_to_folder():
 def btn_arrange_nuc_files_firstlevel_subfolders_to_des_folder():
     arrange_nuc_files_in_firstlevel_subfolder_to_des_dir(dir_soft_q.get(), dir_des_q.get())
     status_q.set("Done btn_arrange_nuc_files_firstlevel_subfolders_to_folder!")
-def btn_extract_nucfiles_to_desdir():
-    extract_files_in_childfolders_to_des(dir_soft_q.get(), dir_des_q.get())
-    status_q.set("Done btn_extract_nucfiles_to_desdir!")
+def btn_extract_nucfiles_in_soft():
+    extract_files_in_childfolders_to_des(dir_soft_q.get())
+    status_q.set("Done btn_extract_nucfiles_in_soft!")
 # Define buttons
 btn_CHANGE_FOLDER_NAME_IN_ORG = tk.Button(wrapper3, text ="CHANGE_FOLDER_NAME_IN_ORG", 
                        bg ='#ffb3fe', command = btn_main_check_and_change_nucfolder_name)
@@ -209,10 +209,10 @@ btn_rm_status_msg = tk.Button(wrapper3, text ="ARRANGE_NUC_FILES_IN_FIRSTLEVEL_S
 
 btn_rm_status_msg.grid(row = 4, column= 3, pady = 20)
 
-btn_rm_status_msg = tk.Button(wrapper3, text ="EXTRACT_NUC_FILES_IN_SOFT_TO_DES", 
-                       bg ='#ffb3fe', command = btn_extract_nucfiles_to_desdir)
+btn_rm_status_msg = tk.Button(wrapper3, text ="EXTRACT_NUC_FILES_IN_SOFT", 
+                       bg ='#ffb3fe', command = btn_extract_nucfiles_in_soft)
 
-btn_rm_status_msg.grid(row = 6, column= 4, pady = 20)
+btn_rm_status_msg.grid(row = 6, column= 3, pady = 20)
 
 root.title("KNAN NUC check tool")
 root.geometry("1200x800")

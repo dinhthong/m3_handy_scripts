@@ -16,14 +16,14 @@ ok_log_file_count = 0
 check_folder_content_ok_flag = 0
 json_file_name = ""
 
-# _paren_folder: D:\py_test_KNAN_software
-def extract_files_in_childfolders_to_des(_paren_folder, _des_folder):
-	root_folder_ls_list = os.listdir(_paren_folder)
+# _parent_folder: D:\py_test_KNAN_software: folder contains folders, each folders is deviceserial_FTDI: contains files
+def extract_files_in_childfolders_to_des(_parent_folder):
+	root_folder_ls_list = os.listdir(_parent_folder)
 	# each_item_folder_name: 056_FT5OV9NG_ok
-	jfilename= get_json_file_name()
+	jfilename = get_json_file_name()
 	jsonFile = open(jfilename, "w")
 	for each_item_folder_name in root_folder_ls_list:
-		nuc_folder_fullpath = os.path.join(_paren_folder, each_item_folder_name)
+		nuc_folder_fullpath = os.path.join(_parent_folder, each_item_folder_name)
 		if os.path.isdir(nuc_folder_fullpath) == True:
 			nuc_folder_fullpath_ls = os.listdir(nuc_folder_fullpath)
 			count = 0
@@ -38,7 +38,7 @@ def extract_files_in_childfolders_to_des(_paren_folder, _des_folder):
 					#json_info_dict['md5'] = get_md5_hash(nuc_file_fullpath)
 					print("nuc_file_fullpath: " + nuc_file_fullpath)
 					json_info_dict['original_path'] = nuc_file_fullpath
-					new_file_path = os.path.join(_des_folder, each_nuc_file)
+					new_file_path = os.path.join(_parent_folder, each_nuc_file)
 					print("new_file_path: " + new_file_path)
 					json_info_dict['destination_path'] = new_file_path
 					os.rename(nuc_file_fullpath, new_file_path)
@@ -47,9 +47,9 @@ def extract_files_in_childfolders_to_des(_paren_folder, _des_folder):
 				jsonFile.write(jsonString)
 		else:
 			print_header("Not folder")
-		#check_individual_nuc_folder_files(_base_dir_name, each_item_folder_name)
+		# check_individual_nuc_folder_files(_base_dir_name, each_item_folder_name)
 	jsonFile.close()
-	
+
 def arrange_nuc_files_to_folder(knan_software_dir):
 	full_item_dir_list = []
 	for item in os.listdir(knan_software_dir):
