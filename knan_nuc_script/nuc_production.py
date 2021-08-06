@@ -32,13 +32,9 @@ def create_data_FTDI_folder(base, ftdi):
 		os.mkdir(ftdi_folder_path) 
 	except OSError as error: 
 		print(error)
-	
-
-
-
 
 # arrange in level 1 subfolders
-def arrange_nuc_files_in_firstlevel_subfolder_to_des_dir(full_parent_dir, _full_des_dir):
+def arrange_nuc_files_in_firstlevel_subfolder(full_parent_dir):
 	#global each_item_folder_ls_list
 	for item in os.listdir(full_parent_dir):
 		full_dir_path = os.path.join(full_parent_dir, item)
@@ -47,13 +43,13 @@ def arrange_nuc_files_in_firstlevel_subfolder_to_des_dir(full_parent_dir, _full_
 			full_item_dir_list = []
 			for item in os.listdir(full_dir_path):
 				full_item_dir_list.append(os.path.join(full_dir_path, item))
-			create_ftdi_folders_and_move_ftdi_files(full_item_dir_list, _full_des_dir)
+			create_ftdi_folders_and_move_ftdi_files(full_item_dir_list, full_parent_dir)
 		else:
 			print("Not a folder, dissmiss")
 	
 def main():
 	print("nuc_production")
 	# arrange_nuc_files_to_folder("D:\py_test_KNAN_software", "D:\py_test_des_folder")
-	# arrange_nuc_files_in_firstlevel_subfolder_to_des_dir("D:\py_test_KNAN_software", "D:")
+	# arrange_nuc_files_in_firstlevel_subfolder("D:\py_test_KNAN_software", "D:")
 if __name__ == "__main__":
     main()

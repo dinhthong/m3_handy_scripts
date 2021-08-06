@@ -177,8 +177,8 @@ def btn_arrange_nuc_files_to_folder():
     arrange_nuc_files_to_folder(dir_soft_q.get())
     status_q.set("Done btn_remove_status_msg_from_nuc_folder_name!")
 
-def btn_arrange_nuc_files_firstlevel_subfolders_to_des_folder():
-    arrange_nuc_files_in_firstlevel_subfolder_to_des_dir(dir_soft_q.get(), dir_des_q.get())
+def btn_arrange_nuc_files_firstlevel_subfolders():
+    arrange_nuc_files_in_firstlevel_subfolder(dir_soft_q.get())
     status_q.set("Done btn_arrange_nuc_files_firstlevel_subfolders_to_folder!")
 def btn_extract_nucfiles_in_soft():
     extract_files_in_childfolders_to_des(dir_soft_q.get())
@@ -204,8 +204,8 @@ btn_rm_status_msg = tk.Button(wrapper3, text ="ARRANGE_NUC_FILES_TO_FOLDER_IN_SO
 
 btn_rm_status_msg.grid(row = 3, column= 3, pady = 20)
 
-btn_rm_status_msg = tk.Button(wrapper3, text ="ARRANGE_NUC_FILES_IN_FIRSTLEVEL_SOFT_SUBFOLDERS_TO_DES", 
-                       bg ='#ffb3fe', command = btn_arrange_nuc_files_firstlevel_subfolders_to_des_folder)
+btn_rm_status_msg = tk.Button(wrapper3, text ="ARRANGE_NUC_FILES_IN_FIRSTLEVEL_SOFT", 
+                       bg ='#ffb3fe', command = btn_arrange_nuc_files_firstlevel_subfolders)
 
 btn_rm_status_msg.grid(row = 4, column= 3, pady = 20)
 
