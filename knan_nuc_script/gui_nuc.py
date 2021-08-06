@@ -160,32 +160,32 @@ def btn_extract_nucfiles_in_soft():
     extract_files_in_childfolders(dir_soft_q.get())
     status_q.set("Done btn_extract_nucfiles_in_soft!")
 # Define buttons
-btn_CHANGE_FOLDER_NAME_IN_ORG = tk.Button(wrapper3, text ="CHANGE_FOLDER_NAME_IN_ORG", 
+btn_CHANGE_FOLDER_NAME_IN_ORG = tk.Button(wrapper3, text ="1. CHANGE_FOLDER_NAME_IN_ORG", 
                        bg ='#ffb3fe', command = btn_main_check_and_change_nucfolder_name)
 
 btn_CHANGE_FOLDER_NAME_IN_ORG.grid(row = 2, column=2, pady = 20)
 
-btn_checknuc = tk.Button(wrapper3, text ="CHECK_NUC_FOLDER_IN_ORG", 
+btn_checknuc = tk.Button(wrapper3, text ="2. CHECK_NUC_FOLDER_IN_ORG", 
                        bg ='#ffb3fe', command = btn_main_check_complete_nuc_folder)
 
 btn_checknuc.grid(row = 3, column=2, pady = 20)
 
-btn_rm_status_msg = tk.Button(wrapper3, text ="REMOVE_STATUS_MSG_IN_ORG", 
+btn_rm_status_msg = tk.Button(wrapper3, text ="3. REMOVE_STATUS_MSG_IN_ORG", 
                        bg ='#ffb3fe', command = btn_remove_status_msg_from_nuc_folder_name)
 
 btn_rm_status_msg.grid(row = 4, column=2, pady = 20)
 
-btn_rm_status_msg = tk.Button(wrapper3, text ="ARRANGE_NUC_FILES_TO_FOLDER_IN_SOFT", 
+btn_rm_status_msg = tk.Button(wrapper3, text ="4. ARRANGE_NUC_FILES_TO_FOLDER_IN_SOFT", 
                        bg ='#ffb3fe', command = btn_arrange_nuc_files_to_folder)
 
 btn_rm_status_msg.grid(row = 3, column= 3, pady = 20)
 
-btn_rm_status_msg = tk.Button(wrapper3, text ="ARRANGE_NUC_FILES_IN_FIRSTLEVEL_SOFT", 
+btn_rm_status_msg = tk.Button(wrapper3, text ="5. ARRANGE_NUC_FILES_IN_FIRSTLEVEL_SOFT", 
                        bg ='#ffb3fe', command = btn_arrange_nuc_files_firstlevel_subfolders)
 
 btn_rm_status_msg.grid(row = 4, column= 3, pady = 20)
 
-btn_rm_status_msg = tk.Button(wrapper3, text ="EXTRACT_NUC_FILES_IN_SOFT", 
+btn_rm_status_msg = tk.Button(wrapper3, text ="6. EXTRACT_NUC_FILES_IN_SOFT", 
                        bg ='#ffb3fe', command = btn_extract_nucfiles_in_soft)
 
 btn_rm_status_msg.grid(row = 6, column= 3, pady = 20)

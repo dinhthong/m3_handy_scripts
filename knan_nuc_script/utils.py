@@ -91,19 +91,19 @@ def print_check_file_content_message(_ok_temp_file_count, _ok_generated_file_cou
 	temp_str = "_ok_generated_file_count: " + str(_ok_generated_file_count)+"/5"
 	if _ok_generated_file_count == 5:
 		print_ok(temp_str)
-		file_check_str =file_check_str + "ncO"
+		file_check_str =file_check_str + "ntO"
 	else:
 		print_fail(temp_str)
 		#error = error + 1
-		file_check_str = file_check_str + "ncF"
+		file_check_str = file_check_str + "ntF"
 	temp_str ="_ok_log_file_count: " + str(_ok_log_file_count)+"/1"
 	if _ok_log_file_count == 1:
 		print_ok(temp_str)
-		file_check_str =file_check_str + "lO"
+		file_check_str =file_check_str + "logO"
 	else:
 		print_fail(temp_str)
 		#error = error + 1
-		file_check_str = file_check_str + "lF"
+		file_check_str = file_check_str + "logF"
 	return file_check_str
 
 def check_standard_files_count(file_count):

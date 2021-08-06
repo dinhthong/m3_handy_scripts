@@ -30,3 +30,19 @@ https://stackoverflow.com/questions/111155/how-do-i-handle-the-window-close-even
 
 ## JSON
 https://stackoverflow.com/questions/53110610/json-dump-in-python-writing-newline-character-and-carriage-returns-in-file/57021651
+
+# Hướng dẫn sử dụng:
+Ví dụ:
+ORG_DIR = nuc_test
+## Nút 1:
+- Đi vào từng thư mục có trong ORG_DIR, sau đó đọc FTDI string có trong file, rồi đổi tên của folder full thành tên FTDI. Chú ý trước khi sử dụng nút này thì các ký hiệu khác ngăn cách với FTDI bằng dấu gạch dưới
+## Nút 2
+- Đi vào từng thư mục có trong ORG_DIR, sau đó kiểm tra các file ở trong thư mục, xem đủ 9 file nhiệt độ, 5 file NUC table, và 1 file Log chưa, và đổi tên thư mục ban đầu + dấu # + kết quả kiểm tra. Đồng thời ghi log ra file .JSON
+## Nút 3: 
+- Đối với từng thư mục có trong ORG_DIR, Xóa các ký tự sau dấu #
+## Nút 4
+- Trong thư mục SOFT_DIR: tìm các các file có chứa FTDI của đến thiết bị, nó sẽ tự gom lại và tạo folder đặt tên tương ứng.
+## Nút 5
+- Tương tự như nút 4, nhưng nó chỉ làm ở files có trong thư mục con (chỉ vào thêm 1 level)
+## Nút 6:
+- Trong thư mục SOFT_DIR, nó sẽ lấy tất cả các file trong thư mục con ra SOFT_DIR
