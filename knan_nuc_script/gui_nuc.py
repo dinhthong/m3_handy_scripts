@@ -182,7 +182,7 @@ def btn_arrange_nuc_files_firstlevel_subfolders():
     arrange_nuc_files_in_firstlevel_subfolder(dir_soft_q.get())
     status_q.set("Done btn_arrange_nuc_files_firstlevel_subfolders_to_folder!")
 def btn_extract_nucfiles_in_soft():
-    extract_files_in_childfolders_to_des(dir_soft_q.get())
+    extract_files_in_childfolders(dir_soft_q.get())
     status_q.set("Done btn_extract_nucfiles_in_soft!")
 # Define buttons
 btn_CHANGE_FOLDER_NAME_IN_ORG = tk.Button(wrapper3, text ="CHANGE_FOLDER_NAME_IN_ORG", 
