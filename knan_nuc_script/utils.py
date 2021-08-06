@@ -48,7 +48,7 @@ def get_datetime_string():
 	#print(date_time_str)
 	return date_time_str
 
-def get_full_ftdi_from_file_name(file_name):
+def get_full_ftdi_from_string(file_name):
 	# 06-Aug-21: Discard FTDIData*, FTDIGSK* and FTDIDevice*
 	# Because in KNAN_software/State the program generates these file for some information, but it's not interested files
 	return_status = 0
@@ -78,26 +78,33 @@ def get_file_size(_file_fullpath):
 		return -1
 
 def print_check_file_content_message(_ok_temp_file_count, _ok_generated_file_count, _ok_log_file_count):
-	error = 0
+	#error = 0
 	temp_str = "_ok_temp_file_count: " + str(_ok_temp_file_count)+"/9"
+	file_check_str = ""
 	if _ok_temp_file_count == 9:
 		print_ok(temp_str)
+		file_check_str = "tO"
 	else:
 		print_fail(temp_str)
-		error = error + 1
+		#error = error + 1
+		file_check_str = "tF"
 	temp_str = "_ok_generated_file_count: " + str(_ok_generated_file_count)+"/5"
 	if _ok_generated_file_count == 5:
 		print_ok(temp_str)
+		file_check_str =file_check_str + "ncO"
 	else:
 		print_fail(temp_str)
-		error = error + 1
+		#error = error + 1
+		file_check_str = file_check_str + "ncF"
 	temp_str ="_ok_log_file_count: " + str(_ok_log_file_count)+"/1"
 	if _ok_log_file_count == 1:
 		print_ok(temp_str)
+		file_check_str =file_check_str + "lO"
 	else:
 		print_fail(temp_str)
-		error = error + 1
-	return error
+		#error = error + 1
+		file_check_str = file_check_str + "lF"
+	return file_check_str
 
 def check_standard_files_count(file_count):
 	print("File count: " + str(file_count))
@@ -202,7 +209,7 @@ def create_ftdi_folders_and_move_ftdi_files(item_fullpath_list, full_des_dir):
 		print(full_item_dir)
 		last_part_of_dir = os.path.basename(os.path.normpath(full_item_dir))
 		if os.path.isfile(full_item_dir) == True:
-			get_ftdi_ok, extracted_ftdi = get_full_ftdi_from_file_name(full_item_dir)
+			get_ftdi_ok, extracted_ftdi = get_full_ftdi_from_string(full_item_dir)
 			if get_ftdi_ok == 1:
 				print("Extracted ftdi: " + extracted_ftdi)
 				new_ftdi_folder = create_data_FTDI_folder(full_des_dir, extracted_ftdi)

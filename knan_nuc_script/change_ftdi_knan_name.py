@@ -31,7 +31,7 @@ def check_and_change_nucfolder_name(_filepath):
 		underscore_index_list = find(each_item_folder_name, "_")
 		underscore_count = len(underscore_index_list)
 		for tb_file in src_folder_ls:
-			valid_ftdi_flag, extracted_ftdi = get_full_ftdi_from_file_name(tb_file)
+			valid_ftdi_flag, extracted_ftdi = get_full_ftdi_from_string(tb_file)
 			if valid_ftdi_flag == 1:
 				break
 		# check if folder name is already good
@@ -88,13 +88,13 @@ def append_checkmsg_to_folder_name(st, _dir_full_path):
 	global fullpath_src_folder
 	global check_folder_content_ok_flag
 	new_folder_name = remove_original_msg(_dir_full_path)
-	end_str = "#"
-	if st == 0:
-		end_str = end_str + "fcOK"
-		check_folder_content_ok_flag = 1
-	else:
-		end_str = end_str + "fcF"
-		check_folder_content_ok_flag = 0
+	end_str = "#" + st
+	#if st == 0:
+	#end_str = st
+	#	check_folder_content_ok_flag = 1
+	#else:
+	#end_str = end_str + "fcF"
+	#	check_folder_content_ok_flag = 0
 	# start rename
 	if new_folder_name=="":
 		_nn = _dir_full_path+end_str
@@ -145,7 +145,7 @@ def get_ftdi_and_check_all_files(_full_dir_path, _each_item_folder_ls_list):
 		this_file_info_dict['nuc_file_path'] = full_nuc_file_path
 		file_type = -1
 		if done_get_ftdi_flag == 0:
-			get_ftdi_status, extracted_ftdi = get_full_ftdi_from_file_name(tb_file)
+			get_ftdi_status, extracted_ftdi = get_full_ftdi_from_string(tb_file)
 			if get_ftdi_status==1:
 				done_get_ftdi_flag = 1
 		if done_get_ftdi_flag == 1:
@@ -161,11 +161,13 @@ def get_ftdi_and_check_all_files(_full_dir_path, _each_item_folder_ls_list):
 			this_file_info_dict['file_type'] = file_type
 		file_info_list.append(this_file_info_dict)
 	error_st = print_check_file_content_message(ok_temp_file_count, ok_generated_file_count, ok_log_file_count)
-	new_folder_name =append_checkmsg_to_folder_name(error_st, _full_dir_path)
-	return [extracted_ftdi, check_folder_content_ok_flag, file_info_list, new_folder_name]
+	new_folder_name = append_checkmsg_to_folder_name(error_st, _full_dir_path)
+	return [extracted_ftdi, error_st, file_info_list, new_folder_name]
 	# append check status message to end of folder name
-
-# RETURN LIST: [ftdi number, number of files, file name and check status,
+# @INPUT: 
+# _base_dir_name: D:/py_test_KNAN_software
+# _nuc_dir_name:  061_FT5OV9HL_ok
+# @RETURN LIST: [ftdi number, number of files, file name and check status,
 # temperature files check status, output files check and status, Log files check and status, check result]
 def check_individual_nuc_folder_files(_base_dir_name, _nuc_dir_name):
 	this_info_dict = {}
@@ -178,7 +180,7 @@ def check_individual_nuc_folder_files(_base_dir_name, _nuc_dir_name):
 		each_item_folder_file_count = len(each_item_folder_ls_list)
 		this_info_dict['file_count'] = each_item_folder_file_count
 		check_standard_files_count(each_item_folder_file_count)
-		if each_item_folder_file_count>0:
+		if each_item_folder_file_count > 0:
 			[this_ftdi, check_result, this_all_fileinfo_list, new_path] = get_ftdi_and_check_all_files(full_dir_path, each_item_folder_ls_list)
 			this_info_dict['check_result'] = check_result
 			this_info_dict['ftdi'] = this_ftdi
@@ -201,7 +203,7 @@ def check_complete_nuc_folder(_base_dir_name):
 	# each_item_folder_name: 056_FT5OV9NG_ok
 	for each_item_folder_name in root_folder_ls_list:
 		print("Folder name: " + each_item_folder_name)
-		status, FTDI = get_full_ftdi_from_file_name(each_item_folder_name)
+		status, FTDI = get_full_ftdi_from_string(each_item_folder_name)
 		if status == 1:
 			count = count + 1
 			json_info_dict = {}
