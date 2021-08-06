@@ -6,7 +6,7 @@
 - Write user working logs (new session, button click...) and save to text file
 - JSON file -> more info: check info of each file, display file name and file size... MD5, and the folder it's working. maybe also the commands?
 - Extracted back from parent folder -> index all temperatures file -> move/copy to destination folder (in this case des folder will be /KNAN_software/data)
-- Move status message to append first of NUC folder name (so user can soft easier)
+- Move status message to append first of NUC folder name (so user can sort easier)
 - More strict file type checking function (and more option for easy program change)
 # Features
 - User can point to 'Phan mem lay mau du lieu', the software then navigates to Data folder, NUC_Table, Log... (or by user selection dir paths) -> check the files:

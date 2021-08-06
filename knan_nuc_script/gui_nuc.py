@@ -13,8 +13,6 @@ config = ConfigParser()
 # check and write text file
 if os.path.exists(pg_textfile_name):
     print("Config already exists")
-    # config.add_section('main')
-    # config.set('main', 'key1', 'value1')
 else:
     f = open(pg_textfile_name,"w+")
     f.close()
@@ -26,7 +24,6 @@ if config.has_section('main') == False:
     config.add_section('main')
     config.set('main', 'nuc_base_dir', "")
     config.set('main', 'software_folder', "")
-    config.set('main', 'knandata_folder', "")
 def submitact():
     user = Username.get()
     passw = password.get()
@@ -55,17 +52,6 @@ def btn_soft_dir_cb():
         # config.add_section('main')
         config.set('main', 'software_folder', file_path_variable)
         status_q.set("Change folder contains KNAN_Software to: " + file_path_variable)
-
-def btn_des_dir_cb():
-        #print("Refreshing table")
-    file_path_variable = search_for_file_path(dir_des_q.get())
-    print ("\nfile_path_variable = ", file_path_variable)
-    if file_path_variable != "":
-        dir_des_q.set(file_path_variable)
-        # write to config file
-        # config.add_section('main')
-        config.set('main', 'knandata_folder', file_path_variable)
-        status_q.set("Change folder contains KNAN_Software to: "+file_path_variable)
 
 def search_for_file_path(current_dir):
     #currdir = os.getcwd()
@@ -138,17 +124,6 @@ ent_data = Entry(wrapper2, textvariable=dir_soft_q)
 ent_data.pack(side=tk.LEFT, padx=6)
 ent_data.place(x=600, y=40, height=20, width=350)
 dir_soft_q.set(config.get('main', 'software_folder'))
-
-# KNAN_software/data folder
-btn_des_dir_object = tk.Button(wrapper2, text ="DES_DIR", 
-                       bg ='blue', command = btn_des_dir_cb)
-btn_des_dir_object.place(x = 500, y = 65, width = 75)
-
-dir_des_q = StringVar()
-ent3 = Entry(wrapper2, textvariable=dir_des_q)
-ent3.pack(side=tk.LEFT, padx=6)
-ent3.place(x=600, y=65, height=20, width=350)
-dir_des_q.set(config.get('main', 'knandata_folder'))
 
 # working log on GUI
 status_q = StringVar()

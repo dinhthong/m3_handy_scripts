@@ -200,27 +200,25 @@ def check_complete_nuc_folder(_base_dir_name):
 	jsonFile.write(jsonString)
 	# each_item_folder_name: 056_FT5OV9NG_ok
 	for each_item_folder_name in root_folder_ls_list:
-		count = count + 1
-		json_info_dict = {}
-		print_header("***STT: " + str(count))
-		json_info_dict['STT'] = count
-		dict_folder_info = check_individual_nuc_folder_files(_base_dir_name, each_item_folder_name)
-		json_info_dict.update(dict_folder_info)
-		jsonString = json.dumps(json_info_dict, indent=2, separators=(',', ': '))
-		jsonFile.write(jsonString)
+		print("Folder name: " + each_item_folder_name)
+		status, FTDI = get_full_ftdi_from_file_name(each_item_folder_name)
+		if status == 1:
+			count = count + 1
+			json_info_dict = {}
+			print_header("***STT: " + str(count))
+			json_info_dict['STT'] = count
+			dict_folder_info = check_individual_nuc_folder_files(_base_dir_name, each_item_folder_name)
+			json_info_dict.update(dict_folder_info)
+			jsonString = json.dumps(json_info_dict, indent=2, separators=(',', ': '))
+			jsonFile.write(jsonString)
+		else:
+			print("Not a FTDI folder, discard check folder's content")
 	jsonFile.close()
 
 def main_check_complete_nuc_folder(filepath):
 	print("Hello World!")
-	global json_file_name
-	#filePath = '/home/somedir/Documents/python/logs'
-	get_datetime_string()
-
-	#check_and_change_nucfolder_name()
+	#get_datetime_string()
 	check_complete_nuc_folder(filepath)
-	#readjsonfile = open(json_file_name, "r")
-	#jsondata = json.load(readjsonfile)
-	#print(jsondata)
 
 def main_check_and_change_nucfolder_name(filepath):
 	print("Hello World!")
