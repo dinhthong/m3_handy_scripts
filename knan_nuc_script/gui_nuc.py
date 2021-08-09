@@ -133,6 +133,7 @@ lbl.pack(side=tk.LEFT, padx=15)
 
 # create new record wrapper
 # https://www.kite.com/python/answers/how-to-make-an-array-of-strings-in-python
+ftdi_dev_pair_json_dir = "ftdi_dev_pair.json"
 
 def btn_main_check_complete_nuc_folder():
     print(dir_org_q.get())
@@ -140,7 +141,7 @@ def btn_main_check_complete_nuc_folder():
     status_q.set("Done btn_main_check_complete_nuc_folder!")
 def btn_get_ftdi_and_devserial_pair_to_json():
     print(dir_org_q.get())
-    get_and_save_ftdi_devserial_pair(dir_org_q.get())
+    get_and_save_ftdi_devserial_pair(dir_org_q.get(), ftdi_dev_pair_json_dir)
 
 def btn_main_check_and_change_nucfolder_name():
     print(dir_org_q.get())

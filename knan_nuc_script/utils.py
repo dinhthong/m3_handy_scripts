@@ -9,7 +9,7 @@ import json
 # define constant
 c_ftdi_length = 8
 c_temperatire_file_size = 157286400
-g_allow_rename = 0
+g_allow_rename = 1
 allow_print_debug_info = 1
 
 class bcolors:
@@ -199,7 +199,11 @@ def read_and_get_devserial_from_ftdi_in_json_file(file_name, input_ftdi):
 	
 	# returns JSON object as 
 	# a dictionary
-	dict_lists = json.load(f)
+	try: 
+		dict_lists = json.load(f)
+	except ValueError as e:
+		print(e)
+		return -1
 	# print(data)
 	# Iterating through the json
 	# list
@@ -211,7 +215,7 @@ def read_and_get_devserial_from_ftdi_in_json_file(file_name, input_ftdi):
 		searched_ftdi = next(item for item in dict_lists if item["FTDI"] == input_ftdi)
 	except:
 		print("Can't find corresponding dev_serial from: " + input_ftdi)
-		return ""
+		return -1
 	# Closing file
 	f.close()
 	#print("Searched ftdi: " + str(searched_ftdi))
@@ -223,7 +227,7 @@ def read_and_get_devserial_from_ftdi_in_json_file(file_name, input_ftdi):
 def create_data_FTDI_folder(base, ftdi):
 	#get_datetime_string()
 	dev_serial = read_and_get_devserial_from_ftdi_in_json_file("ftdi_dev_pair.json", ftdi)
-	if dev_serial != "":
+	if dev_serial != -1:
 		ftdi_folder_path = os.path.join(base, str(dev_serial) + "_" + ftdi)
 	else:
 		ftdi_folder_path = os.path.join(base, "data_" + ftdi)
