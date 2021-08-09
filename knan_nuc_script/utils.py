@@ -191,14 +191,11 @@ def check_file_count(file_count):
 		else:
 			print_fail("File count error")
 
-def read_and_get_devserial_from_ftdi_in_json_file(file_name, input_ftdi):
+def read_and_get_match_dict_by_ftdi_in_json_file(file_name, input_ftdi):
 	#import json
-	print("Getting devserial from ftdi: " + input_ftdi)
+	print("Getting matched dict by ftdi: " + input_ftdi)
 	# Opening JSON file
 	f = open(file_name, "r")
-	
-	# returns JSON object as 
-	# a dictionary
 	try: 
 		dict_lists = json.load(f)
 	except ValueError as e:
@@ -206,29 +203,47 @@ def read_and_get_devserial_from_ftdi_in_json_file(file_name, input_ftdi):
 		f.close()
 		print("Reading current file" + file_name + " not success")
 		return -1
-	# print(data)
-	# Iterating through the json
-	# list
-	#for i in dict_lists:
-	 	#print(i)
-		#getList(dict)
-	searched_ftdi = {}
+	dict_searched_by_ftdi = {}
 	try:
-		searched_ftdi = next(item for item in dict_lists if item["FTDI"] == input_ftdi)
+		dict_searched_by_ftdi = next(item for item in dict_lists if item["FTDI"] == input_ftdi)
 	except:
 		print("Can't find corresponding dev_serial from: " + input_ftdi)
 		f.close()
 		return -1
 	# Closing file
 	f.close()
-	print("Match dictionary value: " + str(searched_ftdi))
-	return searched_ftdi
+	print("Match dictionary value: " + str(dict_searched_by_ftdi))
+	return dict_searched_by_ftdi
+
+def read_and_get_match_dict_by_devserial_in_json_file(file_name, _input_dev_serial):
+	#import json
+	print("Getting matched dict by dev_serial: " + str(_input_dev_serial))
+	# Opening JSON file
+	f = open(file_name, "r")
+	try: 
+		dict_lists = json.load(f)
+	except ValueError as e:
+		print(e)
+		f.close()
+		print("Reading current .JSON file:" + file_name + " not success")
+		return -1
+	dict_searched_by_devserial = {}
+	try:
+		dict_searched_by_devserial = next(item for item in dict_lists if item["dev_serial"] == _input_dev_serial)
+	except:
+		print("Can't find corresponding dev_serial from: " + _input_dev_serial)
+		f.close()
+		return -1
+	# Closing file
+	f.close()
+	print("Match dictionary value: " + str(dict_searched_by_devserial))
+	return dict_searched_by_devserial
 
 # Create if not exist
 # if the FTDI is in database -> extract the dev serial number
 def create_data_FTDI_folder(base, ftdi):
 	#get_datetime_string()
-	return_dict = read_and_get_devserial_from_ftdi_in_json_file("ftdi_dev_pair.json", ftdi)
+	return_dict = read_and_get_match_dict_by_ftdi_in_json_file("ftdi_dev_pair.json", ftdi)
 	if return_dict != -1:
 		ftdi_folder_path = os.path.join(base, str(return_dict["dev_serial"]) + "_" + ftdi + return_dict["msg"])
 	else:
