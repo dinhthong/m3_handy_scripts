@@ -193,7 +193,7 @@ def check_file_count(file_count):
 
 def read_and_get_devserial_from_ftdi_in_json_file(file_name, input_ftdi):
 	#import json
-  
+	print("Getting devserial from ftdi: " + input_ftdi)
 	# Opening JSON file
 	f = open(file_name, "r")
 	
@@ -203,22 +203,25 @@ def read_and_get_devserial_from_ftdi_in_json_file(file_name, input_ftdi):
 		dict_lists = json.load(f)
 	except ValueError as e:
 		print(e)
+		f.close()
+		print("Reading current file" + file_name + " not success")
 		return -1
 	# print(data)
 	# Iterating through the json
 	# list
-	for i in dict_lists:
-	 	print(i)
+	#for i in dict_lists:
+	 	#print(i)
 		#getList(dict)
 	searched_ftdi = {}
 	try:
 		searched_ftdi = next(item for item in dict_lists if item["FTDI"] == input_ftdi)
 	except:
 		print("Can't find corresponding dev_serial from: " + input_ftdi)
+		f.close()
 		return -1
 	# Closing file
 	f.close()
-	#print("Searched ftdi: " + str(searched_ftdi))
+	print("Match dictionary value: " + str(searched_ftdi))
 	return searched_ftdi['dev_serial']
 
 

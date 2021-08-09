@@ -54,16 +54,19 @@ def get_and_save_ftdi_devserial_pair(_full_parent_dir, _json_file_name):
 	f.close()
 	ftdi_dev_list = dict_lists
 	print("ftdi_dev_list:")
-	print(ftdi_dev_list)
+	print_debug(str(ftdi_dev_list))
 	# read the json file and 
+	count = 0
 	for item in os.listdir(_full_parent_dir):
+		count = count + 1
+		print_header("***STT: " + str(count))
 		full_dir_path = os.path.join(_full_parent_dir, item)
+		print(full_dir_path)
 		if os.path.isdir(full_dir_path) == True:
-			print(full_dir_path)
 			[idx, ftdi] = get_full_ftdi_from_string(item)
 			if idx!=-1:
 				r = read_and_get_devserial_from_ftdi_in_json_file(_json_file_name, ftdi)
-				print("Return value for read_and_get_devserial_from_ftdi_in_json_file(), in get_and_save_ftdi_devserial_pair):" + str(r))
+				# print("Return value for read_and_get_devserial_from_ftdi_in_json_file(), in get_and_save_ftdi_devserial_pair):" + str(r))
 				# if the pair doesn't exist in current json file -> add new dictonary pair to the list
 				if r==-1:
 					#print(stt)
@@ -71,12 +74,14 @@ def get_and_save_ftdi_devserial_pair(_full_parent_dir, _json_file_name):
 					dev_serial = item[0:idx].replace("_","")
 					dev_serial = dev_serial.replace(" ","")
 					if dev_serial.isnumeric():
-						print(dev_serial)
+						#print(dev_serial)
 						json_info_dict = {}
 						json_info_dict['dev_serial'] = int(dev_serial)
 						json_info_dict['FTDI'] = ftdi
 						print(json_info_dict)
 						ftdi_dev_list.append(json_info_dict)
+				else:
+					print_fail("The dictionary already exists in list, skip adding to JSON file")
 			# full_item_dir_list = []
 			# for item in os.listdir(full_dir_path):
 			# 	full_item_dir_list.append(os.path.join(full_dir_path, item))
