@@ -1,12 +1,14 @@
 # Intro
 + Save user operations, and error prone.
 # Todos
+- Improve the link between: Dev Serial - FTDI - Comment Message (user). They are seperated by underscore '_' character and thus we actually can save these.
+-> Write to `ftdi_dev_pair.json` file. Future dictionary schema: {"dev serial": , "FTDI";, "msg":}
+Because we don't want to lose the user message like `canchecklai`.... in original folder name !
+- Improve performance of the code (avoid too much unncessary resources used for iteration...) -> LATER :D
 - Display working file, return status after clicking the button. And the folder status
 - Display working messages (fail/ok) to GUI
 - Write user working logs (new session, button click...) and save to text file
 - JSON file -> more info: check info of each file, display file name and file size... MD5, and the folder it's working. maybe also the commands?
-- Extracted back from parent folder -> index all temperatures file -> move/copy to destination folder (in this case des folder will be /KNAN_software/data)
-- Move status message to append first of NUC folder name (so user can sort easier)
 - More strict file type checking function (and more option for easy program change)
 # Features
 - User can point to 'Phan mem lay mau du lieu', the software then navigates to Data folder, NUC_Table, Log... (or by user selection dir paths) -> check the files:
@@ -14,7 +16,6 @@
 + The user can select parent nuc folder. -> and select temperature folder -> Add feature: export valid temperature data files (by checking name and size in subfolders...) to temperature folder (to be generated NUC in software again)
 - Export to current folder: json file contains FAIL/OK folders only -> Done for 2 functions
 - Better GUI design.
-- Data structure: Link between FTDI and device serial
 - Display usage text when user hovers to button (manual)
 - Add scroll text box to display print message...
 # Vietnamese
