@@ -44,7 +44,12 @@ def arrange_nuc_files_in_firstlevel_subfolder(full_parent_dir):
 
 def get_and_save_ftdi_devserial_pair(_full_parent_dir, _json_file_name):
 	# read the current json file and save to list
-	f = open(_json_file_name, "r")
+	if os.path.isfile(_json_file_name):
+		f = open(_json_file_name, "r")
+	else:
+		print("File doesn't exist")
+		f = open(_json_file_name, 'a+')
+
 	# returns JSON object as 
 	# a dictionary
 	try:
@@ -57,37 +62,38 @@ def get_and_save_ftdi_devserial_pair(_full_parent_dir, _json_file_name):
 	print_debug(str(ftdi_dev_list))
 	# read the json file and 
 	count = 0
-	for item in os.listdir(_full_parent_dir):
+	for folder_name in os.listdir(_full_parent_dir):
 		count = count + 1
 		print_header("***STT: " + str(count))
-		full_dir_path = os.path.join(_full_parent_dir, item)
+		full_dir_path = os.path.join(_full_parent_dir, folder_name)
 		print(full_dir_path)
 		if os.path.isdir(full_dir_path) == True:
-			[idx, ftdi] = get_full_ftdi_from_string(item)
+			[idx, ftdi] = get_full_ftdi_from_string(folder_name)
 			if idx!=-1:
-				r = read_and_get_devserial_from_ftdi_in_json_file(_json_file_name, ftdi)
+				#if 
+				user_msg = folder_name[idx+c_ftdi_length:]
+				#user_msg = remove_original_app_msg(user_msg, 0)
+				print("Extracted user message: " + user_msg)
+				list_or_negativeone = read_and_get_devserial_from_ftdi_in_json_file(_json_file_name, ftdi)
 				# print("Return value for read_and_get_devserial_from_ftdi_in_json_file(), in get_and_save_ftdi_devserial_pair):" + str(r))
 				# if the pair doesn't exist in current json file -> add new dictonary pair to the list
-				if r==-1:
+				if list_or_negativeone==-1:
 					#print(stt)
-					#print(item[0:idx])
-					dev_serial = item[0:idx].replace("_","")
+					#print(folder_name[0:idx])
+					dev_serial = folder_name[0:idx].replace("_","")
 					dev_serial = dev_serial.replace(" ","")
 					if dev_serial.isnumeric():
 						#print(dev_serial)
 						json_info_dict = {}
 						json_info_dict['dev_serial'] = int(dev_serial)
 						json_info_dict['FTDI'] = ftdi
+						json_info_dict['msg'] = user_msg
 						print(json_info_dict)
 						ftdi_dev_list.append(json_info_dict)
 				else:
 					print_fail("The dictionary already exists in list, skip adding to JSON file")
-			# full_item_dir_list = []
-			# for item in os.listdir(full_dir_path):
-			# 	full_item_dir_list.append(os.path.join(full_dir_path, item))
-			# create_ftdi_folders_and_move_ftdi_files(full_item_dir_list, _full_parent_dir)
 		else:
-			print("Not a folder, dissmiss")
+			print("Not a folder, skip...")
 	jsonFile = open(_json_file_name, "w")
 	jsonString = json.dumps(ftdi_dev_list, indent=2, separators=(',', ': '))
 	jsonFile.write(jsonString)

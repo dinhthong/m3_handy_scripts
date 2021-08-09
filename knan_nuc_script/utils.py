@@ -222,16 +222,15 @@ def read_and_get_devserial_from_ftdi_in_json_file(file_name, input_ftdi):
 	# Closing file
 	f.close()
 	print("Match dictionary value: " + str(searched_ftdi))
-	return searched_ftdi['dev_serial']
-
+	return searched_ftdi
 
 # Create if not exist
 # if the FTDI is in database -> extract the dev serial number
 def create_data_FTDI_folder(base, ftdi):
 	#get_datetime_string()
-	dev_serial = read_and_get_devserial_from_ftdi_in_json_file("ftdi_dev_pair.json", ftdi)
-	if dev_serial != -1:
-		ftdi_folder_path = os.path.join(base, str(dev_serial) + "_" + ftdi)
+	return_dict = read_and_get_devserial_from_ftdi_in_json_file("ftdi_dev_pair.json", ftdi)
+	if return_dict != -1:
+		ftdi_folder_path = os.path.join(base, str(return_dict["dev_serial"]) + "_" + ftdi + return_dict["msg"])
 	else:
 		ftdi_folder_path = os.path.join(base, "data_" + ftdi)
 
@@ -260,3 +259,15 @@ def create_ftdi_folders_and_move_ftdi_files(item_fullpath_list, full_des_dir):
 				new_file_path = os.path.join(new_ftdi_folder, last_part_of_dir)
 				rename_dir(full_item_dir, new_file_path)
 		print_header("--------------------------------------------------------------------------------------------")
+
+# Remove string after # character
+# VD: D:\Dulieu_NUC_KNAN\fromOneDrive_PC_HDD\031_FT5P10Z3_ok
+def remove_original_app_msg(_dir_full_path, rename_flag):
+	first_status_index = _dir_full_path.find("#")
+	new_name = ""
+	if first_status_index>=0:
+		new_name = _dir_full_path[0:first_status_index]
+		print_debug(new_name)
+		if rename_flag == 1:
+			rename_dir(_dir_full_path, new_name)
+	return new_name

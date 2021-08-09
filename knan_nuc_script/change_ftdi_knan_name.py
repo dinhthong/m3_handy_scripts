@@ -73,21 +73,12 @@ def check_and_change_nucfolder_name(_filepath):
 temp_file_check = array('B', [0, 0, 0, 0, 0, 0, 0, 0, 0])
 check_folder_content_ok_flag = 0
 
-# Remove string after # character
-# VD: D:\Dulieu_NUC_KNAN\fromOneDrive_PC_HDD\031_FT5P10Z3_ok
-def remove_original_msg(_dir_full_path):
-	first_status_index = _dir_full_path.find("#")
-	new_name = ""
-	if first_status_index>1:
-		new_name = _dir_full_path[0:first_status_index]
-		print(new_name)
-		rename_dir(_dir_full_path, new_name)
-	return new_name
+
 
 def append_checkmsg_to_folder_name(st, _dir_full_path):
 	global fullpath_src_folder
 	global check_folder_content_ok_flag
-	new_folder_name = remove_original_msg(_dir_full_path)
+	new_folder_name = remove_original_app_msg(_dir_full_path, 1)
 	end_str = "#" + st
 	#if st == 0:
 	#end_str = st
@@ -117,11 +108,12 @@ def remove_status_msg_from_nuc_folder_name(_filename):
 		count = count + 1
 		fullpath_src_folder = os.path.join(_filename, each_item_folder_name)
 		print(fullpath_src_folder)
-		each_item_folder_ls_list = os.listdir(fullpath_src_folder)
-		each_item_folder_file_count = len(each_item_folder_ls_list)
-		# check_standard_files_count(each_item_folder_file_count)
-		if each_item_folder_file_count>0:
-			remove_original_msg(fullpath_src_folder)
+		if os.path.isdir(fullpath_src_folder):
+			each_item_folder_ls_list = os.listdir(fullpath_src_folder)
+			#each_item_folder_file_count = len(each_item_folder_ls_list)
+			# check_standard_files_count(each_item_folder_file_count)
+			#if each_item_folder_file_count>0:
+			remove_original_app_msg(fullpath_src_folder, 1)
 		#aDict = [{"stt": count, "foder_name": each_item_folder_name, "ma_thiet_bi": "place_holder", "ftdi_name": extracted_ftdi, "files_check_status": check_folder_content_ok_flag}]
 		#jsonString = json.dumps(aDict, indent=2, separators=(',', ': '))
 		#jsonString = json.dumps(aDict)
