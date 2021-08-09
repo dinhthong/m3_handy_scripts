@@ -5,10 +5,11 @@ from array import *
 from datetime import date
 from datetime import datetime
 import hashlib
+import json
 # define constant
 c_ftdi_length = 8
 c_temperatire_file_size = 157286400
-g_allow_rename = 1
+g_allow_rename = 0
 allow_print_debug_info = 1
 
 class bcolors:
@@ -48,23 +49,25 @@ def get_datetime_string():
 	#print(date_time_str)
 	return date_time_str
 
+# return 
+# status 
 def get_full_ftdi_from_string(file_name):
 	# 06-Aug-21: Discard FTDIData*, FTDIGSK* and FTDIDevice*
 	# Because in KNAN_software/State the program generates these file for some information, but it's not interested files
-	return_status = 0
+	ft_first_index = -1
 	if file_name.find("FTDI") >= 0:
-		return return_status, ""
+		return ft_first_index, ""
 	ft_first_index = file_name.find("FT")
 	
 	if ft_first_index>=0:
 		get_ftdi = file_name[ft_first_index:ft_first_index+c_ftdi_length]
 		print_ok("FTDI: "+ get_ftdi)
-		return_status = 1
+		#return_status = 1
 	else:
 		get_ftdi = ""
 		print_fail("No FTDI string in file is found!, Please check folder content!")
-		return_status = 0
-	return return_status, get_ftdi
+		#return_status = 0
+	return ft_first_index, get_ftdi
 
 def get_file_size(_file_fullpath):
 	#file_fullpath = fullpath_src_folder + '/' + _fullpath_file
@@ -187,11 +190,44 @@ def check_file_count(file_count):
 			print_ok("File count ok")
 		else:
 			print_fail("File count error")
-			
+
+def read_and_get_devserial_from_ftdi_in_json_file(file_name, input_ftdi):
+	#import json
+  
+	# Opening JSON file
+	f = open(file_name, "r")
+	
+	# returns JSON object as 
+	# a dictionary
+	dict_lists = json.load(f)
+	# print(data)
+	# Iterating through the json
+	# list
+	for i in dict_lists:
+	 	print(i)
+		#getList(dict)
+	searched_ftdi = {}
+	try:
+		searched_ftdi = next(item for item in dict_lists if item["FTDI"] == input_ftdi)
+	except:
+		print("Can't find corresponding dev_serial from: " + input_ftdi)
+		return ""
+	# Closing file
+	f.close()
+	#print("Searched ftdi: " + str(searched_ftdi))
+	return searched_ftdi['dev_serial']
+
+
 # Create if not exist
+# if the FTDI is in database -> extract the dev serial number
 def create_data_FTDI_folder(base, ftdi):
 	#get_datetime_string()
-	ftdi_folder_path = base + "/data_" + ftdi
+	dev_serial = read_and_get_devserial_from_ftdi_in_json_file("ftdi_dev_pair.json", ftdi)
+	if dev_serial != "":
+		ftdi_folder_path = os.path.join(base, str(dev_serial) + "_" + ftdi)
+	else:
+		ftdi_folder_path = os.path.join(base, "data_" + ftdi)
+
 	try:
 		os.mkdir(ftdi_folder_path) 
 	except OSError as error: 
@@ -210,7 +246,7 @@ def create_ftdi_folders_and_move_ftdi_files(item_fullpath_list, full_des_dir):
 		last_part_of_dir = os.path.basename(os.path.normpath(full_item_dir))
 		if os.path.isfile(full_item_dir) == True:
 			get_ftdi_ok, extracted_ftdi = get_full_ftdi_from_string(full_item_dir)
-			if get_ftdi_ok == 1:
+			if get_ftdi_ok != -1:
 				print("Extracted ftdi: " + extracted_ftdi)
 				new_ftdi_folder = create_data_FTDI_folder(full_des_dir, extracted_ftdi)
 				file_type = check_nuc_file_name_and_size(full_item_dir, get_file_size(full_item_dir))

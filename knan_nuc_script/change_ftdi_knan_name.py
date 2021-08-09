@@ -32,7 +32,7 @@ def check_and_change_nucfolder_name(_filepath):
 		underscore_count = len(underscore_index_list)
 		for tb_file in src_folder_ls:
 			valid_ftdi_flag, extracted_ftdi = get_full_ftdi_from_string(tb_file)
-			if valid_ftdi_flag == 1:
+			if valid_ftdi_flag != -1:
 				break
 		# check if folder name is already good
 		if valid_ftdi_flag == 1:
@@ -146,7 +146,7 @@ def get_ftdi_and_check_all_files(_full_dir_path, _each_item_folder_ls_list):
 		file_type = -1
 		if done_get_ftdi_flag == 0:
 			get_ftdi_status, extracted_ftdi = get_full_ftdi_from_string(tb_file)
-			if get_ftdi_status==1:
+			if get_ftdi_status!=-1:
 				done_get_ftdi_flag = 1
 		if done_get_ftdi_flag == 1:
 			file_size = get_file_size(full_nuc_file_path)
@@ -204,7 +204,7 @@ def check_complete_nuc_folder(_base_dir_name):
 	for each_item_folder_name in root_folder_ls_list:
 		print("Folder name: " + each_item_folder_name)
 		status, FTDI = get_full_ftdi_from_string(each_item_folder_name)
-		if status == 1:
+		if status != -1:
 			count = count + 1
 			json_info_dict = {}
 			print_header("***STT: " + str(count))

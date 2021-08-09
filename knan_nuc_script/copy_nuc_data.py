@@ -30,7 +30,7 @@ def extract_files_in_childfolders(_parent_folder):
 			for file_in_folder_item in nuc_folder_fullpath_ls:
 				#full_file_dir = os.path.join(nuc_folder_fullpath, file_in_folder_item)
 				get_ftdi_ok, extracted_ftdi = get_full_ftdi_from_string(file_in_folder_item)
-				if get_ftdi_ok == 1:
+				if get_ftdi_ok != -1:
 					json_info_dict = {}
 					count = count + 1
 					print_header("***STT: " + str(count))
