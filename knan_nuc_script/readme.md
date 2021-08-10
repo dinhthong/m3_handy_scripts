@@ -1,9 +1,6 @@
 # Intro
 + Save user operations, and error prone.
 # Todos
-- Improve the link between: Dev Serial - FTDI - Comment Message (user). They are seperated by underscore '_' character and thus we actually can save these.
--> Write to `ftdi_dev_pair.json` file. Future dictionary schema: {"dev serial": , "FTDI";, "msg":}
-Because we don't want to lose the user message like `canchecklai`.... in original folder name !
 - Improve performance of the code (avoid too much unncessary resources used for iteration...) -> LATER :D
 - Merge/handle duplicate folders, remove duplicate files (by checking MD5...)
 - Display working file, return status after clicking the button. And the folder status

@@ -62,11 +62,9 @@ def get_full_ftdi_from_string(file_name):
 	if ft_first_index>=0:
 		get_ftdi = file_name[ft_first_index:ft_first_index+c_ftdi_length]
 		print_ok("FTDI: "+ get_ftdi)
-		#return_status = 1
 	else:
 		get_ftdi = ""
 		print_fail("No FTDI string in file is found!, Please check folder content!")
-		#return_status = 0
 	return ft_first_index, get_ftdi
 
 def get_file_size(_file_fullpath):
@@ -81,7 +79,6 @@ def get_file_size(_file_fullpath):
 		return -1
 
 def print_check_file_content_message(_ok_temp_file_count, _ok_generated_file_count, _ok_log_file_count):
-	#error = 0
 	temp_str = "_ok_temp_file_count: " + str(_ok_temp_file_count)+"/9"
 	file_check_str = ""
 	if _ok_temp_file_count == 9:
@@ -89,7 +86,6 @@ def print_check_file_content_message(_ok_temp_file_count, _ok_generated_file_cou
 		file_check_str = "tO"
 	else:
 		print_fail(temp_str)
-		#error = error + 1
 		file_check_str = "tF"
 	temp_str = "_ok_generated_file_count: " + str(_ok_generated_file_count)+"/5"
 	if _ok_generated_file_count == 5:
@@ -97,7 +93,6 @@ def print_check_file_content_message(_ok_temp_file_count, _ok_generated_file_cou
 		file_check_str =file_check_str + "ntO"
 	else:
 		print_fail(temp_str)
-		#error = error + 1
 		file_check_str = file_check_str + "ntF"
 	temp_str ="_ok_log_file_count: " + str(_ok_log_file_count)+"/1"
 	if _ok_log_file_count == 1:
@@ -105,7 +100,6 @@ def print_check_file_content_message(_ok_temp_file_count, _ok_generated_file_cou
 		file_check_str =file_check_str + "logO"
 	else:
 		print_fail(temp_str)
-		#error = error + 1
 		file_check_str = file_check_str + "logF"
 	return file_check_str
 
@@ -231,7 +225,7 @@ def read_and_get_match_dict_by_devserial_in_json_file(file_name, _input_dev_seri
 	try:
 		dict_searched_by_devserial = next(item for item in dict_lists if item["dev_serial"] == _input_dev_serial)
 	except:
-		print("Can't find corresponding dev_serial from: " + _input_dev_serial)
+		print("Can't find corresponding dev_serial from: " + str(_input_dev_serial))
 		f.close()
 		return -1
 	# Closing file

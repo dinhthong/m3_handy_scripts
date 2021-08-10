@@ -18,7 +18,7 @@ def check_and_change_nucfolder_name(_filepath):
 	root_folder_ls_list = os.listdir(_filepath)
 	for each_item_folder_name in root_folder_ls_list:
 		json_info_dict = {}
-		valid_ftdi_flag = 0
+		first_ftdi_idx = 0
 		good_name_flag = 0
 		print_header("***STT: " + str(count))
 		json_info_dict['STT'] = count
@@ -31,11 +31,11 @@ def check_and_change_nucfolder_name(_filepath):
 		underscore_index_list = find(each_item_folder_name, "_")
 		underscore_count = len(underscore_index_list)
 		for tb_file in src_folder_ls:
-			valid_ftdi_flag, extracted_ftdi = get_full_ftdi_from_string(tb_file)
-			if valid_ftdi_flag != -1:
+			first_ftdi_idx, extracted_ftdi = get_full_ftdi_from_string(tb_file)
+			if first_ftdi_idx != -1:
 				break
 		# check if folder name is already good
-		if valid_ftdi_flag == 1:
+		if first_ftdi_idx >= 0:
 			if underscore_count == 0:
 				# continue the for loop for this each_item_folder_name
 				print_fail("Discard this for loop as no underscore found")
