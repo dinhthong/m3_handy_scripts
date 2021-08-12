@@ -4,15 +4,7 @@ import sys
 from array import *
 from utils import *
 import json
-import shutil
 
-# define constant
-c_ftdi_length = 8
-# global vars
-ok_temp_file_count = 0
-ok_generated_file_count = 0
-ok_log_file_count = 0
-check_folder_content_ok_flag = 0
 # arrange in level 1 subfolders
 def arrange_nuc_files_in_firstlevel_subfolder(full_parent_dir):
 	for item in os.listdir(full_parent_dir):
@@ -24,16 +16,10 @@ def arrange_nuc_files_in_firstlevel_subfolder(full_parent_dir):
 				full_item_dir_list.append(os.path.join(full_dir_path, item))
 			create_ftdi_folders_and_move_ftdi_files(full_item_dir_list, full_parent_dir)
 		else:
-			print("Not a folder, dissmiss")
+			print("Not a folder, skip...")
 
-# iterate all folders
-# detect and get FTDI first index: n
-# strip folder name from index 0 to n, check if it's a valid number
-# create a device and FTDI pair, with dev serial as primary key.
-# for each dev serial, if the pair value doesn't change, skip
-# if it changes, ->
-
-def get_and_save_ftdi_devserial_pair(_full_parent_dir, _json_file_name):
+def extract_and_save_nuc_folder_info_to_json_file(_full_parent_dir, _json_file_name):
+	print_debug("In function: extract_and_save_nuc_folder_info_to_json_file")
 	# read the current json file and save to list
 	if os.path.isfile(_json_file_name):
 		f = open(_json_file_name, "r")
@@ -48,8 +34,8 @@ def get_and_save_ftdi_devserial_pair(_full_parent_dir, _json_file_name):
 		dict_lists = []
 	f.close()
 	ftdi_dev_list = dict_lists
-	print("ftdi_dev_list:")
-	print_debug(str(ftdi_dev_list))
+	#print("ftdi_dev_list:")
+	#print_debug(str(ftdi_dev_list))
 	# read the json file and 
 	count = 0
 	for folder_name in os.listdir(_full_parent_dir):
@@ -95,10 +81,7 @@ def get_and_save_ftdi_devserial_pair(_full_parent_dir, _json_file_name):
 							print_debug("Match user msg")
 						else:
 							print_debug("Different user msg, updating:...")	
-							dict_lists[index]["msg"] = new_user_msg
-							#if index>=0:
-							#	
-						
+							dict_lists[index]["msg"] = new_user_msg				
 		else:
 			print("Not a folder, skip...")
 	#print(ftdi_dev_list)
@@ -109,10 +92,6 @@ def get_and_save_ftdi_devserial_pair(_full_parent_dir, _json_file_name):
 
 def main():
 	print("nuc_production")
-	# arrange_nuc_files_to_folder("D:\py_test_KNAN_software", "D:\py_test_des_folder")
-	# arrange_nuc_files_in_firstlevel_subfolder("D:\py_test_KNAN_software", "D:")
-	# get_and_save_ftdi_devserial_pair("D:\\Dulieu_NUC_KNAN\\fromOneDrive_PC_HDD", jfilename)
-	#get_ftdi = read_and_get_match_dict_by_ftdi_in_json_file(jfilename, "2FT5OUTLD")
-	#print("get_ftdi: " + str(get_ftdi))
+
 if __name__ == "__main__":
     main()

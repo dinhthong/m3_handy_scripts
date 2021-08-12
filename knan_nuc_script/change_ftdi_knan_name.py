@@ -1,6 +1,5 @@
 # todo: Check folder content
 import os
-import sys
 from array import *
 from utils import *
 import json
@@ -69,51 +68,18 @@ def check_and_change_nucfolder_name(_filepath):
 		# jsonString = json.dumps(json_info_dict, indent=2, separators=(',', ': '))
 		# jsonFile.write(jsonString)
 	# jsonFile.close()
-# -20, -10, 0,...
-temp_file_check = array('B', [0, 0, 0, 0, 0, 0, 0, 0, 0])
-check_folder_content_ok_flag = 0
-
-
-
-def append_checkmsg_to_folder_name(st, _dir_full_path):
-	global fullpath_src_folder
-	global check_folder_content_ok_flag
-	new_folder_name = remove_original_app_msg(_dir_full_path, 1)
-	end_str = "#" + st
-	#if st == 0:
-	#end_str = st
-	#	check_folder_content_ok_flag = 1
-	#else:
-	#end_str = end_str + "fcF"
-	#	check_folder_content_ok_flag = 0
-	# start rename
-	if new_folder_name=="":
-		_nn = _dir_full_path+end_str
-		rename_dir(_dir_full_path, _nn)
-	else:
-		_nn = new_folder_name+end_str
-		rename_dir(new_folder_name, _nn)
-	return _nn
-
-each_item_folder_ls_list = []
-json_file_name = ""
 
 # input: D:\Dulieu_NUC_KNAN\fromOneDrive_PC_HDD
-def remove_status_msg_from_nuc_folder_name(_filename):
+def remove_status_msg_from_nuc_folder_name(_full_parentfolder_dir):
 	count = 1
-	root_folder_ls_list = os.listdir(_filename)
-	#jsonFile = open(json_file_name, "w")
+	root_folder_ls_list = os.listdir(_full_parentfolder_dir)
 	for each_item_folder_name in root_folder_ls_list:
 		print_header("***STT: " + str(count))
 		count = count + 1
-		fullpath_src_folder = os.path.join(_filename, each_item_folder_name)
-		print(fullpath_src_folder)
-		if os.path.isdir(fullpath_src_folder):
-			each_item_folder_ls_list = os.listdir(fullpath_src_folder)
-			#each_item_folder_file_count = len(each_item_folder_ls_list)
-			# check_standard_files_count(each_item_folder_file_count)
-			#if each_item_folder_file_count>0:
-			remove_original_app_msg(fullpath_src_folder, 1)
+		full_nuc_folder_dir = os.path.join(_full_parentfolder_dir, each_item_folder_name)
+		print(full_nuc_folder_dir)
+		if os.path.isdir(full_nuc_folder_dir):
+			remove_original_app_msg(full_nuc_folder_dir, 1)
 		#aDict = [{"stt": count, "foder_name": each_item_folder_name, "ma_thiet_bi": "place_holder", "ftdi_name": extracted_ftdi, "files_check_status": check_folder_content_ok_flag}]
 		#jsonString = json.dumps(aDict, indent=2, separators=(',', ': '))
 		#jsonString = json.dumps(aDict)
@@ -156,6 +122,7 @@ def get_ftdi_and_check_all_files(_full_dir_path, _each_item_folder_ls_list):
 	new_folder_name = append_checkmsg_to_folder_name(error_st, _full_dir_path)
 	return [extracted_ftdi, error_st, file_info_list, new_folder_name]
 	# append check status message to end of folder name
+
 # @INPUT: 
 # _base_dir_name: D:/py_test_KNAN_software
 # _nuc_dir_name:  061_FT5OV9HL_ok
@@ -182,7 +149,8 @@ def check_individual_nuc_folder_files(_base_dir_name, _nuc_dir_name):
 		print("Not a dir")
 	print_header("--------------------------------------------------------------------------------------------")
 	return this_info_dict
-# _filename: D:\Dulieu_NUC_KNAN\fromOneDrive_PC_HDD
+
+# _full_parentfolder_dir: D:\Dulieu_NUC_KNAN\fromOneDrive_PC_HDD
 # root_folder_ls_list: [061_FT5OV9HL_ok, 097_FT5OUWNJ_cancheck]
 def check_complete_nuc_folder(_base_dir_name):
 	count = 0

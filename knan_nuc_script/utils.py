@@ -185,11 +185,16 @@ def check_file_count(file_count):
 		else:
 			print_fail("File count error")
 
-def read_and_get_match_dict_by_ftdi_in_json_file(file_name, input_ftdi):
+def read_and_get_match_dict_by_ftdi_in_json_file(file_name, _input_ftdi):
 	#import json
-	print("Getting matched dict by ftdi: " + input_ftdi)
+	print("Getting matched dict by ftdi: " + _input_ftdi)
 	# Opening JSON file
-	f = open(file_name, "r")
+	#f = open(file_name, "r")
+	if os.path.isfile(file_name):
+		f = open(file_name, "r")
+	else:
+		print("File doesn't exist")
+		f = open(file_name, 'a+')
 	try: 
 		dict_lists = json.load(f)
 	except ValueError as e:
@@ -199,9 +204,9 @@ def read_and_get_match_dict_by_ftdi_in_json_file(file_name, input_ftdi):
 		return -1
 	dict_searched_by_ftdi = {}
 	try:
-		dict_searched_by_ftdi = next(item for item in dict_lists if item["FTDI"] == input_ftdi)
+		dict_searched_by_ftdi = next(item for item in dict_lists if item["FTDI"] == _input_ftdi)
 	except:
-		print("Can't find corresponding dev_serial from: " + input_ftdi)
+		print("Can't find corresponding dev_serial from: " + _input_ftdi)
 		f.close()
 		return -1
 	# Closing file
@@ -280,3 +285,15 @@ def remove_original_app_msg(_dir_full_path, rename_flag):
 		if rename_flag == 1:
 			rename_dir(_dir_full_path, new_name)
 	return new_name
+
+def append_checkmsg_to_folder_name(st, _dir_full_path):
+	new_folder_name = remove_original_app_msg(_dir_full_path, 1)
+	end_str = "#" + st
+	# start rename
+	if new_folder_name == "":
+		_nn = _dir_full_path+end_str
+		rename_dir(_dir_full_path, _nn)
+	else:
+		_nn = new_folder_name+end_str
+		rename_dir(new_folder_name, _nn)
+	return _nn

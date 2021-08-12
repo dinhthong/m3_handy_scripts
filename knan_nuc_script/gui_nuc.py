@@ -140,9 +140,9 @@ def btn_main_check_complete_nuc_folder():
     main_check_complete_nuc_folder(dir_org_q.get())
     status_q.set("Done btn_main_check_complete_nuc_folder!")
 
-def btn_get_ftdi_and_devserial_pair_to_json():
+def btn_extract_and_save_nuc_folder_info_to_json_file():
     print(dir_org_q.get())
-    get_and_save_ftdi_devserial_pair(dir_org_q.get(), ftdi_dev_pair_json_dir)
+    extract_and_save_nuc_folder_info_to_json_file(dir_org_q.get(), ftdi_dev_pair_json_dir)
 
 def btn_main_check_and_change_nucfolder_name():
     print(dir_org_q.get())
@@ -171,12 +171,12 @@ btn_CHANGE_FOLDER_NAME_IN_ORG = tk.Button(wrapper3, text ="1. CHANGE_FOLDER_NAME
 
 btn_CHANGE_FOLDER_NAME_IN_ORG.grid(row = 2, column=2, pady = 20)
 
-btn_get_ftdi_and_dev_pair = tk.Button(wrapper3, text ="2.0 GET FTDI AND DEV SERIAL PAIR", 
-                       bg ='#ffb3fe', command = btn_get_ftdi_and_devserial_pair_to_json)
+btn_get_ftdi_and_dev_pair = tk.Button(wrapper3, text ="2.0. GET NUC FOLDER INFO TO JSON", 
+                       bg ='#ffb3fe', command = btn_extract_and_save_nuc_folder_info_to_json_file)
 
 btn_get_ftdi_and_dev_pair.grid(row = 3, column=2, pady = 20)
 
-btn_checknuc = tk.Button(wrapper3, text ="2.1 CHECK_NUC_FOLDER_IN_ORG", 
+btn_checknuc = tk.Button(wrapper3, text ="2.1. CHECK_NUC_FOLDER_IN_ORG", 
                        bg ='#ffb3fe', command = btn_main_check_complete_nuc_folder)
 
 btn_checknuc.grid(row = 4, column = 2, pady = 20)

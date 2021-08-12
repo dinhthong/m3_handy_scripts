@@ -1,13 +1,9 @@
 # todo: Check folder content
 import os
-import sys
 from array import *
 from utils import *
 import json
-import shutil
 
-# define constant
-c_ftdi_length = 8
 # _parent_folder: D:\py_test_KNAN_software: folder contains folders, each folders is deviceserial_FTDI: contains files
 def extract_files_in_childfolders(_parent_folder):
 	root_folder_ls_list = os.listdir(_parent_folder)
