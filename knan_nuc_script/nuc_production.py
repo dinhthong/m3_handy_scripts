@@ -4,7 +4,7 @@ import sys
 from array import *
 from utils import *
 import json
-
+import operator
 # arrange in level 1 subfolders
 def arrange_nuc_files_in_firstlevel_subfolder(full_parent_dir):
 	for item in os.listdir(full_parent_dir):
@@ -26,17 +26,12 @@ def extract_and_save_nuc_folder_info_to_json_file(_full_parent_dir, _json_file_n
 	else:
 		print("File doesn't exist")
 		f = open(_json_file_name, 'a+')
-	# returns JSON object as 
-	# a dictionary
 	try:
-		dict_lists = json.load(f)
+		extracted_ftdi_dev_lists = json.load(f)
 	except:
-		dict_lists = []
+		extracted_ftdi_dev_lists = []
 	f.close()
-	ftdi_dev_list = dict_lists
-	#print("ftdi_dev_list:")
-	#print_debug(str(ftdi_dev_list))
-	# read the json file and 
+
 	count = 0
 	for folder_name in os.listdir(_full_parent_dir):
 		count = count + 1
@@ -64,34 +59,57 @@ def extract_and_save_nuc_folder_info_to_json_file(_full_parent_dir, _json_file_n
 						json_info_dict['msg'] = new_user_msg
 						print_debug("Extracted dict from folder: " + folder_name)
 						print(json_info_dict)
-						ftdi_dev_list.append(json_info_dict)
+						extracted_ftdi_dev_lists.append(json_info_dict)
 					else:
 						print_warning("The dictionary already exists in list, check and update current dictionary")
-						index = next((i for i, item in enumerate(dict_lists) if item["dev_serial"] == dev_serial), None)
+						index = next((i for i, item in enumerate(extracted_ftdi_dev_lists) if item["dev_serial"] == dev_serial), None)
 						print("index: " + str(index))
 						print_debug("Found dict by dev serial: " + str(dev_serial))
-						print(ftdi_dev_list[index])
+						print(extracted_ftdi_dev_lists[index])
 						
 						if match_dict["FTDI"] == new_ftdi:
 							print_debug("Match FTDI")
 						else:
 							print_debug("Different FTDI, updating:...")
-							dict_lists[index]["FTDI"] = new_ftdi
+							extracted_ftdi_dev_lists[index]["FTDI"] = new_ftdi
 						if match_dict["msg"] == new_user_msg:
 							print_debug("Match user msg")
 						else:
 							print_debug("Different user msg, updating:...")	
-							dict_lists[index]["msg"] = new_user_msg				
+							extracted_ftdi_dev_lists[index]["msg"] = new_user_msg				
 		else:
 			print("Not a folder, skip...")
-	#print(ftdi_dev_list)
+	#print(extracted_ftdi_dev_lists)
 	jsonFile = open(_json_file_name, "w")
-	jsonString = json.dumps(ftdi_dev_list, indent=2, separators=(',', ': '))
+	jsonString = json.dumps(extracted_ftdi_dev_lists, indent=2, separators=(',', ': '))
 	jsonFile.write(jsonString)
 	jsonFile.close()
 
+def arrange_json_file(_json_file_name):
+	if os.path.isfile(_json_file_name):
+		f = open(_json_file_name, "r")
+	else:
+		print("File doesn't exist")
+		f = open(_json_file_name, 'a+')
+	try:
+		extracted_ftdi_dev_lists = json.load(f)
+	except:
+		extracted_ftdi_dev_lists = []
+	f.close()
+	# https://stackoverflow.com/questions/72899/how-do-i-sort-a-list-of-dictionaries-by-a-value-of-the-dictionary
+	newlist = sorted(extracted_ftdi_dev_lists, key=lambda k: k['dev_serial']) 
+	print(newlist)
+	# jsonFile = open(_json_file_name, "w")
+	# jsonString = json.dumps(newlist, indent=2, separators=(',', ': '))
+	# jsonFile.write(jsonString)
+	# jsonFile.close()
+	#dev_serial_list.append(item['dev_serial'])
+	#print(extracted_ftdi_dev_lists)
+	#arrange_json_file(_json_file_name)
+
 def main():
 	print("nuc_production")
+	arrange_json_file("ftdi_dev_pair.json")
 
 if __name__ == "__main__":
     main()
