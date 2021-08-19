@@ -26,6 +26,8 @@ def check_and_change_nucfolder_name(_filepath):
 		fullpath_src_folder = os.path.join(_filepath, each_item_folder_name)
 		print("Full _filepath: " + fullpath_src_folder)
 		# all root_folder_ls_list and folder in fullpath_src_folder
+		if os.path.isdir(fullpath_src_folder) == False:
+			continue
 		src_folder_ls = os.listdir(fullpath_src_folder)
 		underscore_index_list = find(each_item_folder_name, "_")
 		underscore_count = len(underscore_index_list)
@@ -120,7 +122,7 @@ def get_ftdi_and_check_all_files(_full_dir_path, _each_item_folder_ls_list):
 			elif file_type == 3:
 				ok_log_file_count = ok_log_file_count + 1
 			this_file_info_dict['file_type'] = file_type
-			this_file_info_dict['md5'] = calculate_md5_hash(full_nuc_file_path)
+			#this_file_info_dict['md5'] = calculate_md5_hash(full_nuc_file_path)
 		file_info_list.append(this_file_info_dict)
 	error_st = print_check_file_content_message(ok_temp_file_count, ok_generated_file_count, ok_log_file_count)
 	new_folder_name = append_checkmsg_to_folder_name(error_st, _full_dir_path)
