@@ -300,7 +300,7 @@ def append_checkmsg_to_folder_name(st, _dir_full_path):
 
 # https://www.kite.com/python/answers/how-to-generate-an-md5-checksum-of-a-file-in-python
 def calculate_md5_hash(_file_full_dir):
-	print("calculate MD5 test")
+	print("calculate MD5")
 	md5_hash = hashlib.md5()
 
 	try:
@@ -309,7 +309,7 @@ def calculate_md5_hash(_file_full_dir):
 		md5_hash.update(content)
 		digest = md5_hash.hexdigest() 
 	except:
-		print_debug("Calculae hash failed")
+		print_debug("Calculate hash failed")
 		digest = -1
-	print_debug(digest)
+	print_debug("MD5 hash: " + str(digest))
 	return digest

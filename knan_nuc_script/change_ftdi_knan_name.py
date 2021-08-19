@@ -91,6 +91,7 @@ def remove_status_msg_from_nuc_folder_name(_full_parentfolder_dir):
 # _full_dir_path = D:\Dulieu_NUC_KNAN\fromOneDrive_PC_HDD\002_FT5P16DM
 # _each_item_folder_ls_list = [FT5P16DM_190521_50.bin, FT5OUSZM_310521_30.bin, Log_FT5OUSZM.txt]
 def get_ftdi_and_check_all_files(_full_dir_path, _each_item_folder_ls_list):
+	print(" in func get_ftdi_and_check_all_files")
 	done_get_ftdi_flag = 0
 	ok_temp_file_count = 0
 	ok_generated_file_count = 0
@@ -99,6 +100,7 @@ def get_ftdi_and_check_all_files(_full_dir_path, _each_item_folder_ls_list):
 	# tb_file: FT5P16DM_190521_50.bin
 	for tb_file in _each_item_folder_ls_list:
 		this_file_info_dict = {}
+		
 		full_nuc_file_path = os.path.join(_full_dir_path, tb_file)
 		this_file_info_dict['nuc_file_path'] = full_nuc_file_path
 		file_type = -1
@@ -110,6 +112,7 @@ def get_ftdi_and_check_all_files(_full_dir_path, _each_item_folder_ls_list):
 			file_size = get_file_size(full_nuc_file_path)
 			this_file_info_dict['file_size'] = file_size
 			file_type = check_nuc_file_name_and_size(tb_file, file_size)
+
 			if file_type == 1:
 				ok_temp_file_count = ok_temp_file_count + 1
 			elif file_type == 2:
@@ -117,6 +120,7 @@ def get_ftdi_and_check_all_files(_full_dir_path, _each_item_folder_ls_list):
 			elif file_type == 3:
 				ok_log_file_count = ok_log_file_count + 1
 			this_file_info_dict['file_type'] = file_type
+			this_file_info_dict['md5'] = calculate_md5_hash(full_nuc_file_path)
 		file_info_list.append(this_file_info_dict)
 	error_st = print_check_file_content_message(ok_temp_file_count, ok_generated_file_count, ok_log_file_count)
 	new_folder_name = append_checkmsg_to_folder_name(error_st, _full_dir_path)
