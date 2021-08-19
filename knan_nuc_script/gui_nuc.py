@@ -128,28 +128,14 @@ soft_field.place_textbox(_x = 200, _h = 40, _w = 350)
 # https://www.kite.com/python/answers/how-to-make-an-array-of-strings-in-python
 ftdi_dev_pair_json_dir = "ftdi_dev_pair.json"
 
-# def btn_main_check_complete_nuc_folder():
-#     print(org_field.dir_q.get())
-#     main_check_complete_nuc_folder(org_field.dir_q.get())
-#     status_q.set("Done btn_main_check_complete_nuc_folder!")
-
 def btn_extract_and_save_nuc_folder_info_to_json_file():
     print(org_field.dir_q.get())
     extract_and_save_nuc_folder_info_to_json_file(org_field.dir_q.get(), ftdi_dev_pair_json_dir)
 
-# def btn_main_check_and_change_nucfolder_name():
-#     print(org_field.dir_q.get())
-#     main_check_and_change_nucfolder_name(org_field.dir_q.get())
-
-def btn_remove_status_msg_from_nuc_folder_name():
-    #print(dir_org_q.get())
-    remove_status_msg_from_nuc_folder_name(org_field.dir_q.get())
-    status_q.set("Done btn_remove_status_msg_from_nuc_folder_name!")
-
 def btn_arrange_nuc_files_to_folder():
     #print(dir_org_q.get())
     arrange_nuc_files_to_folder(soft_field.dir_q.get())
-    status_q.set("Done btn_remove_status_msg_from_nuc_folder_name!")
+    status_q.set("Done btn_arrange_nuc_files_to_folder!")
 
 def btn_arrange_nuc_files_firstlevel_subfolders():
     arrange_nuc_files_in_firstlevel_subfolder(soft_field.dir_q.get())
@@ -179,11 +165,6 @@ class button_action:
 button_chang_folder_name = button_action("1. CHANGE_FOLDER_NAME_IN_ORG", main_check_and_change_nucfolder_name)
 button_chang_folder_name.create_button(2, 2)
 
-# btn_CHANGE_FOLDER_NAME_IN_ORG = tk.Button(wrapper3, text ="", 
-#                        bg ='#ffb3fe', command = btn_main_check_and_change_nucfolder_name)
-
-# btn_CHANGE_FOLDER_NAME_IN_ORG.grid(row = 2, column=2, pady = 20)
-
 btn_get_ftdi_and_dev_pair = tk.Button(wrapper3, text ="2.0. GET NUC FOLDER INFO TO JSON", 
                        bg ='#ffb3fe', command = btn_extract_and_save_nuc_folder_info_to_json_file)
 
@@ -192,7 +173,7 @@ btn_get_ftdi_and_dev_pair.grid(row = 3, column=2, pady = 20)
 button_check_nuc_folder_in_org = button_action("2.1. CHECK_NUC_FOLDER_IN_ORG", main_check_complete_nuc_folder)
 button_check_nuc_folder_in_org.create_button(4, 2)
 
-button_rm_status_msg_in_org = button_action("3. REMOVE_STATUS_MSG_IN_ORG", btn_remove_status_msg_from_nuc_folder_name)
+button_rm_status_msg_in_org = button_action("3. REMOVE_STATUS_MSG_IN_ORG", remove_status_msg_from_nuc_folder_name)
 button_rm_status_msg_in_org.create_button(5, 2)
 
 btn_rm_status_msg = tk.Button(wrapper3, text ="4. ARRANGE_NUC_FILES_TO_FOLDER_IN_SOFT", 
