@@ -106,10 +106,12 @@ def arrange_json_file(_json_file_name):
 	#dev_serial_list.append(item['dev_serial'])
 	#print(extracted_ftdi_dev_lists)
 	#arrange_json_file(_json_file_name)
+hash_file = "D:/Dulieu_NUC_KNAN/fromOneDrive_PC_HDD/024_p150j_ok/" + "FT5P105J_110521_0.bin"
 
 def main():
 	print("nuc_production")
-	arrange_json_file("ftdi_dev_pair.json")
+	#arrange_json_file("ftdi_dev_pair.json")
+	calculate_md5_hash(hash_file)
 
 if __name__ == "__main__":
     main()

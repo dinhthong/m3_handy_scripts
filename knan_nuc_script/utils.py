@@ -297,3 +297,19 @@ def append_checkmsg_to_folder_name(st, _dir_full_path):
 		_nn = new_folder_name+end_str
 		rename_dir(new_folder_name, _nn)
 	return _nn
+
+# https://www.kite.com/python/answers/how-to-generate-an-md5-checksum-of-a-file-in-python
+def calculate_md5_hash(_file_full_dir):
+	print("calculate MD5 test")
+	md5_hash = hashlib.md5()
+
+	try:
+		a_file = open(_file_full_dir, "rb")
+		content = a_file.read()
+		md5_hash.update(content)
+		digest = md5_hash.hexdigest() 
+	except:
+		print_debug("Calculae hash failed")
+		digest = -1
+	print_debug(digest)
+	return digest
