@@ -122,6 +122,7 @@ def check_nuc_file_name_and_size(_fname, _fsize):
 				return 1
 			else:
 				print_fail("Temperature file size NOT ok")
+				return -1
 		else:
 			print("output file")
 			return 2
