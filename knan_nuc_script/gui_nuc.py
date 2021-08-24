@@ -79,10 +79,10 @@ lbl.pack(side=tk.LEFT, padx=15)
 def search_btn_cb():
     print("Search button clicked")
 class select_dir_button:
-    button_text = 0
-    config_file_key = ""
+    #button_text = 0
+    #config_file_key = ""
     dir_q = StringVar()
-    btn_soft_object = tk.Button()
+    #btn_soft_object = tk.Button()
     ent_data = Entry()
     y_pos = 0
     x_pos = 0
@@ -90,23 +90,15 @@ class select_dir_button:
     def __init__(self, _btn_text, _config_file_key):
         self.button_text = _btn_text
         self.config_file_key = _config_file_key
-        self.btn_soft_object = tk.Button(wrapper2, text = self.button_text, 
-                       bg ='blue', command = self.btn_select_dir_cb)
+        #print_debug(config.get('main', _config_file_key))
+        #self.dir_q = StringVar()
         self.dir_q.set(config.get('main', _config_file_key))
+        print_debug(self.dir_q.get())
     # Button
-    def place_button(self, _x, _y, _width):
-        self.x_pos = _x
-        self.y_pos = _y
-        self.btn_soft_object.place(x = _x, y = _y, width = _width)
-
-    ent_data = Entry(wrapper2, textvariable = dir_q)
-    # Textbox
-    def place_textbox(self, _x, _h, _w, _y = y_pos):
-        self.ent_data.pack(side=tk.LEFT, padx=6)
-        self.ent_data.place(x=_x, y=_y, height=_h, width=_w)
     
     def btn_select_dir_cb(self):
         #print("Refreshing table")
+        print(self.dir_q.get())
         file_path_variable = search_for_file_path(self.dir_q.get())
         print ("\nfile_path_variable = ", file_path_variable)
         if file_path_variable != "":
@@ -116,12 +108,25 @@ class select_dir_button:
             config.set('main', self.config_file_key, file_path_variable)
             status_q.set("Change folder contains "+ self.button_text + " to: " + file_path_variable)
 
+    def create_button(self, _x, _y, _width):
+        self.btn_soft_object = tk.Button(wrapper2, text = self.button_text, 
+                bg ='blue', command = self.btn_select_dir_cb)
+        self.x_pos = _x
+        self.y_pos = _y
+        self.btn_soft_object.place(x = _x, y = _y, width = _width)
+
+    ent_data = Entry(wrapper2, textvariable = dir_q)
+    # Textbox
+    def place_textbox(self, _x, _h, _w, _y = y_pos):
+        self.ent_data.pack(side=tk.LEFT, padx=6)
+        self.ent_data.place(x=_x, y=_y, height=_h, width=_w)
+
 org_field = select_dir_button("ORG", 'nuc_base_dir')
-org_field.place_button(10, 10, 75)
+org_field.create_button(10, 10, 75)
 org_field.place_textbox(_x = 500, _h = 20, _w = 350)
 
 soft_field = select_dir_button("SOFT_DIR", 'software_folder')
-soft_field.place_button(400, 40, 75)
+soft_field.create_button(400, 40, 75)
 soft_field.place_textbox(_x = 200, _h = 40, _w = 350)
 
 # create new record wrapper
