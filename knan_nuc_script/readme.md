@@ -21,7 +21,7 @@
 - Phần mềm sẽ thường được sử dụng trên 2 máy: máy lấy NUC, máy gen NUC.
 - Trên máy lấy NUC: Thêm chức năng gom files vào folder tương ứng nếu đủ các files (9 files nhiệt độ) và dung lượng -> click là có thể copy sang máy khác để gen nuc. Đồng thời hiển thị thông tin của folder KNAN_software đấy (bằng cách click vào). 
 - Trên máy gen NUC: Gom files vào folder đối với các thiết bị đã gen xong, đủ files, và Log message đạt yêu cầu (15 files). Click xong là có thể copy sang ổ đĩa HDD để lưu trữ.
-
+- Chưa xét trường hợp: trùng device serial và FTDI nhưng khác tên folder ^^ (kiểu bị trùng dữ liệu). Cái này người dùng tự xử lý cho nó chuẩn đê
 # Practices
 - Clean code
 # References

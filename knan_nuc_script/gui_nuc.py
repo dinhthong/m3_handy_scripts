@@ -10,8 +10,8 @@ from copy_nuc_data import *
 from nuc_production import *
 #full_app_data_path = os.getcwd()+"\\...\\..."
 full_app_data_path = os.getcwd()
-os.chdir('..')
-os.chdir('..')
+# os.chdir('..')
+# os.chdir('..')
 full_app_data_path = os.getcwd()
 pg_textfile_name = os.path.join(full_app_data_path, "config.ini")
 print(pg_textfile_name)
