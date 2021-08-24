@@ -27,6 +27,8 @@
 # References
 https://stackoverflow.com/questions/111155/how-do-i-handle-the-window-close-event-in-tkinter
 https://stackoverflow.com/questions/21058935/python-json-loads-shows-valueerror-extra-data
+https://stackoverflow.com/questions/72899/how-do-i-sort-a-list-of-dictionaries-by-a-value-of-the-dictionary
+
 ## JSON
 https://stackoverflow.com/questions/53110610/json-dump-in-python-writing-newline-character-and-carriage-returns-in-file/57021651
 

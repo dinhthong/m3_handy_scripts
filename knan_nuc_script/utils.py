@@ -157,16 +157,6 @@ def get_json_file_name():
 		f = open(json_file_name, 'a+')
 		f.close()
 	return json_file_name
-
-# Import hashlib library (md5 method is part of it)
-def get_md5_hash(_filename):
-	# Open,close, read file and calculate MD5 on its contents 
-	with open(_filename) as file_to_check:
-		# read contents of the file
-		data = file_to_check.read()    
-		# pipe contents of the file through
-		md5_returned = hashlib.md5(data).hexdigest()
-	return md5_returned
 # program related utils
 
 # Description: check file name and file size 

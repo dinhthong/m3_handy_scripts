@@ -54,9 +54,20 @@ def extract_and_save_nuc_folder_info_to_json_file(_full_parent_dir, _json_file_n
 						#if dev_serial.isnumeric():
 						#print(dev_serial)
 						json_info_dict = {}
-						json_info_dict['dev_serial'] = dev_serial
+						json_info_dict['dev_serial'] = f'{dev_serial:04}'
 						json_info_dict['FTDI'] = new_ftdi
 						json_info_dict['msg'] = new_user_msg
+						# link file content (nuctable file md5 or temperature file)
+						# find "FTDI + n" file and calculate md5
+						full_nuc_table_1_file = os.path.join(full_dir_path, new_ftdi+ "1.bin")
+						#print(full_nuc_table_1_file)
+						if os.path.isfile(full_nuc_table_1_file):
+							#calculate md5
+							FTDI1_md5_s = calculate_md5_hash(full_nuc_table_1_file)
+							if  FTDI1_md5_s != -1:
+								json_info_dict['FTDI1_md5'] = FTDI1_md5_s
+							else:
+								json_info_dict['FTDI1_md5'] = 0
 						print_debug("Extracted dict from folder: " + folder_name)
 						print(json_info_dict)
 						extracted_ftdi_dev_lists.append(json_info_dict)
@@ -79,38 +90,16 @@ def extract_and_save_nuc_folder_info_to_json_file(_full_parent_dir, _json_file_n
 							extracted_ftdi_dev_lists[index]["msg"] = new_user_msg				
 		else:
 			print("Not a folder, skip...")
-	#print(extracted_ftdi_dev_lists)
+	extracted_ftdi_dev_lists = sorted(extracted_ftdi_dev_lists, key=lambda k: k['dev_serial']) 
 	jsonFile = open(_json_file_name, "w")
 	jsonString = json.dumps(extracted_ftdi_dev_lists, indent=2, separators=(',', ': '))
 	jsonFile.write(jsonString)
 	jsonFile.close()
 
-def arrange_json_file(_json_file_name):
-	if os.path.isfile(_json_file_name):
-		f = open(_json_file_name, "r")
-	else:
-		print("File doesn't exist")
-		f = open(_json_file_name, 'a+')
-	try:
-		extracted_ftdi_dev_lists = json.load(f)
-	except:
-		extracted_ftdi_dev_lists = []
-	f.close()
-	# https://stackoverflow.com/questions/72899/how-do-i-sort-a-list-of-dictionaries-by-a-value-of-the-dictionary
-	newlist = sorted(extracted_ftdi_dev_lists, key=lambda k: k['dev_serial']) 
-	print(newlist)
-	# jsonFile = open(_json_file_name, "w")
-	# jsonString = json.dumps(newlist, indent=2, separators=(',', ': '))
-	# jsonFile.write(jsonString)
-	# jsonFile.close()
-	#dev_serial_list.append(item['dev_serial'])
-	#print(extracted_ftdi_dev_lists)
-	#arrange_json_file(_json_file_name)
 hash_file = "D:/Dulieu_NUC_KNAN/fromOneDrive_PC_HDD/024_p150j_ok/" + "FT5P105J_110521_0.bin"
 
 def main():
 	print("nuc_production")
-	#arrange_json_file("ftdi_dev_pair.json")
 	calculate_md5_hash(hash_file)
 
 if __name__ == "__main__":

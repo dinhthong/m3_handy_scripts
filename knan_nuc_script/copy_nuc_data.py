@@ -26,7 +26,6 @@ def extract_files_in_childfolders(_parent_folder):
 					nuc_file_fullpath = os.path.join(nuc_folder_fullpath, file_in_folder_item)
 					print(nuc_file_fullpath)
 					if check_temperature_file(nuc_file_fullpath) == True:
-						#json_info_dict['md5'] = get_md5_hash(nuc_file_fullpath)
 						print("nuc_file_fullpath: " + nuc_file_fullpath)
 						json_info_dict['original_path'] = nuc_file_fullpath
 						new_file_path = os.path.join(_parent_folder, file_in_folder_item)
