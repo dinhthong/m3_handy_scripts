@@ -52,6 +52,7 @@ def check_and_change_nucfolder_name(_filepath):
 			if good_name_flag==1:
 				print_ok("Discard this as the each_item_folder_name is already OK")
 				continue
+			
 			new_fullpath_folder_name = os.path.join(_filepath, new_folder_name)
 			print("fullpath_src_folder: "+ fullpath_src_folder + "; new_fullpath_folder_name: " + new_fullpath_folder_name)
 

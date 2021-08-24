@@ -37,6 +37,28 @@ def submitact():
 
 root = Tk()
 
+def btn_org_dir_cb():
+    #print("Refreshing table")
+    file_path_variable = search_for_file_path(dir_org_q.get())
+    print ("\nfile_path_variable = ", file_path_variable)
+    if file_path_variable != "":
+        dir_org_q.set(file_path_variable)
+        # write to config file
+        # config.add_section('main')
+        config.set('main', 'nuc_base_dir', file_path_variable)
+        status_q.set("Change folder contains NUC folders to: " + file_path_variable)
+
+def btn_soft_dir_cb():
+    #print("Refreshing table")
+    file_path_variable = search_for_file_path(dir_soft_q.get())
+    print ("\nfile_path_variable = ", file_path_variable)
+    if file_path_variable != "":
+        dir_soft_q.set(file_path_variable)
+        # write to config file
+        # config.add_section('main')
+        config.set('main', 'software_folder', file_path_variable)
+        status_q.set("Change folder contains KNAN_Software to: " + file_path_variable)
+
 def search_for_file_path(current_dir):
     #currdir = os.getcwd()
     tempdir = filedialog.askdirectory(parent=root, initialdir=current_dir, title='Please select a directory')
@@ -70,72 +92,58 @@ submitbtn = tk.Button(wrapper0, text ="Login",
                       bg ='blue', command = submitact)
 submitbtn.place(x = 150, y = 70, width = 55)
 
+def search_btn_cb():
+    print("Search button clicked")
+
+# User action wrapper
+btn_org_dir_object = tk.Button(wrapper2, text ="ORG_DIR", 
+                       bg ='blue', command = btn_org_dir_cb)
+btn_org_dir_object.place(x = 10, y = 10, width = 75)
+# Search selection
+# Search box
+q = StringVar()
+lbl = Label(wrapper2, text="Search")
+lbl.pack(side=tk.LEFT, padx=10)
+ent = Entry(wrapper2, textvariable=q)
+ent.pack(side=tk.LEFT, padx=6)
+
+# Search button
+btn = Button(wrapper2, text="Search", command=search_btn_cb)
+btn.pack(side=tk.LEFT, padx=6) 
+
+# Search box
+dir_org_q = StringVar()
+# lbl = Label(wrapper2, width=10, text="Selected dir")
+# lbl.pack(side=tk.LEFT, padx=15)
+ent2 = Entry(wrapper2, textvariable=dir_org_q)
+ent2.pack(side=tk.LEFT, padx=6)
+ent2.place(x=100, y=15, height=20, width=350)
+dir_org_q.set(config.get('main', 'nuc_base_dir'))
+
+# data_folder selection
+btn_soft_dir_object = tk.Button(wrapper2, text ="SOFT_DIR", 
+                       bg ='blue', command = btn_soft_dir_cb)
+btn_soft_dir_object.place(x = 500, y = 40, width = 75)
+
+dir_soft_q = StringVar()
+ent_data = Entry(wrapper2, textvariable=dir_soft_q)
+ent_data.pack(side=tk.LEFT, padx=6)
+ent_data.place(x=600, y=40, height=20, width=350)
+dir_soft_q.set(config.get('main', 'software_folder'))
+
 # working log on GUI
 status_q = StringVar()
 status_q.set("HELLO")
 lbl = Label(wrapper1, width=50, textvariable = status_q)
 lbl.pack(side=tk.LEFT, padx=15)
 
-def search_btn_cb():
-    print("Search button clicked")
-class select_dir_button:
-    #button_text = 0
-    #config_file_key = ""
-    dir_q = StringVar()
-    #btn_soft_object = tk.Button()
-    ent_data = Entry()
-    y_pos = 0
-    x_pos = 0
-    # parameterized constructor
-    def __init__(self, _btn_text, _config_file_key):
-        self.button_text = _btn_text
-        self.config_file_key = _config_file_key
-        #print_debug(config.get('main', _config_file_key))
-        #self.dir_q = StringVar()
-        self.dir_q.set(config.get('main', _config_file_key))
-        print_debug(self.dir_q.get())
-    # Button
-    
-    def btn_select_dir_cb(self):
-        #print("Refreshing table")
-        print(self.dir_q.get())
-        file_path_variable = search_for_file_path(self.dir_q.get())
-        print ("\nfile_path_variable = ", file_path_variable)
-        if file_path_variable != "":
-            self.dir_q.set(file_path_variable)
-            # write to config file
-            # config.add_section('main')
-            config.set('main', self.config_file_key, file_path_variable)
-            status_q.set("Change folder contains "+ self.button_text + " to: " + file_path_variable)
-
-    def create_button(self, _x, _y, _width):
-        self.btn_soft_object = tk.Button(wrapper2, text = self.button_text, 
-                bg ='blue', command = self.btn_select_dir_cb)
-        self.x_pos = _x
-        self.y_pos = _y
-        self.btn_soft_object.place(x = _x, y = _y, width = _width)
-
-    ent_data = Entry(wrapper2, textvariable = dir_q)
-    # Textbox
-    def place_textbox(self, _x, _h, _w, _y = y_pos):
-        self.ent_data.pack(side=tk.LEFT, padx=6)
-        self.ent_data.place(x=_x, y=_y, height=_h, width=_w)
-
-org_field = select_dir_button("ORG", 'nuc_base_dir')
-org_field.create_button(10, 10, 75)
-org_field.place_textbox(_x = 500, _h = 20, _w = 350)
-
-soft_field = select_dir_button("SOFT_DIR", 'software_folder')
-soft_field.create_button(400, 40, 75)
-soft_field.place_textbox(_x = 200, _h = 40, _w = 350)
-
 # create new record wrapper
 # https://www.kite.com/python/answers/how-to-make-an-array-of-strings-in-python
 ftdi_dev_pair_json_dir = "ftdi_dev_pair.json"
 
 def btn_extract_and_save_nuc_folder_info_to_json_file():
-    print(org_field.dir_q.get())
-    extract_and_save_nuc_folder_info_to_json_file(org_field.dir_q.get(), ftdi_dev_pair_json_dir)
+    print(dir_org_q.get())
+    extract_and_save_nuc_folder_info_to_json_file(dir_org_q.get(), ftdi_dev_pair_json_dir)
 
 # Define buttons
 class button_action:
@@ -152,13 +160,13 @@ class button_action:
         self.this_btn.grid(row = _row, column=_col, pady = 20)
 
     def do_when_button_clicked(self):
-        print("dir = " + org_field.dir_q.get())
-        self.callback_func(org_field.dir_q.get())
+        print("dir = " + dir_org_q.get())
+        self.callback_func(dir_org_q.get())
 
 class button_action2(button_action):
     def do_when_button_clicked(self):
-        print("dir = " + soft_field.dir_q.get())
-        self.callback_func(soft_field.dir_q.get())
+        print("dir = " + dir_soft_q.get())
+        self.callback_func(dir_soft_q.get())
 
 button_chang_folder_name = button_action("1. CHANGE_FOLDER_NAME_IN_ORG", main_check_and_change_nucfolder_name)
 button_chang_folder_name.create_button(2, 2)
