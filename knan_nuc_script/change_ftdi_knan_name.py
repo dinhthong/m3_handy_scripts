@@ -37,23 +37,28 @@ def check_and_change_nucfolder_name(_filepath):
 				break
 		# check if folder name is already good
 		if first_ftdi_idx >= 0:
-			if underscore_count == 0:
+			if underscore_count <= 0:
 				# continue the for loop for this each_item_folder_name
 				print_fail("Discard this for loop as no underscore found")
 				continue
+			if underscore_count >= 1:
+				dev_serial = each_item_folder_name[0:underscore_index_list[0]]
+				if dev_serial.isnumeric():
+					pad_dev_serial = f'{int(dev_serial):04}'
+					#print(dev_serial)
 			if underscore_count == 1:
-				new_folder_name = each_item_folder_name[0:underscore_index_list[0]+1]+extracted_ftdi
-				if (len(each_item_folder_name[underscore_index_list[0]:]) == c_ftdi_length+1):
+				new_folder_name = extracted_ftdi
+				if (len(each_item_folder_name[underscore_index_list[0]:]) == c_ftdi_length+1) and len(dev_serial) == 4:
 					good_name_flag = 1
 			if underscore_count >= 2:
-				if (underscore_index_list[1]-underscore_index_list[0] == c_ftdi_length+1):
+				if (underscore_index_list[1]-underscore_index_list[0] == c_ftdi_length+1) and len(dev_serial) == 4:
 					good_name_flag = 1
-				new_folder_name = each_item_folder_name[0:underscore_index_list[0]+1]+extracted_ftdi+each_item_folder_name[underscore_index_list[1]:]
+				new_folder_name = extracted_ftdi+each_item_folder_name[underscore_index_list[1]:]
 			if good_name_flag==1:
 				print_ok("Discard this as the each_item_folder_name is already OK")
 				continue
-			
-			new_fullpath_folder_name = os.path.join(_filepath, new_folder_name)
+
+			new_fullpath_folder_name = os.path.join(_filepath, pad_dev_serial+"_"+new_folder_name)
 			print("fullpath_src_folder: "+ fullpath_src_folder + "; new_fullpath_folder_name: " + new_fullpath_folder_name)
 
 			# start rename
@@ -118,11 +123,10 @@ def get_ftdi_and_check_all_files(_full_dir_path, _each_item_folder_ls_list):
 
 			if file_type == 1:
 				ok_temp_file_count = ok_temp_file_count + 1
-				# only calculate md5 of the first healthy temperature file
-				if ok_temp_file_count == 1:
-					this_file_info_dict['md5'] = calculate_md5_hash(full_nuc_file_path)
+				
 			elif file_type == 2:
 				ok_generated_file_count = ok_generated_file_count + 1
+				# only calculate md5 of the first nuc_table file
 				if ok_generated_file_count == 1:
 					this_file_info_dict['md5'] = calculate_md5_hash(full_nuc_file_path)
 			elif file_type == 3:

@@ -43,6 +43,7 @@ ORG_DIR = nuc_test
 - Đối với từng thư mục có trong ORG_DIR, Xóa các ký tự sau dấu #
 ## Nút 4
 - Trong thư mục SOFT_DIR: tìm các các file có chứa FTDI của đến thiết bị, nó sẽ tự gom lại và tạo folder đặt tên tương ứng.
+- Chú ý đối với Nút 4 và nút 5: Chỉ nên sử dụng khi gom các file để chuẩn bị cho việc gen NUC, nó gom lại không hề biết được ban đầu lấy ra từ folder nào.
 ## Nút 5
 - Tương tự như nút 4, nhưng nó chỉ làm ở files có trong thư mục con (chỉ vào thêm 1 level)
 ## Nút 6:

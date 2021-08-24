@@ -31,7 +31,6 @@ def extract_and_save_nuc_folder_info_to_json_file(_full_parent_dir, _json_file_n
 	except:
 		extracted_ftdi_dev_lists = []
 	f.close()
-
 	count = 0
 	for folder_name in os.listdir(_full_parent_dir):
 		count = count + 1
@@ -44,51 +43,55 @@ def extract_and_save_nuc_folder_info_to_json_file(_full_parent_dir, _json_file_n
 				dev_serial = folder_name[0:idx].replace("_","")
 				dev_serial = dev_serial.replace(" ","")
 				new_user_msg = folder_name[idx+c_ftdi_length:]
-				#new_user_msg = remove_original_app_msg(new_user_msg, 0)
-				#print("Extracted user message: " + new_user_msg)
-				# link file content (nuctable file md5 or temperature file)
 				# find "FTDI + n" file and calculate md5
 				full_nuc_table_1_file = os.path.join(full_dir_path, new_ftdi+ "1.bin")
-				#print(full_nuc_table_1_file)
+				new_FTDI1_md5 = ""
 				if os.path.isfile(full_nuc_table_1_file):
 					#calculate md5
 					new_FTDI1_md5 = calculate_md5_hash(full_nuc_table_1_file)
-					if  new_FTDI1_md5 == -1:
-						new_FTDI1_md5 = ""
-				
 				if dev_serial.isnumeric():
+					add_new_dict_flag = 0 
 					dev_serial = f'{int(dev_serial):04}' # padding zeros
-					match_dict = read_and_get_match_dict_by_devserial_in_json_file(_json_file_name, dev_serial)
-					if match_dict == -1:
-						#if dev_serial.isnumeric():
-						#print(dev_serial)
+					# Search index match by dev_serial in list
+					# If index = -1 (None) -> Add new
+					match_index, match_dict = read_and_get_match_dict_by_devserial_in_list(extracted_ftdi_dev_lists, dev_serial)
+					if match_index == -1:
+						add_new_dict_flag = 1
+					# If exists same dev_serial in the list: we have to find index match by both 'dev_serial' and 'FTDI_MD5' and check if user updates 'msg'
+					# If none match by both (dev_serial and FTDI_MD5) is found: 
+					# case 1: The FTDI_MD5 == "": folder doesn't contain this file, if we find the identical (dev_serial, msg, FTDI) then pass, if different -> add new dict to list
+					# case 2: FTDI_MD5 != "" -> means that new MD5 file (kind of new different folder) with the same dev_serial -> so we add new dict to list
+					else:
+						match_dev_md5_index = None
+						if new_FTDI1_md5 != "":
+							match_dev_md5_index = next((i for i, item in enumerate(extracted_ftdi_dev_lists) if item["dev_serial"] == dev_serial and item["FTDI1_md5"] == new_FTDI1_md5), None)
+							print("Found dict by dev serial and md5: " + str(dev_serial) + " at index: " + str(match_index))
+							print("match both index: " + str(match_dev_md5_index))
+							if match_dev_md5_index != None:
+								print_debug("Match FTDI1_md5 file")
+								if match_dict["msg"] == new_user_msg:
+									print_debug("Match user msg, skip update msg")
+								else:
+									print_debug("Different user msg, updating:...")	
+									if match_dev_md5_index>=0:
+										extracted_ftdi_dev_lists[match_dev_md5_index]["msg"] = new_user_msg
+							else:
+								add_new_dict_flag = 1
+						else:
+							#if new_FTDI1_md5 == "":
+							ma_index = next((i for i, item in enumerate(extracted_ftdi_dev_lists) if item["dev_serial"] == dev_serial and item["FTDI1_md5"] == "" and item['msg'] == new_user_msg), None)
+							if ma_index == None:
+								add_new_dict_flag = 1
+
+					if add_new_dict_flag == 1:
 						json_info_dict = {}
 						json_info_dict['dev_serial'] = dev_serial
 						json_info_dict['FTDI'] = new_ftdi
 						json_info_dict['msg'] = new_user_msg
-						json_info_dict['FTDI1.bin_md5'] = new_FTDI1_md5
+						json_info_dict['FTDI1_md5'] = new_FTDI1_md5
 						print_debug("Extracted dict from folder: " + folder_name)
 						print(json_info_dict)
 						extracted_ftdi_dev_lists.append(json_info_dict)
-					else: # find an already exist dict with the same device serial number
-						print_warning("The dictionary already exists in list, check and update current dictionary")
-						index = next((i for i, item in enumerate(extracted_ftdi_dev_lists) if item["dev_serial"] == dev_serial), None)
-						print("index: " + str(index))
-						print_debug("Found dict by dev serial: " + str(dev_serial))
-						print(extracted_ftdi_dev_lists[index])
-						if match_dict["FTDI"] == new_ftdi:
-							print_debug("Match FTDI")
-							if match_dict["FTDI1.bin_md5"] == new_FTDI1_md5:
-								print_debug("Match FTDI1.bin_md5 file")
-								if match_dict["msg"] == new_user_msg:
-									print_debug("Match user msg")
-								else:
-									print_debug("Different user msg, updating:...")	
-									extracted_ftdi_dev_lists[index]["msg"] = new_user_msg		
-						else:
-							print_debug("Different FTDI")
-							#extracted_ftdi_dev_lists[index]["FTDI"] = new_ftdi
-							
 		else:
 			print("Not a folder, skip...")
 	extracted_ftdi_dev_lists = sorted(extracted_ftdi_dev_lists, key=lambda k: k['dev_serial']) 

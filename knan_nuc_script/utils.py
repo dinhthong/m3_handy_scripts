@@ -229,16 +229,39 @@ def read_and_get_match_dict_by_devserial_in_json_file(file_name, _input_dev_seri
 	print("Match dictionary value: " + str(dict_searched_by_devserial))
 	return dict_searched_by_devserial
 
+def read_and_get_match_dict_by_devserial_in_list(_list, _input_dev_serial):
+	dict_searched_by_devserial = {}
+	try:
+		dict_searched_by_devserial = next(item for item in _list if item["dev_serial"] == _input_dev_serial)
+		match_index = next((i for i, item in enumerate(_list) if item["dev_serial"] == _input_dev_serial), None)
+	except:
+		print("Can't find corresponding dev_serial from: " + str(_input_dev_serial))
+		return [-1, {}]
+	print("Match dictionary value: " + str(dict_searched_by_devserial))
+	
+	return [match_index, dict_searched_by_devserial]
+
+def read_and_get_match_dict_by_devserial_and_md5_in_list(_list, _input_dev_serial, _md5):
+	dict_searched_by_devserial = {}
+	if _md5 == "":
+		return -1
+	try:
+		dict_searched_by_devserial = next(item for item in _list if item["dev_serial"] == _input_dev_serial and item["FTDI1.bin_md5"] == _md5)
+	except:
+		print("Can't find corresponding dev_serial from: " + str(_input_dev_serial))
+		return -1
+	print("Match dictionary value: " + str(dict_searched_by_devserial))
+	return dict_searched_by_devserial
+
 # Create if not exist
 # if the FTDI is in database -> extract the dev serial number
 def create_data_FTDI_folder(base, ftdi):
 	#get_datetime_string()
 	return_dict = read_and_get_match_dict_by_ftdi_in_json_file("ftdi_dev_pair.json", ftdi)
 	if return_dict != -1:
-		ftdi_folder_path = os.path.join(base, str(return_dict["dev_serial"]) + "_" + ftdi + return_dict["msg"])
+		ftdi_folder_path = os.path.join(base, str(return_dict["dev_serial"]) + "_" + ftdi + "_" + "anew")
 	else:
 		ftdi_folder_path = os.path.join(base, "data_" + ftdi)
-
 	try:
 		os.mkdir(ftdi_folder_path) 
 	except OSError as error: 

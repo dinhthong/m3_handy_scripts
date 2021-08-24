@@ -187,17 +187,20 @@ button_check_nuc_folder_in_org.create_button(4, 2)
 button_rm_status_msg_in_org = button_action("3. REMOVE_STATUS_MSG_IN_ORG", remove_status_msg_from_nuc_folder_name)
 button_rm_status_msg_in_org.create_button(5, 2)
 
+# only use this to arrange files to folder
+# the program only tries to search device serial pair and create a new folder based off the json file
+# the program doens't know the output and result of these files (after generate NUC and download firmware)
 btn_rm_status_msg_in_soft = button_action2("4. ARRANGE_NUC_FILES_TO_FOLDER_IN_SOFT", arrange_nuc_files_to_folder) 
-btn_rm_status_msg_in_soft.create_button(3, 3)
+btn_rm_status_msg_in_soft.create_button(2, 3)
 
 btn_arr_nuc_files_infirstlevel_in_soft = button_action2("5. ARRANGE_NUC_FILES_IN_FIRSTLEVEL_SOFT", arrange_nuc_files_in_firstlevel_subfolder) 
-btn_arr_nuc_files_infirstlevel_in_soft.create_button(4, 3)
+btn_arr_nuc_files_infirstlevel_in_soft.create_button(3, 3)
 
 btn_rm_status_msg_in_soft = button_action2("6. EXTRACT_NUC_FILES_IN_SOFT", extract_files_in_childfolders) 
-btn_rm_status_msg_in_soft.create_button(6, 3)
+btn_rm_status_msg_in_soft.create_button(4, 3)
 
 btn_rm_status_msg_in_soft = button_action_two_dir("7. COPY NUC FROM ORG to SOFT", duplicate_nuc_table_only) 
-btn_rm_status_msg_in_soft.create_button(2, 5)
+btn_rm_status_msg_in_soft.create_button(5, 3)
 
 root.title("KNAN NUC check tool")
 root.geometry("1200x800")

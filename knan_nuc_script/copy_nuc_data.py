@@ -48,7 +48,6 @@ def arrange_nuc_files_to_folder(knan_software_dir):
 	#print_debug(full_item_dir_list)
 	create_ftdi_folders_and_move_ftdi_files(full_item_dir_list, knan_software_dir)
 
-
 #_base_folder = D:\Dulieu_NUC_KNAN\fromOneDrive_PC_HDD
 def duplicate_nuc_table_only(_base_folder, _des_folder):
 	full_item_dir_list = []
@@ -83,9 +82,6 @@ def duplicate_nuc_table_only(_base_folder, _des_folder):
 
 def main():
 	print("copy_nuc_data")
-	# arrange_nuc_files_to_folder("D:\py_test_KNAN_software", "D:\py_test_des_folder")
-	# extract_files_in_childfolders("D:\py_test_KNAN_software", "D:\py_test_des_folder")
-	duplicate_nuc_table_only("D:\Dulieu_NUC_KNAN//fromOneDrive_PC_HDD", "D:\Dulieu_NUC_KNAN")
 
 if __name__ == "__main__":
     main()
