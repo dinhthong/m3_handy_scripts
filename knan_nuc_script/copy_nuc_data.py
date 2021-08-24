@@ -51,34 +51,36 @@ def arrange_nuc_files_to_folder(knan_software_dir):
 #_base_folder = D:\Dulieu_NUC_KNAN\fromOneDrive_PC_HDD
 def duplicate_nuc_table_only(_base_folder, _des_folder):
 	full_item_dir_list = []
+	count = 0
 	for folder_item in os.listdir(_base_folder):
 		full_path = os.path.join(_base_folder, folder_item)
 		new_folder = os.path.join(_des_folder, folder_item)
 		print(full_path)
 		if os.path.isdir(full_path) == True:
+			count = count + 1
 			try:
 				os.mkdir(new_folder) 
 			except OSError as error: 
 				print(error)
-
+			print_ok("STT: " + str(count))
 			for file_item in os.listdir(full_path):
 				full_file_path = os.path.join(full_path, file_item)
-
 				if os.path.isfile(full_file_path) == True:
-					#print(len(file_item))
-
-					underscore_index_list = find(file_item, "_")
-					underscore_count = len(underscore_index_list)
-					if underscore_count != 2:
-						src_file = os.path.join(full_path, file_item)
-						new_des = os.path.join(new_folder, file_item)
-						print_debug(src_file)
-						print_debug(new_des)
-						copyfile(src_file, new_des)
-						#rename_dir(full_item_dir, new_file_path)			
-		#full_item_dir_list.append(os.path.join(knan_software_dir, item))
-	#print_debug(full_item_dir_list)
-	#create_ftdi_folders_and_move_ftdi_files(full_item_dir_list, knan_software_dir)
+					#only copy ftdi file
+					if file_item.find('FT') >=0:
+						underscore_index_list = find(file_item, "_")
+						underscore_count = len(underscore_index_list)
+						if underscore_count != 2:
+							src_file = os.path.join(full_path, file_item)
+							new_des = os.path.join(new_folder, file_item)
+							print_debug("src: " + src_file)
+							print_debug("des: " + new_des)
+							if os.path.isfile(new_des) == True:
+								print_warning("Destination File already exist, skip...")
+							else:
+								copyfile(src_file, new_des)
+					else:
+						print_warning("Not FTDI file, skip...")
 
 def main():
 	print("copy_nuc_data")
