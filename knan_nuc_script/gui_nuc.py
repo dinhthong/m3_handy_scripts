@@ -132,18 +132,6 @@ def btn_extract_and_save_nuc_folder_info_to_json_file():
     print(org_field.dir_q.get())
     extract_and_save_nuc_folder_info_to_json_file(org_field.dir_q.get(), ftdi_dev_pair_json_dir)
 
-def btn_arrange_nuc_files_to_folder():
-    #print(dir_org_q.get())
-    arrange_nuc_files_to_folder(soft_field.dir_q.get())
-    status_q.set("Done btn_arrange_nuc_files_to_folder!")
-
-def btn_arrange_nuc_files_firstlevel_subfolders():
-    arrange_nuc_files_in_firstlevel_subfolder(soft_field.dir_q.get())
-    status_q.set("Done btn_arrange_nuc_files_firstlevel_subfolders_to_folder!")
-
-def btn_extract_nucfiles_in_soft():
-    extract_files_in_childfolders(soft_field.dir_q.get())
-    status_q.set("Done btn_extract_nucfiles_in_soft!")
 # Define buttons
 class button_action:
     this_btn = tk.Button()
@@ -162,6 +150,11 @@ class button_action:
         print("dir = " + org_field.dir_q.get())
         self.callback_func(org_field.dir_q.get())
 
+class button_action2(button_action):
+    def do_when_button_clicked(self):
+        print("dir = " + soft_field.dir_q.get())
+        self.callback_func(soft_field.dir_q.get())
+
 button_chang_folder_name = button_action("1. CHANGE_FOLDER_NAME_IN_ORG", main_check_and_change_nucfolder_name)
 button_chang_folder_name.create_button(2, 2)
 
@@ -176,20 +169,14 @@ button_check_nuc_folder_in_org.create_button(4, 2)
 button_rm_status_msg_in_org = button_action("3. REMOVE_STATUS_MSG_IN_ORG", remove_status_msg_from_nuc_folder_name)
 button_rm_status_msg_in_org.create_button(5, 2)
 
-btn_rm_status_msg = tk.Button(wrapper3, text ="4. ARRANGE_NUC_FILES_TO_FOLDER_IN_SOFT", 
-                       bg ='#ffb3fe', command = btn_arrange_nuc_files_to_folder)
+btn_rm_status_msg_in_soft = button_action2("4. ARRANGE_NUC_FILES_TO_FOLDER_IN_SOFT", arrange_nuc_files_to_folder) 
+btn_rm_status_msg_in_soft.create_button(3, 3)
 
-btn_rm_status_msg.grid(row = 3, column= 3, pady = 20)
+btn_arr_nuc_files_infirstlevel_in_soft = button_action2("5. ARRANGE_NUC_FILES_IN_FIRSTLEVEL_SOFT", arrange_nuc_files_in_firstlevel_subfolder) 
+btn_arr_nuc_files_infirstlevel_in_soft.create_button(4, 3)
 
-btn_rm_status_msg = tk.Button(wrapper3, text ="5. ARRANGE_NUC_FILES_IN_FIRSTLEVEL_SOFT", 
-                       bg ='#ffb3fe', command = btn_arrange_nuc_files_firstlevel_subfolders)
-
-btn_rm_status_msg.grid(row = 4, column= 3, pady = 20)
-
-btn_rm_status_msg = tk.Button(wrapper3, text ="6. EXTRACT_NUC_FILES_IN_SOFT", 
-                       bg ='#ffb3fe', command = btn_extract_nucfiles_in_soft)
-
-btn_rm_status_msg.grid(row = 6, column= 3, pady = 20)
+btn_rm_status_msg_in_soft = button_action2("6. EXTRACT_NUC_FILES_IN_SOFT", extract_files_in_childfolders) 
+btn_rm_status_msg_in_soft.create_button(6, 3)
 
 root.title("KNAN NUC check tool")
 root.geometry("1200x800")
