@@ -168,6 +168,11 @@ class button_action2(button_action):
         print("dir = " + dir_soft_q.get())
         self.callback_func(dir_soft_q.get())
 
+class button_action_two_dir(button_action):
+    def do_when_button_clicked(self):
+        print("dir = " + dir_soft_q.get())
+        self.callback_func(dir_org_q.get(), dir_soft_q.get())
+
 button_chang_folder_name = button_action("1. CHANGE_FOLDER_NAME_IN_ORG", main_check_and_change_nucfolder_name)
 button_chang_folder_name.create_button(2, 2)
 
@@ -190,6 +195,9 @@ btn_arr_nuc_files_infirstlevel_in_soft.create_button(4, 3)
 
 btn_rm_status_msg_in_soft = button_action2("6. EXTRACT_NUC_FILES_IN_SOFT", extract_files_in_childfolders) 
 btn_rm_status_msg_in_soft.create_button(6, 3)
+
+btn_rm_status_msg_in_soft = button_action_two_dir("7. COPY NUC FROM ORG to SOFT", duplicate_nuc_table_only) 
+btn_rm_status_msg_in_soft.create_button(2, 5)
 
 root.title("KNAN NUC check tool")
 root.geometry("1200x800")
