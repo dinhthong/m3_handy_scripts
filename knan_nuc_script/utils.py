@@ -289,22 +289,22 @@ def create_ftdi_folders_and_move_ftdi_files(item_fullpath_list, full_des_dir):
 		print_header("--------------------------------------------------------------------------------------------")
 
 # Remove string after # character
-# VD: D:\Dulieu_NUC_KNAN\fromOneDrive_PC_HDD\031_FT5P10Z3_ok
-def remove_original_app_msg(_dir_full_path, rename_flag):
-	first_status_index = _dir_full_path.find("#")
-	new_name = ""
+# VD: D:\Dulieu_NUC_KNAN\fromOneDrive_PC_HDD\031_FT5P10Z3_ok#dasda
+# @return: same if there's no '#' character in name
+def remove_original_app_msg(dir_name, rename_flag):
+	first_status_index = dir_name.find("#")
+	new_name = dir_name
 	if first_status_index>=0:
-		new_name = _dir_full_path[0:first_status_index]
+		new_name = dir_name[0:first_status_index]
 		print_debug(new_name)
 		if rename_flag == 1:
-			rename_dir(_dir_full_path, new_name)
+			rename_dir(dir_name, new_name)
 	return new_name
 
 def append_checkmsg_to_folder_name(st, _dir_full_path):
 	new_folder_name = remove_original_app_msg(_dir_full_path, 1)
 	end_str = "#" + st
-	# start rename
-	if new_folder_name == "":
+	if new_folder_name == _dir_full_path: # there's no '#' character in name
 		_nn = _dir_full_path+end_str
 		rename_dir(_dir_full_path, _nn)
 	else:

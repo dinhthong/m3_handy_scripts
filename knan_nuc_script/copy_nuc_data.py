@@ -49,19 +49,18 @@ def arrange_nuc_files_to_folder(knan_software_dir):
 	create_ftdi_folders_and_move_ftdi_files(full_item_dir_list, knan_software_dir)
 
 #_base_folder = D:\Dulieu_NUC_KNAN\fromOneDrive_PC_HDD
+# check if source folder contains [generated nuc_table files], if not skip creating folder
+# @todos: don't copy duplicate folder (by checking first file's MD5 eg)
 def duplicate_nuc_table_only(_base_folder, _des_folder):
-	full_item_dir_list = []
 	count = 0
 	for folder_item in os.listdir(_base_folder):
 		full_path = os.path.join(_base_folder, folder_item)
-		new_folder = os.path.join(_des_folder, folder_item)
+		new_folder = os.path.join(_des_folder, remove_original_app_msg(folder_item, 0))
 		print(full_path)
 		if os.path.isdir(full_path) == True:
+			folder_create_done_flag = 0
 			count = count + 1
-			try:
-				os.mkdir(new_folder) 
-			except OSError as error: 
-				print(error)
+			# create new destination folder
 			print_ok("STT: " + str(count))
 			for file_item in os.listdir(full_path):
 				full_file_path = os.path.join(full_path, file_item)
@@ -70,17 +69,24 @@ def duplicate_nuc_table_only(_base_folder, _des_folder):
 					if file_item.find('FT') >=0:
 						underscore_index_list = find(file_item, "_")
 						underscore_count = len(underscore_index_list)
+						# only copy [generated nuc_table files]
 						if underscore_count != 2:
+							# create new destination folder and set flag
+							if folder_create_done_flag == 0 and os.path.isdir(new_folder) == False:
+								try:
+									os.mkdir(new_folder)
+									folder_create_done_flag = 1
+								except OSError as error: 
+									print(error)
 							src_file = os.path.join(full_path, file_item)
 							new_des = os.path.join(new_folder, file_item)
-							print_debug("src: " + src_file)
-							print_debug("des: " + new_des)
 							if os.path.isfile(new_des) == True:
-								print_warning("Destination File already exist, skip...")
+								print_warning("Destination file already exist, skip...")
 							else:
 								copyfile(src_file, new_des)
 					else:
 						print_warning("Not FTDI file, skip...")
+	print_ok("Done")
 
 def main():
 	print("copy_nuc_data")
