@@ -27,9 +27,9 @@ def extract_and_save_nuc_folder_info_to_json_file(_full_parent_dir, _json_file_n
 		print("File doesn't exist")
 		f = open(_json_file_name, 'a+')
 	try:
-		extracted_ftdi_dev_lists = json.load(f)
+		extracted_ftdi_dev_list = json.load(f)
 	except:
-		extracted_ftdi_dev_lists = []
+		extracted_ftdi_dev_list = []
 	f.close()
 	count = 0
 	for folder_name in os.listdir(_full_parent_dir):
@@ -54,7 +54,7 @@ def extract_and_save_nuc_folder_info_to_json_file(_full_parent_dir, _json_file_n
 					dev_serial = f'{int(dev_serial):04}' # padding zeros
 					# Search index match by dev_serial in list
 					# If index = -1 (None) -> Add new
-					match_index, match_dict = read_and_get_match_dict_by_devserial_in_list(extracted_ftdi_dev_lists, dev_serial)
+					match_index, match_dict = read_and_get_match_dict_by_devserial_in_list(extracted_ftdi_dev_list, dev_serial)
 					if match_index == -1:
 						add_new_dict_flag = 1
 					# If exists same dev_serial in the list: we have to find index match by both 'dev_serial' and 'FTDI_MD5' and check if user updates 'msg'
@@ -64,7 +64,7 @@ def extract_and_save_nuc_folder_info_to_json_file(_full_parent_dir, _json_file_n
 					else:
 						match_dev_md5_index = None
 						if new_FTDI1_md5 != "":
-							match_dev_md5_index = next((i for i, item in enumerate(extracted_ftdi_dev_lists) if item["dev_serial"] == dev_serial and item["FTDI1_md5"] == new_FTDI1_md5), None)
+							match_dev_md5_index = next((i for i, item in enumerate(extracted_ftdi_dev_list) if item["dev_serial"] == dev_serial and item["FTDI1_md5"] == new_FTDI1_md5), None)
 							print("Found dict by dev serial and md5: " + str(dev_serial) + " at index: " + str(match_index))
 							print("match both index: " + str(match_dev_md5_index))
 							if match_dev_md5_index != None:
@@ -74,12 +74,12 @@ def extract_and_save_nuc_folder_info_to_json_file(_full_parent_dir, _json_file_n
 								else:
 									print_debug("Different user msg, updating:...")	
 									if match_dev_md5_index>=0:
-										extracted_ftdi_dev_lists[match_dev_md5_index]["msg"] = new_user_msg
+										extracted_ftdi_dev_list[match_dev_md5_index]["msg"] = new_user_msg
 							else:
 								add_new_dict_flag = 1
 						else:
 							#if new_FTDI1_md5 == "":
-							ma_index = next((i for i, item in enumerate(extracted_ftdi_dev_lists) if item["dev_serial"] == dev_serial and item["FTDI1_md5"] == "" and item['msg'] == new_user_msg), None)
+							ma_index = next((i for i, item in enumerate(extracted_ftdi_dev_list) if item["dev_serial"] == dev_serial and item["FTDI1_md5"] == "" and item['msg'] == new_user_msg), None)
 							if ma_index == None:
 								add_new_dict_flag = 1
 
@@ -91,12 +91,13 @@ def extract_and_save_nuc_folder_info_to_json_file(_full_parent_dir, _json_file_n
 						json_info_dict['FTDI1_md5'] = new_FTDI1_md5
 						print_debug("Extracted dict from folder: " + folder_name)
 						print(json_info_dict)
-						extracted_ftdi_dev_lists.append(json_info_dict)
+						extracted_ftdi_dev_list.append(json_info_dict)
 		else:
 			print("Not a folder, skip...")
-	extracted_ftdi_dev_lists = sorted(extracted_ftdi_dev_lists, key=lambda k: k['dev_serial']) 
+	# sort the list ascending by 'dev_serial'
+	extracted_ftdi_dev_list = sorted(extracted_ftdi_dev_list, key=lambda k: k['dev_serial']) 
 	jsonFile = open(_json_file_name, "w")
-	jsonString = json.dumps(extracted_ftdi_dev_lists, indent=2, separators=(',', ': '))
+	jsonString = json.dumps(extracted_ftdi_dev_list, indent=2, separators=(',', ': '))
 	jsonFile.write(jsonString)
 	jsonFile.close()
 

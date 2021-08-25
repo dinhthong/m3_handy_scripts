@@ -53,15 +53,16 @@ def arrange_nuc_files_to_folder(knan_software_dir):
 # @todos: don't copy duplicate folder (by checking first file's MD5 eg)
 def duplicate_nuc_table_only(_base_folder, _des_folder):
 	count = 0
-	for folder_item in os.listdir(_base_folder):
+	device_folder_item_list = os.listdir(_base_folder)
+	len_device_folder_item_list = len(device_folder_item_list)
+	for folder_item in device_folder_item_list:
 		full_path = os.path.join(_base_folder, folder_item)
 		new_folder = os.path.join(_des_folder, remove_original_app_msg(folder_item, 0))
-		print(full_path)
 		if os.path.isdir(full_path) == True:
 			folder_create_done_flag = 0
 			count = count + 1
 			# create new destination folder
-			print_ok("STT: " + str(count))
+			print_ok("***STT: " + str(count) + "/" + str(len_device_folder_item_list))
 			for file_item in os.listdir(full_path):
 				full_file_path = os.path.join(full_path, file_item)
 				if os.path.isfile(full_file_path) == True:

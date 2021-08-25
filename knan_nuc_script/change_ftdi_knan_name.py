@@ -50,17 +50,15 @@ def check_and_change_nucfolder_name(_filepath):
 				new_folder_name = extracted_ftdi
 				if (len(each_item_folder_name[underscore_index_list[0]:]) == c_ftdi_length+1) and len(dev_serial) == 4:
 					good_name_flag = 1
-			if underscore_count >= 2:
+			elif underscore_count >= 2:
 				if (underscore_index_list[1]-underscore_index_list[0] == c_ftdi_length+1) and len(dev_serial) == 4:
 					good_name_flag = 1
 				new_folder_name = extracted_ftdi+each_item_folder_name[underscore_index_list[1]:]
-			if good_name_flag==1:
+			if good_name_flag == 1:
 				print_ok("Discard this as the each_item_folder_name is already OK")
 				continue
-
 			new_fullpath_folder_name = os.path.join(_filepath, pad_dev_serial+"_"+new_folder_name)
 			print("fullpath_src_folder: "+ fullpath_src_folder + "; new_fullpath_folder_name: " + new_fullpath_folder_name)
-
 			# start rename
 			if g_allow_rename == 1:
 				try:
@@ -88,12 +86,7 @@ def remove_status_msg_from_nuc_folder_name(_full_parentfolder_dir):
 		print(full_nuc_folder_dir)
 		if os.path.isdir(full_nuc_folder_dir):
 			remove_original_app_msg(full_nuc_folder_dir, 1)
-		#aDict = [{"stt": count, "foder_name": each_item_folder_name, "ma_thiet_bi": "place_holder", "ftdi_name": extracted_ftdi, "files_check_status": check_folder_content_ok_flag}]
-		#jsonString = json.dumps(aDict, indent=2, separators=(',', ': '))
-		#jsonString = json.dumps(aDict)
-		#jsonFile.write(jsonString)
 		print_header("--------------------------------------------------------------------------------------------")
-	#jsonFile.close()
 
 # Example data:
 # _full_dir_path = D:\Dulieu_NUC_KNAN\fromOneDrive_PC_HDD\002_FT5P16DM
@@ -108,7 +101,6 @@ def get_ftdi_and_check_all_files(_full_dir_path, _each_item_folder_ls_list):
 	# tb_file: FT5P16DM_190521_50.bin
 	for tb_file in _each_item_folder_ls_list:
 		this_file_info_dict = {}
-		
 		full_nuc_file_path = os.path.join(_full_dir_path, tb_file)
 		this_file_info_dict['nuc_file_path'] = full_nuc_file_path
 		file_type = -1
@@ -120,10 +112,8 @@ def get_ftdi_and_check_all_files(_full_dir_path, _each_item_folder_ls_list):
 			file_size = get_file_size(full_nuc_file_path)
 			this_file_info_dict['file_size'] = file_size
 			file_type = check_nuc_file_name_and_size(tb_file, file_size)
-
 			if file_type == 1:
 				ok_temp_file_count = ok_temp_file_count + 1
-				
 			elif file_type == 2:
 				ok_generated_file_count = ok_generated_file_count + 1
 				# only calculate md5 of the first nuc_table file
@@ -166,6 +156,7 @@ def check_individual_nuc_folder_files(_base_dir_name, _nuc_dir_name):
 	print_header("--------------------------------------------------------------------------------------------")
 	return this_info_dict
 
+# @description: Check folder's content and apend 
 # _full_parentfolder_dir: D:\Dulieu_NUC_KNAN\fromOneDrive_PC_HDD
 # root_folder_ls_list: [061_FT5OV9HL_ok, 097_FT5OUWNJ_cancheck]
 def check_complete_nuc_folder(_base_dir_name):
@@ -193,18 +184,9 @@ def check_complete_nuc_folder(_base_dir_name):
 			print("Not a FTDI folder, discard check folder's content")
 	jsonFile.close()
 
-def main_check_complete_nuc_folder(filepath):
-	print("Hello World!")
-	#get_datetime_string()
-	check_complete_nuc_folder(filepath)
-
-def main_check_and_change_nucfolder_name(filepath):
-	print("Hello World!")
-	check_and_change_nucfolder_name(filepath)
-
 def main():
 	print("Hello World!")
-	#main_check_complete_nuc_folder()
+	#check_complete_nuc_folder()
 
 if __name__ == "__main__":
     main()
