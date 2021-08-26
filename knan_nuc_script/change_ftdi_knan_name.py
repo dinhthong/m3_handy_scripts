@@ -44,7 +44,7 @@ def check_and_change_nucfolder_name(_filepath):
 			if underscore_count >= 1:
 				dev_serial = each_item_folder_name[0:underscore_index_list[0]]
 				if dev_serial.isnumeric():
-					pad_dev_serial = f'{int(dev_serial):04}'
+					pad_dev_serial = dev_serial.zfill(4)
 					#print(dev_serial)
 			if underscore_count == 1:
 				new_folder_name = extracted_ftdi

@@ -51,7 +51,7 @@ def extract_and_save_nuc_folder_info_to_json_file(_full_parent_dir, _json_file_n
 					new_FTDI1_md5 = calculate_md5_hash(full_nuc_table_1_file)
 				if dev_serial.isnumeric():
 					add_new_dict_flag = 0 
-					dev_serial = f'{int(dev_serial):04}' # padding zeros
+					dev_serial = dev_serial.zfill(4) # padding zeros
 					# Search index match by dev_serial in list
 					# If index = -1 (None) -> Add new
 					match_index, match_dict = read_and_get_match_dict_by_devserial_in_list(extracted_ftdi_dev_list, dev_serial)

@@ -63,6 +63,7 @@ def duplicate_nuc_table_only(_base_folder, _des_folder):
 			count = count + 1
 			# create new destination folder
 			print_ok("***STT: " + str(count) + "/" + str(len_device_folder_item_list))
+			print_ok("Working in folder: " + full_path)
 			for file_item in os.listdir(full_path):
 				full_file_path = os.path.join(full_path, file_item)
 				if os.path.isfile(full_file_path) == True:
